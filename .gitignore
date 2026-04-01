@@ -62,7 +62,6 @@ Backend/__pycache__/
 Backend/*.pyc
 Backend/Outputs/*.mp4
 Backend/Source_Videos/*.mp4
-Backend/models/
 Backend/.pytest_cache/
 Backend/temp/
 Backend/tmp/
@@ -86,6 +85,11 @@ Frontend/yarn-error.log*
 *.pt
 *.pth
 *.h5
+
+# Include bundled local embedding model required by the backend
+!Backend/Models/
+!Backend/Models/all-MiniLM-L6-v2/
+!Backend/Models/all-MiniLM-L6-v2/**
 
 # Keep certain directories but ignore contents
 Backend/Outputs/*

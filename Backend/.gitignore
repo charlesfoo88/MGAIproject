@@ -48,10 +48,10 @@ Source_Videos/*.mp4
 Source_Videos/*.avi
 Source_Videos/*.mov
 
-# Models (90MB - deploy separately or use Git LFS)
-# The models/ folder contains sentence-transformers model files
-# For deployment: ensure models/all-MiniLM-L6-v2/ contains all 9 model files
-models/
+# Models - Include bundled sentence-transformers model for teammates
+# (87MB - small enough to commit directly)
+!Models/
+!Models/all-MiniLM-L6-v2/**
 
 # Logs
 *.log
