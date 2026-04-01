@@ -1,0 +1,29 @@
+# MGAI Backend Dependencies
+# Video Processing and AI Pipeline Requirements
+
+# Video processing
+ffmpeg-python>=0.2.0         # Video extraction, stitching, and subtitle attachment
+
+# Text embeddings and similarity
+sentence-transformers>=2.2.0  # Semantic embeddings for RAG and text processing
+numpy>=1.24.0                 # Numerical operations for embeddings
+
+# LLM API clients
+groq>=0.4.0                   # Groq API client for Llama models
+google-generativeai>=0.3.0    # Google Gemini API client
+
+# LangChain framework
+langchain                     # LangChain core framework
+langchain-groq                # LangChain integration for Groq
+langchain-google-genai        # LangChain integration for Google Gemini
+langchain-core                # LangChain core components
+
+# Web API framework
+fastapi>=0.104.0              # Modern web framework for building APIs
+uvicorn>=0.24.0               # ASGI server for FastAPI
+python-multipart>=0.0.6       # Form data parsing for file uploads
+requests>=2.31.0              # HTTP client for API testing
+
+# Knowledge base building
+wikipedia-api>=0.13.0         # Wikipedia API for entity descriptions
+python-dotenv>=1.0.0          # Environment variable management (.env files)

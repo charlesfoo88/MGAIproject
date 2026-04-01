@@ -1,0 +1,200 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f4f4f4;
+}
+
+.page {
+  max-width: 900px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.card, .output-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.field label {
+  font-weight: bold;
+}
+
+select, button {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background: #2563eb;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.status {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.video-shell {
+  position: relative;
+  background: black;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+video {
+  width: 100%;
+}
+
+.caption {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  background: rgba(0,0,0,0.6);
+  padding: 8px;
+}
+
+#placeholder {
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: gray;
+}
+
+/* Reels Container - Two Column Grid */
+.reels-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* Reel Titles */
+.reel-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-left: 12px;
+  border-left: 4px solid #ccc;
+}
+
+.reel-title.reel-a {
+  border-left-color: #22c55e; /* Green */
+}
+
+.reel-title.reel-b {
+  border-left-color: #3b82f6; /* Blue */
+}
+
+/* Event Badges */
+.event-badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-goal {
+  background-color: #22c55e;
+  color: white;
+}
+
+.badge-foul {
+  background-color: #f97316;
+  color: white;
+}
+
+.badge-substitution {
+  background-color: #6b7280;
+  color: white;
+}
+
+.badge-penalty {
+  background-color: #ef4444;
+  color: white;
+}
+
+.badge-var {
+  background-color: #eab308;
+  color: white;
+}
+
+.badge-default {
+  background-color: #9ca3af;
+  color: white;
+}
+
+/* Caption Items */
+.caption-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.caption-item:last-child {
+  border-bottom: none;
+}
+
+.caption-text {
+  font-style: italic;
+  color: #444;
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  color: #2563eb;
+  font-weight: bold;
+  padding: 20px;
+}
+
+/* Error Box */
+.error-box {
+  background: #fee2e2;
+  border: 1px solid #ef4444;
+  padding: 12px;
+  border-radius: 8px;
+  color: #991b1b;
+  margin-bottom: 20px;
+}
+
+/* Stats Bar */
+.stats-bar {
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .reels-container {
+    grid-template-columns: 1fr;
+  }
+}

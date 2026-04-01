@@ -1,0 +1,20 @@
+{
+  "user_preference": "I am an Arsenal fan",
+  "event_count": 9,
+  "captions": [
+    "Disaster strikes for the Gunners as Erling Haaland scores the opening goal for Manchester City in the 22nd minute, finishing from close range after a well-orchestrated City build-up. The Norwegian striker's clinical finish gives City an early 0-1 lead. Arsenal will need to regroup and respond to get back into the match.",
+    "What a moment for Arsenal as Gabriel Martinelli equalizes just before half-time, capping off a swift counter-attack with a clinical finish! The Emirates faithful erupt in a frenzy of cheers and applause as the score is now 1-1, setting the stage for a thrilling second half. Martinelli's goal is a massive boost for the Gunners.",
+    "Frustration for Arsenal as Rodri's cynical foul stops a promising counter-attack in its tracks, earning City a free kick in a precarious position. The Gunners will need to be cautious and defend solidly to prevent City from capitalizing on the resulting set piece. The referee's decision sparks a heated reaction from the Arsenal bench.",
+    "The referee heads to the monitor for a VAR review, and the Wembley crowd holds its collective breath as a possible penalty incident is scrutinized. The tension is palpable as Arsenal fans anxiously await the decision, hoping it won't go against their team. Will the referee's initial call stand, or will VAR intervene?",
+    "Bukayo Saka takes the reins, cutting inside and unleashing a mesmerizing curler that finds the far corner, putting Arsenal ahead 2-1! The Gunners' bench erupts in jubilation as Saka's masterstroke sends the Arsenal faithful into raptures. This could be the turning point in the match.",
+    "A hero's ovation for Gabriel Martinelli as he makes way for Leandro Trossard in the 76th minute, the crowd showing their appreciation for the Brazilian's equalizing goal earlier in the match. Martinelli's substitution marks a change in strategy for Arsenal, who will look to Trossard to bring fresh legs and creativity to the attack.",
+    "De Bruyne unleashes a powerful shot from 25 yards, but the Arsenal goalkeeper produces an incredible save to deny City an equalizer! The crowd goes wild as the Gunners' stopper showcases his reflexes, preserving the 2-1 lead and dealing a significant blow to City's comeback hopes.",
+    "Late drama unfolds at Wembley as Kyle Walker brings down an Arsenal attacker in the box, prompting the referee to point to the spot and award a penalty to the Gunners! The Arsenal faithful are on the edge of their seats, sensing a chance to seal the win and claim the EFL Cup title.",
+    "Ice-cold Bukayo Saka steps up and converts the penalty with ease, slotting it past the City goalkeeper to make it 3-1 and effectively seal the deal for Arsenal! The Gunners' bench empties as players rush to congratulate Saka, and the Arsenal fans are delirious, knowing the EFL Cup is heading back to the Emirates. What a moment for the Gunners!"
+  ],
+  "time_taken": 3.4,
+  "tokens_used": 1442,
+  "prompt_tokens": 783,
+  "completion_tokens": 659,
+  "status": "success"
+}

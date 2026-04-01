@@ -1,0 +1,94 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# API Keys (if any)
+*.key
+secrets/
+
+# Operating System
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Backend specific
+Backend/__pycache__/
+Backend/*.pyc
+Backend/Outputs/*.mp4
+Backend/Source_Videos/*.mp4
+Backend/models/
+Backend/.pytest_cache/
+Backend/temp/
+Backend/tmp/
+
+# Frontend (Node/React)
+Frontend/node_modules/
+Frontend/build/
+Frontend/dist/
+Frontend/.env.local
+Frontend/.env.development.local
+Frontend/.env.test.local
+Frontend/.env.production.local
+Frontend/npm-debug.log*
+Frontend/yarn-debug.log*
+Frontend/yarn-error.log*
+
+# Large files - models (if not bundled)
+*.bin
+*.safetensors
+*.onnx
+*.pt
+*.pth
+*.h5
+
+# Keep certain directories but ignore contents
+Backend/Outputs/*
+!Backend/Outputs/.gitkeep
+Backend/Source_Videos/*
+!Backend/Source_Videos/.gitkeep

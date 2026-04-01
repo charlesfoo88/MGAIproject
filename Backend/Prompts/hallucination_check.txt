@@ -1,0 +1,25 @@
+You are a fact-checker reviewing a sports highlight caption.
+
+Caption to check:
+{caption_text}
+
+Confirmed entities for this event:
+{confirmed_entities}
+- Nicknames and aliases for the above teams and players are also considered confirmed.
+
+Important rules for checking:
+- Generic football terms are NOT hallucinations: attacker, goalkeeper, striker, foul, penalty, box, spot, cup, glory, momentum, counter-attack
+- Time references are NOT hallucinations: minutes, match time, half-time, 88th minute, 76:00 etc.
+- Stadium nicknames are NOT hallucinations: Emirates, The Emirates, Etihad, The Etihad, Wembley
+- "EFL Cup title", "EFL Cup", "the cup", "cup dreams", "cup glory" are confirmed — they refer to the match competition which is confirmed.
+- "Emirates faithful", "the faithful", "Gunners faithful" are confirmed — they refer to Arsenal supporters and are acceptable fan terminology.
+- Only flag actual player names, team names, or scores that are NOT in the confirmed entities list above.
+
+Task: Check if the caption mentions any player name, team name, or score
+that is NOT in the confirmed entities list above.
+
+Answer with exactly:
+PASS — if the caption only mentions confirmed entities
+FAIL: [list the unsupported mentions] — if the caption mentions anything not confirmed
+
+Output only PASS or FAIL with the unsupported mentions. No explanation.
