@@ -124,7 +124,7 @@ def extract_and_stitch(
                 # Concatenate using ffmpeg concat demuxer
                 (
                     ffmpeg
-                    .input(concat_file, format='concat')
+                    .input(concat_file, format='concat', safe=0)
                     .output(temp_output, c='copy')
                     .overwrite_output()
                     .run(quiet=True, capture_stdout=True, capture_stderr=True)

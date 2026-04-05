@@ -16,13 +16,22 @@ class ScoreContext(BaseModel):
     score_change_detected: bool
 
 
+# ===================================================================
+# LEGACY CLASSES - NOT USED BY PIPELINE
+# ===================================================================
+# WARNING: These classes exist only for backward compatibility.
+# DO NOT USE in new code. Mark for future removal.
+# ===================================================================
+
 class ModalityScores(BaseModel):
+    """LEGACY - DO NOT USE - Placeholder for old mock data format"""
     audio: float
     visual: float
     context: float
 
 
 class FeatureVector(BaseModel):
+    """LEGACY - DO NOT USE - Placeholder for old mock data format (54 fields)"""
     audio_peak: float
     audio_density: float
     audio_excitement: float
@@ -58,64 +67,89 @@ class FeatureVector(BaseModel):
 
 
 class TopLabel(BaseModel):
+    """LEGACY - DO NOT USE - Placeholder for old mock data format"""
     label: str
     score: float
 
 
 class DynamicAdjustments(BaseModel):
+    """LEGACY - DO NOT USE - Placeholder for old mock data format"""
     score_change: Optional[float] = None
     celebration: Optional[float] = None
     crowd_peak: Optional[float] = None
 
 
 class HighlightCandidate(BaseModel):
-    """Model for D15 highlight_candidates_mock.json"""
+    """Model for D15 highlight_candidates.json - Updated for Approach B compatibility"""
+    # Required fields (present in Approach B)
     segment_id: str
     time_range: TimeRange
     predicted_event_type: str
     confidence: float
     importance_score: float
     importance_rank: int
-    team: Optional[str] = None
-    players: List[str]
-    score_after_event: str
-    score_context: ScoreContext
-    match_phase: str
-    match_time_display: str
-    ocr_text: List[str]
-    modality_scores: ModalityScores
-    feature_vector: FeatureVector
-    top_labels: List[TopLabel]
-    context_tags: List[str]
-    emotion_tags: List[str]
+    context_summary: str
     domain_inference: str
     domain_confidence: float
-    about_summary: str
-    judgment_criteria: List[str]
-    context_summary: str
-    prompt_template: str
-    analysis_prompt: str
-    dynamic_adjustments: DynamicAdjustments
-    supporting_audio_event_ids: List[str]
-    supporting_video_event_ids: List[str]
-    rationale: List[str]
-    heuristic_importance_score: float
-    learned_importance_score: Optional[float] = None
-    ranking_model: str
-    importance_reasons: List[Any]
+    
+    # Approach B fields - optional
+    team: Optional[str] = None
+    players: Optional[List[str]] = []
+    emotion_tags: Optional[List[str]] = []
+    
+    # ===================================================================
+    # LEGACY FIELDS - NOT USED BY PIPELINE
+    # ===================================================================
+    # WARNING: These fields exist only for backward compatibility with old
+    # mock data format. NONE of these are accessed by pipeline.py, agents,
+    # or any active code. DO NOT USE in new code.
+    # 
+    # TODO: Remove in future refactor after confirming no external dependencies
+    # 
+    # Fields marked for removal:
+    # - modality_scores, feature_vector (54 sub-fields)
+    # - top_labels, context_tags, emotion_tags (partially used)
+    # - about_summary, judgment_criteria, prompt_template, analysis_prompt
+    # - dynamic_adjustments, supporting_*_event_ids, rationale
+    # - heuristic_importance_score, learned_importance_score
+    # - ranking_model, importance_reasons
+    # ===================================================================
+    score_after_event: Optional[str] = None
+    score_context: Optional[ScoreContext] = None
+    match_phase: Optional[str] = None
+    match_time_display: Optional[str] = None
+    ocr_text: Optional[List[str]] = []
+    modality_scores: Optional[ModalityScores] = None  # LEGACY - DO NOT USE
+    feature_vector: Optional[FeatureVector] = None  # LEGACY - DO NOT USE
+    top_labels: Optional[List[TopLabel]] = []  # LEGACY - DO NOT USE
+    context_tags: Optional[List[str]] = []  # LEGACY - DO NOT USE
+    about_summary: Optional[str] = None  # LEGACY - DO NOT USE
+    judgment_criteria: Optional[List[str]] = []  # LEGACY - DO NOT USE
+    prompt_template: Optional[str] = None  # LEGACY - DO NOT USE
+    analysis_prompt: Optional[str] = None  # LEGACY - DO NOT USE
+    dynamic_adjustments: Optional[DynamicAdjustments] = None  # LEGACY - DO NOT USE
+    supporting_audio_event_ids: Optional[List[str]] = []  # LEGACY - DO NOT USE
+    supporting_video_event_ids: Optional[List[str]] = []  # LEGACY - DO NOT USE
+    rationale: Optional[List[str]] = []  # LEGACY - DO NOT USE
+    heuristic_importance_score: Optional[float] = None  # LEGACY - DO NOT USE
+    learned_importance_score: Optional[float] = None  # LEGACY - DO NOT USE
+    ranking_model: Optional[str] = None  # LEGACY - DO NOT USE
+    importance_reasons: Optional[List[Any]] = []  # LEGACY - DO NOT USE
 
 
 # D17 DLHandoff Schema
 class MatchContext(BaseModel):
     match_id: str
-    video_id: str
     competition: str
     season: str
-    date: str
     venue: str
     home_team: str
     away_team: str
     final_score: str
+    # Optional fields - different between mock and Approach B
+    video_id: Optional[str] = None
+    date: Optional[str] = None
+    match_date: Optional[str] = None  # Approach B uses match_date instead of date
 
 
 class EntityRegistry(BaseModel):
@@ -141,12 +175,13 @@ class HandoffEvent(BaseModel):
     confidence: float
     team: Optional[str] = None
     players: List[str]
-    score_after_event: str
-    clip_start_sec: float
-    clip_end_sec: float
-    ocr_text: List[str]
     match_phase: str
     context: EventContext
+    # Optional fields - may be None for non-goal events or when timestamps unavailable
+    score_after_event: Optional[str] = None
+    clip_start_sec: Optional[float] = None
+    clip_end_sec: Optional[float] = None
+    ocr_text: Optional[List[str]] = []
 
 
 class ScoreProgression(BaseModel):

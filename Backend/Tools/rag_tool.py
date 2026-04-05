@@ -275,6 +275,15 @@ if __name__ == "__main__":
         print_and_save(f"  {entity}: {len(result)} chars")
     print_and_save()
 
+    # Test 9: Test newly added match players
+    new_players = ["De Bruyne", "Martinelli", "Walker", "Trossard", "Rodri"]
+    print_and_save("[Test 9] Testing newly added match players...")
+    for player in new_players:
+        result = lookup(player)
+        status = "✓" if result else "✗"
+        print_and_save(f"  {status} {player}: {'Found' if result else 'NOT FOUND'} {f'({len(result)} chars)' if result else ''}")
+    print_and_save()
+
     print_and_save("=" * 60)
     print_and_save("All tests completed!")
     print_and_save("=" * 60)

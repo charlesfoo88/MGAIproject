@@ -1,0 +1,67 @@
+{
+  "match_context": {
+    "match_id": "string",
+    "home_team": "string",
+    "away_team": "string",
+    "competition": "string",
+    "venue": "string",
+    "match_date": "YYYY-MM-DD",
+    "final_score": "H-A",
+    "season": "string"
+  },
+
+  "entity_registry": [
+    {
+      "entity_id": "player_saka",
+      "entity_type": "player",
+      "canonical_name": "Bukayo Saka",
+      "aliases": ["Saka", "B. Saka"],
+      "team_id": "arsenal"
+    },
+    {
+      "entity_id": "team_arsenal",
+      "entity_type": "team",
+      "canonical_name": "Arsenal",
+      "aliases": ["Gunners", "AFC", "The Gunners"],
+      "team_id": "arsenal"
+    }
+  ],
+
+  "score_progression": [
+    {
+      "time": "0:00",
+      "score": "0-0",
+      "event": "kickoff"
+    },
+    {
+      "time": "23:00",
+      "score": "1-0",
+      "scorer": "Kai Havertz",
+      "team": "Arsenal",
+      "event": "goal"
+    }
+  ],
+
+  "events": [
+    {
+      "clip_id": "segment_001",
+      "time": "23:00",
+      "time_seconds": 1380.0,
+      "event_type": "goal",
+      "importance": 0.95,
+      "confidence": 0.99,
+      "team": "Arsenal",
+      "players": ["Kai Havertz"],
+      "score_after_event": "1-0",
+      "clip_start_sec": 1378.0,
+      "clip_end_sec": 1384.0,
+      "ocr_text": ["Havertz", "23:00", "1-0", "ARS", "MCI"],
+      "match_phase": "first_half",
+      "context": {
+        "previous_event": null,
+        "next_event": "goal",
+        "narrative": "Havertz opens the scoring for Arsenal with a clinical finish."
+      }
+    }
+  ]
+}

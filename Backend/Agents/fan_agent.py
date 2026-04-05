@@ -23,6 +23,7 @@ try:
     )
     from ..State import SharedState
     from ..Schemas import HandoffEvent, ReelEvent
+    from ..Schemas.agent_output_schema import EvidenceSource
     from ..Tools import lookup as rag_lookup
 except ImportError:
     # Direct execution fallback
@@ -41,6 +42,7 @@ except ImportError:
     )
     from State import SharedState
     from Schemas import HandoffEvent, ReelEvent
+    from Schemas.agent_output_schema import EvidenceSource
     from Tools import lookup as rag_lookup
 
 
@@ -203,11 +205,17 @@ def build_langchain_chain(template_path: Path, provider: str):
     return prompt | llm | StrOutputParser()
 
 
-def build_event_rag_context(event: HandoffEvent, shared_state: SharedState) -> str:
+def build_event_rag_context(event: HandoffEvent, shared_state: SharedState) -> tuple[str, list[str]]:
     """
     Build event-level RAG context using structured-first KB lookup.
+    
+    Returns:
+        Tuple of (context_string, entities_found)
+        - context_string: Formatted RAG facts for prompt
+        - entities_found: List of entity names that had KB facts
     """
     rag_facts = []
+    rag_entities_found = []
     seen_entities = set()
 
     def add_fact(entity: Optional[str]):
@@ -221,6 +229,7 @@ def build_event_rag_context(event: HandoffEvent, shared_state: SharedState) -> s
         fact = rag_lookup(entity)
         if fact:
             rag_facts.append(f"[{entity}] {fact}")
+            rag_entities_found.append(entity)
             seen_entities.add(normalized)
 
     add_fact(shared_state.preferred_entity)
@@ -232,7 +241,8 @@ def build_event_rag_context(event: HandoffEvent, shared_state: SharedState) -> s
     if shared_state.match_context and shared_state.match_context.venue:
         add_fact(shared_state.match_context.venue)
 
-    return "\n\n".join(rag_facts) if rag_facts else ""
+    context_str = "\n\n".join(rag_facts) if rag_facts else ""
+    return context_str, rag_entities_found
 
 
 def fill_prompt_template(
@@ -369,7 +379,7 @@ def generate_captions(
         
         # Build variables dict for this event
         match_ctx = shared_state.match_context
-        rag_context = build_event_rag_context(event, shared_state)
+        rag_context, rag_entities_found = build_event_rag_context(event, shared_state)
         transcript_context = event.context.narrative if hasattr(event.context, 'narrative') else None
         
         variables = {
@@ -392,6 +402,23 @@ def generate_captions(
         # Invoke LangChain chain with variables
         caption = chain.invoke(variables)
         
+        # Build evidence record for this caption
+        evidence = EvidenceSource(
+            d15_fields={
+                "importance_score": event.importance,
+                "confidence": event.confidence,
+                "predicted_event_type": event.event_type,
+            },
+            d17_fields={
+                "narrative": event.context.narrative if event.context else None,
+                "score_after_event": event.score_after_event,
+                "players": event.players,
+                "event_type": event.event_type,
+            },
+            rag_facts=rag_entities_found,
+            transcript_chunks=[event.context.narrative] if event.context else []
+        )
+        
         # Create ReelEvent
         reel_event = ReelEvent(
             segment_id=event.clip_id,
@@ -400,6 +427,7 @@ def generate_captions(
             caption=caption,
             event_type=event.event_type,
             team=event.team,
+            evidence=evidence,
         )
         
         reel_events.append(reel_event)

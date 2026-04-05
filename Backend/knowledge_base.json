@@ -767,7 +767,9 @@
       "name": "Martin Ødegaard",
       "aliases": [
         "Ødegaard",
-        "Martin"
+        "Odegaard",
+        "Martin",
+        "M. Ødegaard"
       ],
       "team": "Arsenal FC",
       "position": "Attacking Midfield",
@@ -813,7 +815,8 @@
     "kai_havertz": {
       "name": "Kai Havertz",
       "aliases": [
-        "Havertz"
+        "Havertz",
+        "K. Havertz"
       ],
       "team": "Arsenal FC",
       "position": "Centre-Forward",
@@ -837,7 +840,8 @@
       "name": "Myles Lewis-Skelly",
       "aliases": [
         "Lewis-Skelly",
-        "Myles"
+        "Myles",
+        "M. Lewis-Skelly"
       ],
       "team": "Arsenal FC",
       "position": "Left-Back",
@@ -880,6 +884,30 @@
       "nationality": "Italy",
       "description": "Riccardo Calafiori (born 19 May 2002) is an Italian professional footballer who plays as a defender for Premier League club Arsenal and the Italy national team.\nCalafiori began his senior career with Roma. He featured sparingly for the club, and was loaned out to Genoa, before departing to Basel and later Bologna. In July 2024, he joined Premier League club Arsenal for an initial fee of £33.6 million.\nCalafiori has represented Italy through various youth levels since 2017, and made his senior debut in June 2024.",
       "dateOfBirth": "2002-05-19"
+    },
+    "thomas_partey": {
+      "name": "Thomas Partey",
+      "aliases": [
+        "Partey",
+        "T. Partey"
+      ],
+      "team": "Arsenal FC",
+      "position": "Midfielder",
+      "nationality": "Ghana",
+      "description": "Thomas Partey is a Ghanaian professional footballer who plays as a midfielder for Arsenal.",
+      "dateOfBirth": "1993-06-13"
+    },
+    "ethan_nwaneri": {
+      "name": "Ethan Nwaneri",
+      "aliases": [
+        "Nwaneri",
+        "E. Nwaneri"
+      ],
+      "team": "Arsenal FC",
+      "position": "Midfielder",
+      "nationality": "England",
+      "description": "Ethan Nwaneri is an English professional footballer who plays as a midfielder for Arsenal.",
+      "dateOfBirth": "2007-03-21"
     },
     "piero_hincapié": {
       "name": "Piero Hincapié",
@@ -7918,7 +7946,8 @@
       "name": "Erling Haaland",
       "aliases": [
         "Haaland",
-        "Erling"
+        "Erling",
+        "E. Haaland"
       ],
       "team": "Manchester City FC",
       "position": "Centre-Forward",

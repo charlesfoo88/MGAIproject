@@ -13,12 +13,12 @@ from pathlib import Path
 backend_dir = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(backend_dir))
 
+from config import D17_FILE_PATH, ACTIVE_MATCH
+
 
 def load_mock_data():
-    """Load D17 handoff mock data."""
-    mock_data_path = backend_dir / "Mock_Data" / "dl_handoff_mock.json"
-    
-    with open(mock_data_path, 'r', encoding='utf-8') as f:
+    """Load D17 handoff data from active match."""
+    with open(D17_FILE_PATH, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
     return data
@@ -181,8 +181,8 @@ if __name__ == "__main__":
     result = run_baseline(preference, top_k=5)
     
     # Save results
-    output_path = backend_dir / "baselines" / "baseline_keyword_results.json"
-    output_path.parent.mkdir(exist_ok=True)
+    output_path = backend_dir / "Outputs" / ACTIVE_MATCH / "baseline_keyword_results.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(result, f, indent=2, ensure_ascii=False)

@@ -14,8 +14,9 @@ from datetime import datetime
 backend_dir = Path(__file__).resolve().parent
 sys.path.insert(0, str(backend_dir))
 
-# Import pipeline
+# Import pipeline and config
 from pipeline import run_pipeline
+from config import ACTIVE_MATCH
 
 # Test preferences
 TEST_PREFERENCES = [
@@ -123,8 +124,8 @@ def run_evaluation():
     print_summary_statistics(results)
     
     # Save results to JSON
-    output_path = backend_dir / "Outputs" / "evaluation_results.json"
-    output_path.parent.mkdir(exist_ok=True)
+    output_path = backend_dir / "Outputs" / ACTIVE_MATCH / "evaluation_results.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     
     evaluation_data = {
         "match_name": MATCH_NAME,

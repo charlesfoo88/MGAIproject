@@ -1,0 +1,763 @@
+[
+  {
+    "segment_id": "segment_001",
+    "time_range": {
+      "start": 87,
+      "end": 97
+    },
+    "predicted_event_type": "goal",
+    "confidence": 0.99,
+    "importance_score": 0.95,
+    "importance_rank": 1,
+    "team": "Arsenal",
+    "players": [
+      "M. \u00d8degaard",
+      "K. Havertz"
+    ],
+    "score_after_event": "1-0",
+    "score_context": {
+      "home_team": "Arsenal",
+      "away_team": "Manchester City",
+      "home_score": 1,
+      "away_score": 0,
+      "score_change_detected": true
+    },
+    "match_phase": "first_half",
+    "match_time_display": "2:00",
+    "ocr_text": [
+      "M. \u00d8degaard",
+      "2:00"
+    ],
+    "modality_scores": {
+      "audio": 0.95,
+      "visual": 0.94,
+      "context": 0.92
+    },
+    "feature_vector": {
+      "audio_peak": 0.95,
+      "audio_density": 1.0,
+      "audio_excitement": 0.92,
+      "audio_whistle": 0.85,
+      "audio_applause": 0.0,
+      "audio_crowd": 0.96,
+      "audio_commentary": 1.0,
+      "audio_score_update": 1.0,
+      "audio_celebration": 0.88,
+      "audio_foul_or_penalty": 0.0,
+      "audio_stoppage_review": 0.0,
+      "audio_substitution": 0.0,
+      "audio_injury_pause": 0.0,
+      "audio_high_tension": 0.8,
+      "visual_motion": 0.85,
+      "visual_replay": 0.0,
+      "visual_ocr": 1.0,
+      "visual_face": 1.0,
+      "visual_face_count": 6.0,
+      "visual_positive_emotion": 0.91,
+      "visual_negative_emotion": 0.05,
+      "visual_surprise": 0.72,
+      "context_scoreboard_visible": 1.0,
+      "context_crowd_reaction": 0.95,
+      "context_celebration": 0.9,
+      "context_disappointment": 0.0,
+      "context_stoppage_review": 0.0,
+      "context_bench_reaction": 0.6,
+      "context_highlight_package": 0.0,
+      "context_substitution": 0.0,
+      "context_injury": 0.0,
+      "context_high_tension": 0.75
+    },
+    "top_labels": [
+      {
+        "label": "goal",
+        "score": 0.97
+      },
+      {
+        "label": "celebration",
+        "score": 0.88
+      },
+      {
+        "label": "crowd_peak",
+        "score": 0.72
+      }
+    ],
+    "context_tags": [
+      "goal",
+      "score_change",
+      "crowd_eruption"
+    ],
+    "emotion_tags": [
+      "excitement",
+      "celebration"
+    ],
+    "domain_inference": "soccer_broadcast",
+    "domain_confidence": 0.96,
+    "about_summary": "M. \u00d8degaard \u2014 Goal for Arsenal at 2 minutes.",
+    "judgment_criteria": [
+      "Goal event from API-Football",
+      "Video timestamp confirmed by Gemini Vision",
+      "Score progression tracked"
+    ],
+    "context_summary": "M. \u00d8degaard \u2014 Goal for Arsenal at 2 minutes.",
+    "prompt_template": "default_soccer_goal",
+    "analysis_prompt": "Analyze goal scored by M. \u00d8degaard at 2:00",
+    "dynamic_adjustments": {
+      "adjust_for_user_team": true,
+      "adjust_for_player_mention": true,
+      "adjust_for_score_significance": true
+    },
+    "supporting_audio_event_ids": [],
+    "supporting_video_event_ids": [],
+    "rationale": [
+      "Goal scored by M. \u00d8degaard",
+      "Match minute: 2",
+      "Score after: 1-0"
+    ],
+    "heuristic_importance_score": 0.95,
+    "ranking_model": "api_football_gemini_vision",
+    "importance_reasons": [
+      {
+        "reason": "Goal event",
+        "weight": 0.95
+      },
+      {
+        "reason": "Score change",
+        "weight": 0.9
+      }
+    ]
+  },
+  {
+    "segment_id": "segment_003",
+    "time_range": {
+      "start": 368,
+      "end": 378
+    },
+    "predicted_event_type": "goal",
+    "confidence": 0.99,
+    "importance_score": 0.95,
+    "importance_rank": 2,
+    "team": "Manchester City",
+    "players": [
+      "E. Haaland",
+      "Savinho"
+    ],
+    "score_after_event": "1-1",
+    "score_context": {
+      "home_team": "Arsenal",
+      "away_team": "Manchester City",
+      "home_score": 1,
+      "away_score": 1,
+      "score_change_detected": true
+    },
+    "match_phase": "second_half",
+    "match_time_display": "55:00",
+    "ocr_text": [
+      "E. Haaland",
+      "55:00"
+    ],
+    "modality_scores": {
+      "audio": 0.95,
+      "visual": 0.94,
+      "context": 0.92
+    },
+    "feature_vector": {
+      "audio_peak": 0.95,
+      "audio_density": 1.0,
+      "audio_excitement": 0.92,
+      "audio_whistle": 0.85,
+      "audio_applause": 0.0,
+      "audio_crowd": 0.96,
+      "audio_commentary": 1.0,
+      "audio_score_update": 1.0,
+      "audio_celebration": 0.88,
+      "audio_foul_or_penalty": 0.0,
+      "audio_stoppage_review": 0.0,
+      "audio_substitution": 0.0,
+      "audio_injury_pause": 0.0,
+      "audio_high_tension": 0.8,
+      "visual_motion": 0.85,
+      "visual_replay": 0.0,
+      "visual_ocr": 1.0,
+      "visual_face": 1.0,
+      "visual_face_count": 6.0,
+      "visual_positive_emotion": 0.91,
+      "visual_negative_emotion": 0.05,
+      "visual_surprise": 0.72,
+      "context_scoreboard_visible": 1.0,
+      "context_crowd_reaction": 0.95,
+      "context_celebration": 0.9,
+      "context_disappointment": 0.0,
+      "context_stoppage_review": 0.0,
+      "context_bench_reaction": 0.6,
+      "context_highlight_package": 0.0,
+      "context_substitution": 0.0,
+      "context_injury": 0.0,
+      "context_high_tension": 0.75
+    },
+    "top_labels": [
+      {
+        "label": "goal",
+        "score": 0.97
+      },
+      {
+        "label": "celebration",
+        "score": 0.88
+      },
+      {
+        "label": "crowd_peak",
+        "score": 0.72
+      }
+    ],
+    "context_tags": [
+      "goal",
+      "score_change",
+      "crowd_eruption"
+    ],
+    "emotion_tags": [
+      "excitement",
+      "celebration"
+    ],
+    "domain_inference": "soccer_broadcast",
+    "domain_confidence": 0.96,
+    "about_summary": "E. Haaland \u2014 Goal for Manchester City at 55 minutes.",
+    "judgment_criteria": [
+      "Goal event from API-Football",
+      "Video timestamp confirmed by Gemini Vision",
+      "Score progression tracked"
+    ],
+    "context_summary": "E. Haaland \u2014 Goal for Manchester City at 55 minutes.",
+    "prompt_template": "default_soccer_goal",
+    "analysis_prompt": "Analyze goal scored by E. Haaland at 55:00",
+    "dynamic_adjustments": {
+      "adjust_for_user_team": true,
+      "adjust_for_player_mention": true,
+      "adjust_for_score_significance": true
+    },
+    "supporting_audio_event_ids": [],
+    "supporting_video_event_ids": [],
+    "rationale": [
+      "Goal scored by E. Haaland",
+      "Match minute: 55",
+      "Score after: 1-1"
+    ],
+    "heuristic_importance_score": 0.95,
+    "ranking_model": "api_football_gemini_vision",
+    "importance_reasons": [
+      {
+        "reason": "Goal event",
+        "weight": 0.95
+      },
+      {
+        "reason": "Score change",
+        "weight": 0.9
+      }
+    ]
+  },
+  {
+    "segment_id": "segment_004",
+    "time_range": {
+      "start": 437,
+      "end": 447
+    },
+    "predicted_event_type": "goal",
+    "confidence": 0.99,
+    "importance_score": 0.95,
+    "importance_rank": 3,
+    "team": "Arsenal",
+    "players": [
+      "T. Partey"
+    ],
+    "score_after_event": "2-1",
+    "score_context": {
+      "home_team": "Arsenal",
+      "away_team": "Manchester City",
+      "home_score": 2,
+      "away_score": 1,
+      "score_change_detected": true
+    },
+    "match_phase": "second_half",
+    "match_time_display": "56:00",
+    "ocr_text": [
+      "T. Partey",
+      "56:00"
+    ],
+    "modality_scores": {
+      "audio": 0.95,
+      "visual": 0.94,
+      "context": 0.92
+    },
+    "feature_vector": {
+      "audio_peak": 0.95,
+      "audio_density": 1.0,
+      "audio_excitement": 0.92,
+      "audio_whistle": 0.85,
+      "audio_applause": 0.0,
+      "audio_crowd": 0.96,
+      "audio_commentary": 1.0,
+      "audio_score_update": 1.0,
+      "audio_celebration": 0.88,
+      "audio_foul_or_penalty": 0.0,
+      "audio_stoppage_review": 0.0,
+      "audio_substitution": 0.0,
+      "audio_injury_pause": 0.0,
+      "audio_high_tension": 0.8,
+      "visual_motion": 0.85,
+      "visual_replay": 0.0,
+      "visual_ocr": 1.0,
+      "visual_face": 1.0,
+      "visual_face_count": 6.0,
+      "visual_positive_emotion": 0.91,
+      "visual_negative_emotion": 0.05,
+      "visual_surprise": 0.72,
+      "context_scoreboard_visible": 1.0,
+      "context_crowd_reaction": 0.95,
+      "context_celebration": 0.9,
+      "context_disappointment": 0.0,
+      "context_stoppage_review": 0.0,
+      "context_bench_reaction": 0.6,
+      "context_highlight_package": 0.0,
+      "context_substitution": 0.0,
+      "context_injury": 0.0,
+      "context_high_tension": 0.75
+    },
+    "top_labels": [
+      {
+        "label": "goal",
+        "score": 0.97
+      },
+      {
+        "label": "celebration",
+        "score": 0.88
+      },
+      {
+        "label": "crowd_peak",
+        "score": 0.72
+      }
+    ],
+    "context_tags": [
+      "goal",
+      "score_change",
+      "crowd_eruption"
+    ],
+    "emotion_tags": [
+      "excitement",
+      "celebration"
+    ],
+    "domain_inference": "soccer_broadcast",
+    "domain_confidence": 0.96,
+    "about_summary": "T. Partey \u2014 Goal for Arsenal at 56 minutes.",
+    "judgment_criteria": [
+      "Goal event from API-Football",
+      "Video timestamp confirmed by Gemini Vision",
+      "Score progression tracked"
+    ],
+    "context_summary": "T. Partey \u2014 Goal for Arsenal at 56 minutes.",
+    "prompt_template": "default_soccer_goal",
+    "analysis_prompt": "Analyze goal scored by T. Partey at 56:00",
+    "dynamic_adjustments": {
+      "adjust_for_user_team": true,
+      "adjust_for_player_mention": true,
+      "adjust_for_score_significance": true
+    },
+    "supporting_audio_event_ids": [],
+    "supporting_video_event_ids": [],
+    "rationale": [
+      "Goal scored by T. Partey",
+      "Match minute: 56",
+      "Score after: 2-1"
+    ],
+    "heuristic_importance_score": 0.95,
+    "ranking_model": "api_football_gemini_vision",
+    "importance_reasons": [
+      {
+        "reason": "Goal event",
+        "weight": 0.95
+      },
+      {
+        "reason": "Score change",
+        "weight": 0.9
+      }
+    ]
+  },
+  {
+    "segment_id": "segment_005",
+    "time_range": {
+      "start": 484,
+      "end": 494
+    },
+    "predicted_event_type": "goal",
+    "confidence": 0.99,
+    "importance_score": 0.95,
+    "importance_rank": 4,
+    "team": "Arsenal",
+    "players": [
+      "M. Lewis-Skelly",
+      "D. Rice"
+    ],
+    "score_after_event": "3-1",
+    "score_context": {
+      "home_team": "Arsenal",
+      "away_team": "Manchester City",
+      "home_score": 3,
+      "away_score": 1,
+      "score_change_detected": true
+    },
+    "match_phase": "second_half",
+    "match_time_display": "62:00",
+    "ocr_text": [
+      "M. Lewis-Skelly",
+      "62:00"
+    ],
+    "modality_scores": {
+      "audio": 0.95,
+      "visual": 0.94,
+      "context": 0.92
+    },
+    "feature_vector": {
+      "audio_peak": 0.95,
+      "audio_density": 1.0,
+      "audio_excitement": 0.92,
+      "audio_whistle": 0.85,
+      "audio_applause": 0.0,
+      "audio_crowd": 0.96,
+      "audio_commentary": 1.0,
+      "audio_score_update": 1.0,
+      "audio_celebration": 0.88,
+      "audio_foul_or_penalty": 0.0,
+      "audio_stoppage_review": 0.0,
+      "audio_substitution": 0.0,
+      "audio_injury_pause": 0.0,
+      "audio_high_tension": 0.8,
+      "visual_motion": 0.85,
+      "visual_replay": 0.0,
+      "visual_ocr": 1.0,
+      "visual_face": 1.0,
+      "visual_face_count": 6.0,
+      "visual_positive_emotion": 0.91,
+      "visual_negative_emotion": 0.05,
+      "visual_surprise": 0.72,
+      "context_scoreboard_visible": 1.0,
+      "context_crowd_reaction": 0.95,
+      "context_celebration": 0.9,
+      "context_disappointment": 0.0,
+      "context_stoppage_review": 0.0,
+      "context_bench_reaction": 0.6,
+      "context_highlight_package": 0.0,
+      "context_substitution": 0.0,
+      "context_injury": 0.0,
+      "context_high_tension": 0.75
+    },
+    "top_labels": [
+      {
+        "label": "goal",
+        "score": 0.97
+      },
+      {
+        "label": "celebration",
+        "score": 0.88
+      },
+      {
+        "label": "crowd_peak",
+        "score": 0.72
+      }
+    ],
+    "context_tags": [
+      "goal",
+      "score_change",
+      "crowd_eruption"
+    ],
+    "emotion_tags": [
+      "excitement",
+      "celebration"
+    ],
+    "domain_inference": "soccer_broadcast",
+    "domain_confidence": 0.96,
+    "about_summary": "M. Lewis-Skelly \u2014 Goal for Arsenal at 62 minutes.",
+    "judgment_criteria": [
+      "Goal event from API-Football",
+      "Video timestamp confirmed by Gemini Vision",
+      "Score progression tracked"
+    ],
+    "context_summary": "M. Lewis-Skelly \u2014 Goal for Arsenal at 62 minutes.",
+    "prompt_template": "default_soccer_goal",
+    "analysis_prompt": "Analyze goal scored by M. Lewis-Skelly at 62:00",
+    "dynamic_adjustments": {
+      "adjust_for_user_team": true,
+      "adjust_for_player_mention": true,
+      "adjust_for_score_significance": true
+    },
+    "supporting_audio_event_ids": [],
+    "supporting_video_event_ids": [],
+    "rationale": [
+      "Goal scored by M. Lewis-Skelly",
+      "Match minute: 62",
+      "Score after: 3-1"
+    ],
+    "heuristic_importance_score": 0.95,
+    "ranking_model": "api_football_gemini_vision",
+    "importance_reasons": [
+      {
+        "reason": "Goal event",
+        "weight": 0.95
+      },
+      {
+        "reason": "Score change",
+        "weight": 0.9
+      }
+    ]
+  },
+  {
+    "segment_id": "segment_009",
+    "time_range": {
+      "start": 541,
+      "end": 551
+    },
+    "predicted_event_type": "goal",
+    "confidence": 0.99,
+    "importance_score": 0.95,
+    "importance_rank": 5,
+    "team": "Arsenal",
+    "players": [
+      "K. Havertz",
+      "Gabriel Martinelli"
+    ],
+    "score_after_event": "4-1",
+    "score_context": {
+      "home_team": "Arsenal",
+      "away_team": "Manchester City",
+      "home_score": 4,
+      "away_score": 1,
+      "score_change_detected": true
+    },
+    "match_phase": "second_half",
+    "match_time_display": "76:00",
+    "ocr_text": [
+      "K. Havertz",
+      "76:00"
+    ],
+    "modality_scores": {
+      "audio": 0.95,
+      "visual": 0.94,
+      "context": 0.92
+    },
+    "feature_vector": {
+      "audio_peak": 0.95,
+      "audio_density": 1.0,
+      "audio_excitement": 0.92,
+      "audio_whistle": 0.85,
+      "audio_applause": 0.0,
+      "audio_crowd": 0.96,
+      "audio_commentary": 1.0,
+      "audio_score_update": 1.0,
+      "audio_celebration": 0.88,
+      "audio_foul_or_penalty": 0.0,
+      "audio_stoppage_review": 0.0,
+      "audio_substitution": 0.0,
+      "audio_injury_pause": 0.0,
+      "audio_high_tension": 0.8,
+      "visual_motion": 0.85,
+      "visual_replay": 0.0,
+      "visual_ocr": 1.0,
+      "visual_face": 1.0,
+      "visual_face_count": 6.0,
+      "visual_positive_emotion": 0.91,
+      "visual_negative_emotion": 0.05,
+      "visual_surprise": 0.72,
+      "context_scoreboard_visible": 1.0,
+      "context_crowd_reaction": 0.95,
+      "context_celebration": 0.9,
+      "context_disappointment": 0.0,
+      "context_stoppage_review": 0.0,
+      "context_bench_reaction": 0.6,
+      "context_highlight_package": 0.0,
+      "context_substitution": 0.0,
+      "context_injury": 0.0,
+      "context_high_tension": 0.75
+    },
+    "top_labels": [
+      {
+        "label": "goal",
+        "score": 0.97
+      },
+      {
+        "label": "celebration",
+        "score": 0.88
+      },
+      {
+        "label": "crowd_peak",
+        "score": 0.72
+      }
+    ],
+    "context_tags": [
+      "goal",
+      "score_change",
+      "crowd_eruption"
+    ],
+    "emotion_tags": [
+      "excitement",
+      "celebration"
+    ],
+    "domain_inference": "soccer_broadcast",
+    "domain_confidence": 0.96,
+    "about_summary": "K. Havertz \u2014 Goal for Arsenal at 76 minutes.",
+    "judgment_criteria": [
+      "Goal event from API-Football",
+      "Video timestamp confirmed by Gemini Vision",
+      "Score progression tracked"
+    ],
+    "context_summary": "K. Havertz \u2014 Goal for Arsenal at 76 minutes.",
+    "prompt_template": "default_soccer_goal",
+    "analysis_prompt": "Analyze goal scored by K. Havertz at 76:00",
+    "dynamic_adjustments": {
+      "adjust_for_user_team": true,
+      "adjust_for_player_mention": true,
+      "adjust_for_score_significance": true
+    },
+    "supporting_audio_event_ids": [],
+    "supporting_video_event_ids": [],
+    "rationale": [
+      "Goal scored by K. Havertz",
+      "Match minute: 76",
+      "Score after: 4-1"
+    ],
+    "heuristic_importance_score": 0.95,
+    "ranking_model": "api_football_gemini_vision",
+    "importance_reasons": [
+      {
+        "reason": "Goal event",
+        "weight": 0.95
+      },
+      {
+        "reason": "Score change",
+        "weight": 0.9
+      }
+    ]
+  },
+  {
+    "segment_id": "segment_014",
+    "time_range": {
+      "start": 589,
+      "end": 599
+    },
+    "predicted_event_type": "goal",
+    "confidence": 0.99,
+    "importance_score": 0.95,
+    "importance_rank": 6,
+    "team": "Arsenal",
+    "players": [
+      "E. Nwaneri",
+      "D. Rice"
+    ],
+    "score_after_event": "5-1",
+    "score_context": {
+      "home_team": "Arsenal",
+      "away_team": "Manchester City",
+      "home_score": 5,
+      "away_score": 1,
+      "score_change_detected": true
+    },
+    "match_phase": "second_half",
+    "match_time_display": "90:00",
+    "ocr_text": [
+      "E. Nwaneri",
+      "90:00"
+    ],
+    "modality_scores": {
+      "audio": 0.95,
+      "visual": 0.94,
+      "context": 0.92
+    },
+    "feature_vector": {
+      "audio_peak": 0.95,
+      "audio_density": 1.0,
+      "audio_excitement": 0.92,
+      "audio_whistle": 0.85,
+      "audio_applause": 0.0,
+      "audio_crowd": 0.96,
+      "audio_commentary": 1.0,
+      "audio_score_update": 1.0,
+      "audio_celebration": 0.88,
+      "audio_foul_or_penalty": 0.0,
+      "audio_stoppage_review": 0.0,
+      "audio_substitution": 0.0,
+      "audio_injury_pause": 0.0,
+      "audio_high_tension": 0.8,
+      "visual_motion": 0.85,
+      "visual_replay": 0.0,
+      "visual_ocr": 1.0,
+      "visual_face": 1.0,
+      "visual_face_count": 6.0,
+      "visual_positive_emotion": 0.91,
+      "visual_negative_emotion": 0.05,
+      "visual_surprise": 0.72,
+      "context_scoreboard_visible": 1.0,
+      "context_crowd_reaction": 0.95,
+      "context_celebration": 0.9,
+      "context_disappointment": 0.0,
+      "context_stoppage_review": 0.0,
+      "context_bench_reaction": 0.6,
+      "context_highlight_package": 0.0,
+      "context_substitution": 0.0,
+      "context_injury": 0.0,
+      "context_high_tension": 0.75
+    },
+    "top_labels": [
+      {
+        "label": "goal",
+        "score": 0.97
+      },
+      {
+        "label": "celebration",
+        "score": 0.88
+      },
+      {
+        "label": "crowd_peak",
+        "score": 0.72
+      }
+    ],
+    "context_tags": [
+      "goal",
+      "score_change",
+      "crowd_eruption"
+    ],
+    "emotion_tags": [
+      "excitement",
+      "celebration"
+    ],
+    "domain_inference": "soccer_broadcast",
+    "domain_confidence": 0.96,
+    "about_summary": "E. Nwaneri \u2014 Goal for Arsenal at 90 minutes.",
+    "judgment_criteria": [
+      "Goal event from API-Football",
+      "Video timestamp confirmed by Gemini Vision",
+      "Score progression tracked"
+    ],
+    "context_summary": "E. Nwaneri \u2014 Goal for Arsenal at 90 minutes.",
+    "prompt_template": "default_soccer_goal",
+    "analysis_prompt": "Analyze goal scored by E. Nwaneri at 90:00",
+    "dynamic_adjustments": {
+      "adjust_for_user_team": true,
+      "adjust_for_player_mention": true,
+      "adjust_for_score_significance": true
+    },
+    "supporting_audio_event_ids": [],
+    "supporting_video_event_ids": [],
+    "rationale": [
+      "Goal scored by E. Nwaneri",
+      "Match minute: 90",
+      "Score after: 5-1"
+    ],
+    "heuristic_importance_score": 0.95,
+    "ranking_model": "api_football_gemini_vision",
+    "importance_reasons": [
+      {
+        "reason": "Goal event",
+        "weight": 0.95
+      },
+      {
+        "reason": "Score change",
+        "weight": 0.9
+      }
+    ]
+  }
+]

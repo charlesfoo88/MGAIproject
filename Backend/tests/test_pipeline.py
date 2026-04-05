@@ -8,9 +8,12 @@ from datetime import datetime
 backend_dir = Path(__file__).parent.parent  # Go up one level from tests/ to Backend/
 sys.path.insert(0, str(backend_dir))
 
-# Setup result logging
-results_dir = Path(__file__).parent / "results"  # tests/results/
-results_dir.mkdir(exist_ok=True)
+# Import ACTIVE_MATCH from config
+from config import ACTIVE_MATCH
+
+# Setup result logging - organized by match
+results_dir = Path(__file__).parent / "results" / ACTIVE_MATCH  # tests/results/{ACTIVE_MATCH}/
+results_dir.mkdir(parents=True, exist_ok=True)
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 result_file = results_dir / f"test_result_{timestamp}.txt"
 
@@ -124,6 +127,24 @@ for i, score in enumerate(verified_output.preference_alignment_scores, 1):
     reel_label = "Reel A" if i <= reel_a_count else "Reel B"
     event_idx = i if i <= reel_a_count else i - reel_a_count
     print(f"  {reel_label}[{event_idx}]: {score:.3f}")
+
+# Display evidence tracing
+if verified_output.evidence_summary:
+    print("\n" + "=" * 70)
+    print("Evidence Tracing Summary:")
+    print("=" * 70)
+    summary = verified_output.evidence_summary
+    print(f"Total captions traced: {summary.get('total_captions')}")
+    print(f"RAG entities used: {', '.join(summary.get('rag_entities_used', []))}")
+    print(f"D15 fields used: {', '.join(summary.get('d15_fields_used', []))}")
+    print(f"D17 fields used: {', '.join(summary.get('d17_fields_used', []))}")
+    print()
+    print("Per-caption evidence (Reel A):")
+    for i, event in enumerate(verified_output.verified_reel_a, 1):
+        if event.evidence:
+            print(f"  [{i}] RAG facts: {event.evidence.rag_facts}")
+            print(f"       D17 narrative: {str(event.evidence.d17_fields.get('narrative', ''))[:60]}...")
+            print(f"       Importance: {event.evidence.d15_fields.get('importance_score')}")
 
 print("\n" + "=" * 70)
 print("✅ ALL TESTS PASSED!")

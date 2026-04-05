@@ -5,6 +5,8 @@ Caption to check:
 
 Confirmed entities for this event:
 {confirmed_entities}
+- Declan Rice (D. Rice) plays for Arsenal — confirmed
+- Gabriel Martinelli plays for Arsenal — confirmed
 - Nicknames and aliases for the above teams and players are also considered confirmed.
 
 Important rules for checking:

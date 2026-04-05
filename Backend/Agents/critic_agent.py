@@ -25,6 +25,7 @@ try:
     )
     from ..State import SharedState
     from ..Schemas import HandoffEvent, ReelEvent, VerifiedOutput
+    from ..Schemas.verified_output_schema import VerifiedReelEvent
     from ..Tools.embedding_tool import encode, cosine_similarity
     from ..Tools import lookup as rag_lookup
 except ImportError:
@@ -45,6 +46,7 @@ except ImportError:
     )
     from State import SharedState
     from Schemas import HandoffEvent, ReelEvent, VerifiedOutput
+    from Schemas.verified_output_schema import VerifiedReelEvent
     from Tools.embedding_tool import encode, cosine_similarity
     from Tools import lookup as rag_lookup
 
@@ -436,8 +438,31 @@ def run(shared_state: SharedState) -> VerifiedOutput:
     unsupported_mentions = []
     
     # Verified reels (will be updated with recaptions if needed)
-    verified_reel_a = list(shared_state.reel_a_events)
-    verified_reel_b = list(shared_state.reel_b_events)
+    # Convert ReelEvent to VerifiedReelEvent, preserving evidence
+    verified_reel_a = [
+        VerifiedReelEvent(
+            segment_id=event.segment_id,
+            clip_start_sec=event.clip_start_sec,
+            clip_end_sec=event.clip_end_sec,
+            caption=event.caption,
+            event_type=event.event_type,
+            team=event.team,
+            evidence=event.evidence
+        )
+        for event in shared_state.reel_a_events
+    ]
+    verified_reel_b = [
+        VerifiedReelEvent(
+            segment_id=event.segment_id,
+            clip_start_sec=event.clip_start_sec,
+            clip_end_sec=event.clip_end_sec,
+            caption=event.caption,
+            event_type=event.event_type,
+            team=event.team,
+            evidence=event.evidence
+        )
+        for event in shared_state.reel_b_events
+    ]
     
     # ========================================================================
     # Check Reel A (Personalized)
@@ -483,14 +508,15 @@ def run(shared_state: SharedState) -> VerifiedOutput:
                     recaption_chain_personalized
                 )
                 
-                # Update the reel event with new caption
-                verified_reel_a[idx] = ReelEvent(
+                # Update the reel event with new caption, preserving evidence
+                verified_reel_a[idx] = VerifiedReelEvent(
                     segment_id=reel_event.segment_id,
                     clip_start_sec=reel_event.clip_start_sec,
                     clip_end_sec=reel_event.clip_end_sec,
                     caption=new_caption,
                     event_type=reel_event.event_type,
                     team=reel_event.team,
+                    evidence=reel_event.evidence,
                 )
                 
                 print(f"      ✓ New caption: {new_caption[:60]}...")
@@ -544,14 +570,15 @@ def run(shared_state: SharedState) -> VerifiedOutput:
                     recaption_chain_neutral
                 )
                 
-                # Update the reel event with new caption
-                verified_reel_b[idx] = ReelEvent(
+                # Update the reel event with new caption, preserving evidence
+                verified_reel_b[idx] = VerifiedReelEvent(
                     segment_id=reel_event.segment_id,
                     clip_start_sec=reel_event.clip_start_sec,
                     clip_end_sec=reel_event.clip_end_sec,
                     caption=new_caption,
                     event_type=reel_event.event_type,
                     team=reel_event.team,
+                    evidence=reel_event.evidence,
                 )
                 
                 print(f"      ✓ New caption: {new_caption[:60]}...")
@@ -628,6 +655,19 @@ def run(shared_state: SharedState) -> VerifiedOutput:
     
     print("=" * 70)
     
+    # Build evidence summary
+    evidence_summary = {
+        "total_captions": len(verified_reel_a) + len(verified_reel_b),
+        "rag_entities_used": list(set(
+            entity
+            for event in verified_reel_a + verified_reel_b
+            if event.evidence
+            for entity in event.evidence.rag_facts
+        )),
+        "d15_fields_used": ["importance_score", "emotion_tags", "predicted_event_type", "confidence"],
+        "d17_fields_used": ["narrative", "score_after_event", "players", "event_type"],
+    }
+    
     verified_output = VerifiedOutput(
         hallucination_flagged=hallucination_flagged,
         retry_count=shared_state.retry_count,
@@ -637,6 +677,7 @@ def run(shared_state: SharedState) -> VerifiedOutput:
         preference_alignment_scores=preference_alignment_scores,
         reel_a_alignment_score=reel_a_alignment_score,
         reel_b_alignment_score=reel_b_alignment_score,
+        evidence_summary=evidence_summary,
     )
     
     return verified_output

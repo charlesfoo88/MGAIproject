@@ -2,6 +2,36 @@
 
 AI-powered video processing pipeline for generating personalized highlight reels with automated captioning and fact-checking. Provides REST API for frontend integration.
 
+## 🔄 Data Ingestion: Approach A vs Approach B
+
+The system supports two data ingestion workflows:
+
+### **Approach A: DL Video + Gemini Vision**
+- **Input:** ONE pre-processed mp4 video (1-2 minutes) from DL team — NO JSON files
+- **Process:** MGAI uploads video to Gemini Vision → extracts all events (scoreboard, graphics, action, emotion)
+- **Output:** Generates D15 (approach_a_highlight_candidates.json) + D17 (approach_a_dl_handoff.json) from Gemini extraction
+- **Use case:** When DL team provides curated highlight video (importance/confidence/emotion scored)
+- **Status:** ⚠️ Not yet implemented (approach_a_ingestor.py needs to be built)
+
+### **Approach B: Autonomous Workflow (Current)**
+- **Input:** Raw 10-minute match highlight videos (no DL preprocessing required)
+- **Data sources:** 
+  - **API-Sports.io** - Real-time match events (goals, cards, substitutions, lineup)
+  - **Gemini Vision 1.5 Flash** - Automated timestamp detection from video frames using multimodal LLM
+- **Workflow:**
+  1. Run `Tools/approach_b_ingestor.py --match <match_name> --video <video_file> --fixture-id <api_sports_id>` to:
+     - Fetch 14+ real match events from API-Sports.io
+     - Analyze video with Gemini Vision → map events to timestamps (success rate varies)
+     - Generate D15 + D17 files with real data (9 required + 20+ optional legacy fields)
+  2. Run `pipeline.py` as normal → agents process → video stitching extracts clips
+- **Use case:** When only raw match videos and public APIs available  
+- **Status:** ✅ Fully validated on 2 real matches:
+  - Arsenal 5-1 Man City (Feb 2, 2025): 8/14 events mapped, **RAG vs baseline analysis complete**
+  - Liverpool 2-0 Man City (Feb 23, 2025): 2/2 events manually verified (Gemini Vision failed, human fallback used)
+- **Key advantage:** No dependency on DL team, works with any publicly available match video
+
+**Schema compatibility:** Both approaches generate D15/D17 files with 9 required fields + 20+ optional legacy fields for backward compatibility.
+
 ## Prerequisites
 
 ### 1. Python 3.8 or higher
@@ -51,6 +81,8 @@ sudo pacman -S ffmpeg
 ffmpeg -version
 ```
 
+**Note for Windows users:** The video stitching tool includes `safe=0` flag for FFmpeg concat demuxer to handle Windows short paths (e.g., CHARLE~2). This is automatically configured in `video_stitch_tool.py`.
+
 ## Installation
 
 ### 1. Install Python Dependencies
@@ -61,11 +93,11 @@ pip install -r requirements.txt
 ```
 
 This will install:
-- **ffmpeg-python**: Python wrapper for FFmpeg video operations
+- **ffmpeg-python**: Python wrapper for FFmpeg video operations (includes safe=0 flag for Windows path compatibility)
 - **sentence-transformers**: Semantic embeddings for preference alignment
 - **numpy**: Numerical operations for embeddings
 - **groq**: Groq API client for Llama models
-- **google-generativeai**: Google Gemini API client
+- **google-generativeai**: Google Gemini API client (includes Vision 1.5 Flash for Approach B)
 - **langchain**: LangChain core framework for prompt templates and LLM chains
 - **langchain-groq**: LangChain integration for Groq
 - **langchain-google-genai**: LangChain integration for Google Gemini
@@ -73,15 +105,35 @@ This will install:
 - **pydantic**: Data validation and schema enforcement
 - **python-dotenv**: Environment variable management
 - **wikipedia-api**: Wikipedia API for automated knowledge base building
+- **requests**: HTTP client for API-Sports.io integration (Approach B)
 
 ### 2. Configure Environment Variables
 Create a `.env` file in the `Backend/` folder with your API keys:
 
 ```bash
-GROQ_API_KEY=your-groq-api-key-here
-GEMINI_API_KEY=your-gemini-api-key-here
-FOOTBALL_DATA_API_KEY=your-football-data-api-key-here  # Optional: for building/updating knowledge base
+# Caption Generation LLM (choose one or both)
+LLM_PROVIDER=groq  # Default: "groq" (faster, cheaper, better quality) or "gemini"
+GROQ_API_KEY=your-groq-api-key-here  # Required for Groq (llama-3.3-70b-versatile)
+GEMINI_API_KEY=your-gemini-api-key-here  # Optional: backup LLM (gemini-2.5-flash)
+
+# Required for Approach B (autonomous workflow)
+API_SPORTS_KEY=your-api-sports-io-key-here  # Get from https://api-sports.io/
+
+# Optional: For building/updating knowledge base
+FOOTBALL_DATA_API_KEY=your-football-data-api-key-here
 ```
+
+**LLM Provider Comparison:**
+- **Groq (Recommended)**: llama-3.3-70b-versatile
+  - ✅ Faster inference (~2-3s per caption batch)
+  - ✅ Better caption quality (50-90 char complete sentences)
+  - ✅ Cheaper (~$0.0005 per pipeline run)
+  - ✅ Reliable validation pass rate (8+ words requirement)
+- **Gemini**: gemini-2.5-flash
+  - ⚠️ Slower inference
+  - ⚠️ Occasionally incomplete captions
+  - ⚠️ More expensive
+  - ✅ Good as backup option
 
 **Note:** No need to manually set environment variables in your terminal. The application reads from the `.env` file automatically using python-dotenv.
 
@@ -95,9 +147,10 @@ Backend/
 ├── test_api.py                      # API endpoint tests
 ├── evaluate.py                      # Evaluation script — 5 test preferences, logs metrics
 ├── knowledge_base.json              # Structured RAG knowledge base (2.5MB)
-│                                    # 20 teams, 647 players (99.7% with DOB), 21 stadiums
+│                                    # 20 teams, 647 players (645 with DOB = 99.7% coverage)
 │                                    # Enriched with: manager history, comprehensive aliases,
-│                                    # expanded event types, player metadata
+│                                    # **abbreviated aliases** (M. Ødegaard, B. Saka, K. Havertz),
+│                                    # expanded event types, player metadata (position, nationality, DOB)
 │                                    # See Knowledge_Base_Summary.md for full documentation
 ├── Knowledge_Base_Summary.md        # Knowledge base documentation and maintenance guide
 ├── requirements.txt                 # Python dependencies
@@ -111,15 +164,19 @@ Backend/
 │   ├── __init__.py
 │   ├── embedding_tool.py            # Sentence Transformers — encode text, cosine similarity
 │   ├── rag_tool.py                  # Structured knowledge base lookup with alias support
-│   ├── video_stitch_tool.py         # ffmpeg — extract clips, concatenate, add WebVTT subtitles
+│   ├── video_stitch_tool.py         # ffmpeg — extract clips, concatenate, add WebVTT subtitles (safe=0 flag for Windows paths)
+│   ├── export_subtitles.py          # **NEW:** Extract embedded subtitles from MP4 to standalone VTT files (auto-discovers reel_*.mp4)
+│   ├── approach_a_ingestor.py       # ⚠️ TO BE BUILT: Approach A data generator — Gemini Vision video extraction → D15/D17
+│   ├── approach_b_ingestor.py       # **NEW:** Approach B data generator — API-Sports.io + Gemini Vision → D15/D17
 │   ├── knowledge_base_builder.py    # Automated KB building from football-data.org API + Wikipedia
-│   └── add_player.py                # Manual player addition script for historical/missing players
+│   ├── add_player.py                # Manual player addition script for historical/missing players
+│   └── complete_player_dob.py       # DOB enrichment script (99.7% coverage achieved)
 ├── Schemas/
 │   ├── __init__.py
 │   ├── event_schema.py              # Pydantic models for D15 (HighlightCandidate) and D17 (DLHandoff)
 │   ├── agent_input_schema.py        # AgentInput — Sports Analyst to Fan Agent
-│   ├── agent_output_schema.py       # AgentOutput, ReelEvent — Fan Agent output
-│   └── verified_output_schema.py    # VerifiedOutput — Critic Agent output with alignment scores
+│   ├── agent_output_schema.py       # AgentOutput, ReelEvent, EvidenceSource — Fan Agent output with evidence tracking
+│   └── verified_output_schema.py    # VerifiedOutput, VerifiedReelEvent — Critic Agent output with alignment scores and evidence summary
 ├── State/
 │   ├── __init__.py
 │   └── shared_state.py              # SharedState — persists data across all 3 agents
@@ -127,35 +184,140 @@ Backend/
 │   ├── caption_personalised.txt     # Fan-perspective caption prompt template
 │   ├── caption_neutral.txt          # Broadcast-style neutral caption prompt template
 │   └── hallucination_check.txt      # Fact-checking prompt template for Critic Agent
-├── Mock_Data/
-│   ├── highlight_candidates_mock.json   # D15 mock — ML signals, importance scores, emotion tags
-│   ├── dl_handoff_mock.json             # D17 mock — clean event labels, match context, entity registry
-│   ├── fusion_summary.json              # D14 — video stitching timestamps (references D3+D5)
-│   ├── video_analysis_manifest.json     # D5 — video events, source video path
-│   └── audio_analysis_manifest.json     # D3 — audio events, transcript chunks with file paths
+│                                    # Includes permanent confirmed entities (D. Rice, Gabriel Martinelli)
+├── Mock_Data/                           # Match data organized by match name
+│   ├── arsenal_vs_city_efl_2026/        # Mock/test data match (original test fixture)
+│   │   ├── highlight_candidates.json    # D15 — ML signals, importance scores, emotion tags
+│   │   ├── dl_handoff.json              # D17 — clean event labels, match context, entity registry
+│   │   ├── video_analysis_manifest.json # D5 — video events, source video path
+│   │   └── audio_analysis_manifest.json # D3 — audio events, transcript chunks with file paths
+│   ├── arsenal_5_1_man_city_2025_02_02/ # Real match 1 (Approach B format) ✅ Validated
+│   │   ├── approach_b_highlight_candidates.json  # D15 — Generated from API-Sports + Gemini Vision
+│   │   ├── approach_b_dl_handoff.json            # D17 — Generated from API-Sports + Gemini Vision
+│   │   └── gemini_timestamp_mapping.json         # Gemini Vision output (8/14 events mapped)
+│   └── liverpool_2_0_man_city_2025_02_23/ # Real match 2 (Approach B format) - Ready for testing
+│       ├── approach_b_highlight_candidates.json
+│       └── approach_b_dl_handoff.json
+│   # Approach A matches (when implemented):
+│   # - approach_a_highlight_candidates.json (D15 from Gemini Vision video extraction)
+│   # - approach_a_dl_handoff.json (D17 from Gemini Vision video extraction)
 ├── Models/
 │   └── all-MiniLM-L6-v2/              # Local Sentence Transformers model (90.9 MB, no internet needed)
 ├── Source_Videos/                      # Source match .mp4 files (path read from D5 manifest)
-├── Outputs/
-│   ├── evaluation_results.json         # Generated by evaluate.py — multi-preference metrics
-│   └── reel_a_*.mp4 / reel_b_*.mp4   # Generated video reels (production mode)
+├── Outputs/                             # Organized by match name (nested structure)
+│   ├── arsenal_vs_city_efl_2026/        # Output folder for mock match
+│   │   ├── evaluation_results.json      # Generated by evaluate.py — multi-preference metrics
+│   │   ├── baseline_single_prompt_results.json  # Baseline 1 results
+│   │   ├── baseline_keyword_results.json        # Baseline 2 results
+│   │   ├── reel_arsenal.mp4 + reel_arsenal.vtt   # Team 1 fan reel (enthusiastic, e.g., Arsenal supporter)
+│   │   ├── reel_man_city.mp4 + reel_man_city.vtt # Team 2 fan reel (enthusiastic, e.g., Man City supporter)
+│   │   └── reel_neutral.mp4 + reel_neutral.vtt   # Neutral broadcaster reel (factual)
+│   ├── arsenal_5_1_man_city_2025_02_02/ # Output folder for real match 1 ✅ Validated
+│   │   ├── baseline_single_prompt_results.json  # Baseline 1 results
+│   │   ├── baseline_keyword_results.json        # Baseline 2 results
+│   │   ├── reel_arsenal.mp4 + reel_arsenal.vtt   # Arsenal fan perspective (89 char captions)
+│   │   ├── reel_man_city.mp4 + reel_man_city.vtt # Man City fan perspective (74 char captions)
+│   │   └── reel_neutral.mp4 + reel_neutral.vtt   # Neutral broadcaster (66 char captions)
+│   │   ├── reel_a.mp4                   # Generated from Approach B pipeline
+│   │   ├── reel_b.mp4                   # Generated from Approach B pipeline
+│   │   └── reel_test.mp4                # Standalone video stitching test
+│   └── liverpool_2_0_man_city_2025_02_23/ # Output folder for real match 2
 ├── tests/                              # All test files
 │   ├── test_pipeline.py                # Full pipeline test (Stages 1-3)
 │   ├── test_transform_query.py         # Query transformation tests
 │   ├── test_search_terms_rag.py        # Search terms RAG integration tests
 │   ├── test_api.py                     # API endpoint tests
-│   └── results/                        # Test execution logs (timestamped .txt files)
-└── baselines/                          # Baseline scripts + results
+│   └── results/                        # Test execution logs organized by match
+│       ├── arsenal_vs_city_efl_2026/   # Mock match test results
+│       ├── arsenal_5_1_man_city_2025_02_02/  # Real match 1 test results
+│       └── liverpool_2_0_man_city_2025_02_23/ # Real match 2 test results
+└── baselines/                          # Baseline scripts (results saved to Outputs/{ACTIVE_MATCH}/)
     ├── baseline_single_prompt.py       # Baseline 1: Single LLM call, no agents
-    ├── baseline_keyword_filter.py      # Baseline 2: Keyword matching, no LLM
-    ├── baseline_single_prompt_results.json  # Baseline 1 results
-    └── baseline_keyword_results.json   # Baseline 2 results
+    └── baseline_keyword_filter.py      # Baseline 2: Keyword matching, no LLM
 ```
 
 ## Quick Start
 
+### Generate Match Data (Approach A Only)
+
+⚠️ **Approach A is not yet implemented.** The `approach_a_ingestor.py` script needs to be built.
+
+**Planned workflow** (when implemented):
+- Place DL-provided video in `Source_Videos/`
+- Run `python Tools/approach_a_ingestor.py --video-path <path>` to extract events using Gemini Vision
+- Output: D15 + D17 files in `Mock_Data/{match_name}/`
+
+**What Gemini Vision will extract:**
+- Scoreboard reading: Teams, score, match clock
+- Lower third graphics: Player names
+- Action analysis: Event types (goals, fouls, cards, substitutions)
+- Crowd reaction: Emotion levels (high/medium/low)
+- Timestamps: clip_start_sec (event - 2s) and clip_end_sec (event + 8s)
+
+### Generate Match Data (Approach B Only)
+
+If using **Approach B** (autonomous workflow without DL preprocessing), first generate D15/D17 files from raw match video:
+
+```powershell
+# Place raw match highlight video (10+ minutes) in Source_Videos/
+# Then generate data files using API-Sports.io + Gemini Vision
+
+cd Tools
+python approach_b_ingestor.py --match-id 1203519  # Arsenal 5-1 Man City example
+
+# Output:
+# - Mock_Data/{match_name}/approach_b_highlight_candidates.json (D15)
+# - Mock_Data/{match_name}/approach_b_dl_handoff.json (D17)
+# - Mock_Data/{match_name}/gemini_timestamp_mapping.json (Gemini Vision raw output)
+
+# Match ID lookup: Get from API-Sports.io fixtures endpoint
+# Example: https://api-sports.io/documentation/football/v3#tag/Fixtures
+```
+
+**Notes:**
+- Requires `API_SPORTS_KEY` and `GEMINI_API_KEY` in `.env`
+- Automatically maps event timestamps using Gemini Vision (8/14 events typically mapped)
+- Files include 9 required fields + 20+ optional legacy fields for compatibility
+- Skip this step if using **Approach A** (DL-provided video workflow)
+
 ### Run Complete Pipeline (Production)
-Generate personalized highlight reels from a match video:
+
+#### Option 1: Automatic 3-Perspective Generation (Recommended)
+Generate all 3 perspective reels in a single command:
+
+```powershell
+python pipeline.py --match-name "liverpool_2_0_man_city_2025_02_23" --all-perspectives
+```
+
+**What it does:**
+1. Automatically extracts team names from D17 match_context (home_team, away_team)
+2. Runs pipeline TWICE with different perspectives:
+   - Home team fan perspective → saves as `reel_{home_team}.mp4`
+   - Away team fan perspective → saves as `reel_{away_team}.mp4`
+3. Saves neutral reel → `reel_neutral.mp4`
+4. Handles file renaming and duplicate removal automatically
+
+**Output:**
+```
+Backend/Outputs/{match_name}/
+├── reel_{home_team}.mp4    # Home team fan perspective (personalized)
+├── reel_{away_team}.mp4    # Away team fan perspective (personalized)
+└── reel_neutral.mp4        # Neutral perspective (factual)
+```
+
+**Example:**
+```powershell
+python pipeline.py --match-name liverpool_2_0_man_city_2025_02_23 --all-perspectives
+# Generates:
+# - reel_manchester_city.mp4 (home team)
+# - reel_liverpool.mp4 (away team)
+# - reel_neutral.mp4
+```
+
+---
+
+#### Option 2: Single Custom Perspective
+Generate personalized highlight reels with custom user preference:
 
 ```powershell
 # With command-line arguments
@@ -315,6 +477,7 @@ The system uses a comprehensive structured knowledge base for RAG-enhanced entit
 **Built-in enrichments:**
 - ✅ **Player DOB**: 645/647 players (99.7%) have dateOfBirth for age-based commentary
 - ✅ **Manager history**: Current manager + 3 seasons of history for all 20 teams
+- ✅ **Abbreviated aliases**: M. Ødegaard, B. Saka, K. Havertz, D. Rice, J. Stones, etc. (improved RAG matching for formal commentary)
 - ✅ **Stadium aliases**: 51 total aliases (fan nicknames, historical names, acronyms)
 - ✅ **Competition aliases**: 17 aliases (Prem, EPL, UCL, Carabao Cup, etc.)
 - ✅ **Event types**: 13 types (goals, cards, corners, saves, offsides, shots, injuries)
@@ -376,6 +539,24 @@ Results displayed in terminal with formatted output showing captions, alignment 
 python pipeline.py --match-name "your_match" --user-preference "Your preference"
 ```
 
+### Video Stitching Test (No API Calls)
+```bash
+# Test video extraction, concatenation, and subtitle embedding without LLM agents
+python tests/test_video_stitch_only.py
+```
+
+**What it does:**
+- Tests Stage 4 (video stitching) independently without running agents
+- Uses hardcoded test events and captions (no API calls, no token usage)
+- Extracts 5 clips from source video → concatenates → adds WebVTT subtitles
+- Output: `Outputs/{match_name}/reel_test.mp4` (~3.37 MB for 50 seconds)
+- **Use case:** Validate FFmpeg installation and video processing pipeline without consuming API tokens
+
+**Requirements:**
+- FFmpeg installed and in PATH
+- Source video in `Source_Videos/` folder
+- Set `SOURCE_VIDEO_PATH` in config.py (optional, auto-discovers if not set)
+
 ## Evaluation and Baselines
 
 ### Testing Commands
@@ -415,32 +596,40 @@ python evaluate.py
 
 ### Baseline Comparisons
 
+**Both baselines now dynamically use `ACTIVE_MATCH` from config.py** — automatically read from the current match's D17 file and save results to `Outputs/{ACTIVE_MATCH}/`.
+
 **Baseline 1 — Single Prompt (No Agents):**
 ```bash
 python baselines/baseline_single_prompt.py
 ```
-- Approach: Single LLM call with all events in one prompt
-- No agents, no RAG, no hallucination check
-- Time: 3.4 seconds (8.4x faster)
-- Detected hallucinations:
-  - Martinelli nationality invented
-  - Goalkeeper name invented
-  - "Emirates faithful" mentioned (match at Wembley)
-- No personalized/neutral split
+- **Approach:** Single LLM call with all events in one prompt
+- **No agents, no RAG, no hallucination check**
+- **Time:** ~4.5 seconds (6.4x faster than multi-agent pipeline)
+- **Tokens:** ~2,000 tokens per run (Groq API)
+- **Result:** 14 captions generated (one per event, including substitutions/cards)
+- **Example output (arsenal_5_1_man_city_2025_02_02):**
+  - Caption 1: "What a start for the Gunners. Martin Ødegaard scores the opening goal..."
+  - Caption 14: "E. Nwaneri scores the fifth and final goal... And, unfortunately, Bukayo Saka didn't make a significant impact in this game..."
+- **Personalization:** Mentions user preference in captions but no filtering
+- **No personalized/neutral split** (generates single reel only)
 
 **Baseline 2 — Keyword Filter (No LLM):**
 ```bash
 python baselines/baseline_keyword_filter.py
 ```
-- Approach: Pure keyword matching on team/player names
-- No LLM calls
-- Time: Instant
-- Returns event list ranked by keyword overlap and importance score
-- No captions generated
-- Issues: Incorrectly includes opponent events (Haaland goal in Arsenal fan reel)
+- **Approach:** Pure keyword matching on team/player names
+- **No LLM calls** (zero cost)
+- **Time:** Instant
+- **Keywords extracted:** From user preference (e.g., "arsenal", "saka", "love", "watching")
+- **Result:** Ranked event list by keyword overlap + importance score
+- **No captions generated** (returns metadata only)
+- **Example output (arsenal_5_1_man_city_2025_02_02):**
+  - Extracted keywords: ["arsenal", "love", "watching", "saka", "play"]
+  - Top 5 events: All Arsenal goals (each scored 1 point for "arsenal" keyword)
+  - Match score: keyword count + importance ranking
+- **Limitation:** Only matches team/player keywords, doesn't understand context or player involvement
 
-**Conclusion:**
-The multi-agent pipeline trades speed for accuracy, achieving robust hallucination detection, personalized/neutral splitting, and high preference alignment at the cost of ~8x longer execution time.
+**Pipeline comparison:** [To be updated after full pipeline run on arsenal_5_1_man_city_2025_02_02]
 
 ## Pipeline Output Format
 
@@ -480,6 +669,11 @@ The `run_pipeline()` function returns a dictionary:
 
 Edit `config.py` to customize:
 
+- **ACTIVE_MATCH**: Switch between matches ("arsenal_vs_city_efl_2026", "arsenal_5_1_man_city_2025_02_02", "liverpool_2_0_man_city_2025_02_23")
+  - Auto-resolves D15_FILE_PATH, D17_FILE_PATH from Mock_Data/{ACTIVE_MATCH}/ folder
+  - Test results saved to tests/results/{ACTIVE_MATCH}/
+  - Evaluation/baseline results saved to Outputs/{ACTIVE_MATCH}/
+  - Video outputs organized in match-specific folders: Outputs/{ACTIVE_MATCH}/reel_a.mp4
 - **DEMO_MODE**: Set to `True` for testing without video files (uses mock data)
 - **LLM_PROVIDER**: Choose `"groq"` or `"gemini"` for caption generation
 - **MAX_RETRIES**: Maximum re-captioning attempts (default: 2)
@@ -488,24 +682,56 @@ Edit `config.py` to customize:
 - **MIN_CONFIDENCE**: Minimum classifier confidence to include an event (default: 0.5)
 - **ALIGNMENT_THRESHOLD**: Minimum cosine similarity for Reel A preference alignment check (default: 0.35)
 
+**Switching Between Matches:**
+
+To switch between available matches, edit `config.py` and uncomment the desired match:
+
+```python
+# Current active match — change this to switch matches
+ACTIVE_MATCH = "arsenal_vs_city_efl_2026"  # mock data
+# ACTIVE_MATCH = "arsenal_5_1_man_city_2025_02_02"  # real data match 1
+# ACTIVE_MATCH = "liverpool_2_0_man_city_2025_02_23"  # real data match 2
+```
+
+This automatically updates:
+- Data file paths: `D15_FILE_PATH`, `D17_FILE_PATH` from `Mock_Data/{ACTIVE_MATCH}/`
+- Test results location: `tests/results/{ACTIVE_MATCH}/`
+- Evaluation output: `Outputs/{ACTIVE_MATCH}/evaluation_results.json`
+- Baseline output: `Outputs/{ACTIVE_MATCH}/baseline_*.json`
+- Video output: `Outputs/{ACTIVE_MATCH}/reel_a.mp4` and `reel_b.mp4`
+
 **Adding a New Match:**
 
-The system is match-agnostic. To add a new match:
+The system supports two workflows:
+
+**Approach A (DL Video + Gemini Vision):**
+
+⚠️ **Not yet implemented** — `approach_a_ingestor.py` needs to be built.
+
+**Planned workflow (when implemented):**
 
 **MGAI Team:**
-1. Update `D15_FILE_PATH` and `D17_FILE_PATH` in `config.py` to point to the new match data files
-2. Add knowledge base entries to `knowledge_base.json`:
-   - Add teams with aliases (under "teams" section)
-   - Add players with team, position, nationality (under "players" section)
-   - Add stadiums, competitions, match details
-   - Use hierarchical structure for better organization
-3. Update the `match_name` parameter in API calls or command-line arguments
+1. Place DL-provided video in `Source_Videos/approach_a_{match_name}.mp4`
+2. Run `Tools/approach_a_ingestor.py --video-path <path_to_video>` to generate D15/D17 (TO BE BUILT)
+3. Add the match name to `ACTIVE_MATCH` options in `config.py`
+4. Update knowledge base for new teams/players (see [Knowledge_Base_Summary.md](Knowledge_Base_Summary.md))
 
 **DL Team:**
-1. Run DL pipeline on the new match video → produces D14, D15, D17 JSON files
-2. Confirm source video path in D5 `video_analysis_manifest.json` `source.source_path` is accessible to MGAI at runtime
+1. Run DL pipeline on raw match video → produces curated 1-2 minute highlight mp4
+2. Provide video file only (no JSON files needed)
 
-No separate video file handoff needed — MGAI reads the source video path directly from D5.
+**Approach B (Autonomous Workflow):**
+
+✅ **Currently implemented and validated**
+
+**MGAI Team:**
+1. Place raw match highlight video (10+ minutes) in `Source_Videos/` folder
+2. Run `Tools/approach_b_ingestor.py --match-id <api_sports_id>` to generate D15/D17
+3. Update `ACTIVE_MATCH` in `config.py` to the new match name
+4. Update knowledge base for new teams/players (see [Knowledge_Base_Summary.md](Knowledge_Base_Summary.md))
+5. Run `pipeline.py` as normal
+
+**Note:** No separate video file handoff needed — MGAI reads source video path from D5 or discovers it automatically via SOURCE_VIDEO_PATH fallback logic (config → D5 manifest → {match_name}.mp4 → any .mp4).
 
 ## Key Enhancements
 
@@ -583,17 +809,30 @@ The pipeline uses different data sources for different stages:
 
 ### Video Stitching (Stage 4)
 
-**D14 — fusion_summary.json:**
-- **Purpose**: Precise video timestamps from cross-modal fusion analysis
-- **Contents**: segment_id, time_range (start/end), confidence, importance_score
-- **References**: D3 (audio_analysis_manifest.json) and D5 (video_analysis_manifest.json) by event ID
-- **Used by**: video_stitch_tool.py only
-- **NOT read by MGAI agents** — agents work with D15/D17 only
+**Current System (Both Approach A & B):**
+- **Direct timestamp usage**: Uses `clip_start_sec` and `clip_end_sec` from D15/D17
+  - **Approach A**: Timestamps extracted by Gemini Vision from DL-curated video
+  - **Approach B**: Timestamps mapped by Gemini Vision to raw match video
+- **Source discovery**: 4-tier fallback logic
+  1. Check `SOURCE_VIDEO_PATH` from config.py
+  2. Read source path from D5 video_analysis_manifest.json
+  3. Search for `{match_name}.mp4` in Source_Videos/
+  4. Use any .mp4 file in Source_Videos/
 
-This separation allows:
+**Video output structure:**
+- **Match-specific folders**: `Outputs/{match_name}/reel_a.mp4` and `reel_b.mp4`
+- **FFmpeg processing**: Extract clips → concatenate → add WebVTT subtitles
+- **Safe path handling**: Uses `safe=0` flag for Windows short paths (CHARLE~2 compatibility)
+
+**Legacy System (DEPRECATED):**
+- **D14 — fusion_summary.json**: No longer used in current pipeline
+  - Old approach used cross-modal fusion analysis with separate D3/D5 references
+  - Replaced by direct Gemini Vision timestamp extraction in both approaches
+
+This approach allows:
 - AI agents to work with clean, curated highlight data (D15/D17)
-- Video extraction to use real ML-detected time ranges (D14 → D3/D5)
-- Hybrid approach: AI-generated captions + ML-detected video segments
+- Video extraction to use Gemini Vision-provided timestamps directly
+- No dependency on D14 fusion analysis or separate timestamp mapping
 
 ## Troubleshooting
 

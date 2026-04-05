@@ -1,5 +1,17 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
+
+
+class EvidenceSource(BaseModel):
+    """Tracks which sources contributed to a caption"""
+    d15_fields: Dict[str, Any] = {}
+    # D15 fields used: importance_score, emotion_tags, predicted_event_type
+    d17_fields: Dict[str, Any] = {}
+    # D17 fields used: narrative, score_after_event, players, context
+    rag_facts: List[str] = []
+    # List of entity names that had KB facts retrieved
+    transcript_chunks: List[str] = []
+    # Narrative chunks used from D4 audio summaries
 
 
 class ReelEvent(BaseModel):
@@ -9,6 +21,7 @@ class ReelEvent(BaseModel):
     caption: str
     event_type: str
     team: Optional[str] = None
+    evidence: Optional[EvidenceSource] = None
 
 
 class AgentOutput(BaseModel):

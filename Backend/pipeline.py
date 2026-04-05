@@ -23,6 +23,9 @@ try:
         DEMO_MODE,
         OUTPUT_PATH,
         SOURCE_VIDEOS_PATH,
+        SOURCE_VIDEO_PATH,
+        ACTIVE_MATCH,
+        MOCK_DATA_PATH,
     )
 except ImportError:
     # Direct execution fallback
@@ -34,6 +37,9 @@ except ImportError:
         DEMO_MODE,
         OUTPUT_PATH,
         SOURCE_VIDEOS_PATH,
+        SOURCE_VIDEO_PATH,
+        ACTIVE_MATCH,
+        MOCK_DATA_PATH,
     )
 
 
@@ -217,21 +223,67 @@ def run_pipeline(match_name: str, user_preference: str) -> dict:
         OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
         
         # Find source video file
-        # Assumes source video is named {match_name}.mp4 in SOURCE_VIDEOS_PATH
-        source_video = SOURCE_VIDEOS_PATH / f"{match_name}.mp4"
+        # Priority:
+        # 1. Check SOURCE_VIDEO_PATH from config if it exists
+        # 2. Fall back to D5 video_analysis_manifest.json
+        # 3. Search for {match_name}.mp4 in SOURCE_VIDEOS_PATH
+        # 4. Use any .mp4 in SOURCE_VIDEOS_PATH
         
-        if not source_video.exists():
-            print(f"⚠ Source video not found: {source_video}")
+        source_video = None
+        
+        # Option 1: Check SOURCE_VIDEO_PATH from config
+        if SOURCE_VIDEO_PATH and SOURCE_VIDEO_PATH.exists():
+            source_video = SOURCE_VIDEO_PATH
+            print(f"✓ Using SOURCE_VIDEO_PATH from config: {source_video}")
+        
+        # Option 2: Try D5 video_analysis_manifest.json
+        if not source_video:
+            d5_path = MOCK_DATA_PATH / match_name / "video_analysis_manifest.json"
+            if d5_path.exists():
+                try:
+                    with open(d5_path, 'r', encoding='utf-8') as f:
+                        d5_data = json.load(f)
+                    source_path_str = d5_data.get("source_path")
+                    if source_path_str:
+                        # Handle relative paths from Mock_Data folder
+                        if not Path(source_path_str).is_absolute():
+                            source_video = Path(__file__).parent / source_path_str
+                        else:
+                            source_video = Path(source_path_str)
+                        
+                        if source_video.exists():
+                            print(f"✓ Using source from D5 manifest: {source_video}")
+                        else:
+                            print(f"⚠ D5 manifest source path doesn't exist: {source_video}")
+                            source_video = None
+                except Exception as e:
+                    print(f"⚠ Could not read D5 manifest: {e}")
+        
+        # Option 3: Search for {match_name}.mp4
+        if not source_video:
+            candidate = SOURCE_VIDEOS_PATH / f"{match_name}.mp4"
+            if candidate.exists():
+                source_video = candidate
+                print(f"✓ Using match-named video: {source_video}")
+        
+        # Option 4: Use any .mp4 in SOURCE_VIDEOS_PATH
+        if not source_video:
+            print(f"⚠ Source video not found with match name: {match_name}.mp4")
             print("⚠ Searching for any MP4 in Source_Videos/...")
             mp4_files = list(SOURCE_VIDEOS_PATH.glob("*.mp4"))
             if mp4_files:
                 source_video = mp4_files[0]
                 print(f"✓ Using: {source_video.name}")
-            else:
-                raise FileNotFoundError(
-                    f"No source video found. Expected: {source_video} "
-                    f"or any .mp4 in {SOURCE_VIDEOS_PATH}"
-                )
+        
+        # Final check
+        if not source_video or not source_video.exists():
+            raise FileNotFoundError(
+                f"No source video found. Tried:\n"
+                f"  1. SOURCE_VIDEO_PATH: {SOURCE_VIDEO_PATH}\n"
+                f"  2. D5 manifest: {MOCK_DATA_PATH / match_name / 'video_analysis_manifest.json'}\n"
+                f"  3. Match-named: {SOURCE_VIDEOS_PATH / match_name}.mp4\n"
+                f"  4. Any .mp4 in {SOURCE_VIDEOS_PATH}"
+            )
         
         print(f"Source video: {source_video}")
         
@@ -336,7 +388,12 @@ def run_pipeline(match_name: str, user_preference: str) -> dict:
         
         # Stitch Reel A (Personalized)
         print("\n[4.1] Stitching Reel A (Personalized)...")
-        reel_a_path = str(OUTPUT_PATH / f"reel_a_{match_name}.mp4")
+        
+        # Create match-specific output directory
+        match_output_dir = OUTPUT_PATH / match_name
+        match_output_dir.mkdir(parents=True, exist_ok=True)
+        
+        reel_a_path = str(match_output_dir / "reel_a.mp4")
         try:
             video_stitch_tool.extract_and_stitch(
                 source_mp4_path=str(source_video),
@@ -351,7 +408,7 @@ def run_pipeline(match_name: str, user_preference: str) -> dict:
         
         # Stitch Reel B (Neutral)
         print("\n[4.2] Stitching Reel B (Neutral)...")
-        reel_b_path = str(OUTPUT_PATH / f"reel_b_{match_name}.mp4")
+        reel_b_path = str(match_output_dir / "reel_b.mp4")
         try:
             video_stitch_tool.extract_and_stitch(
                 source_mp4_path=str(source_video),
@@ -395,6 +452,25 @@ def run_pipeline(match_name: str, user_preference: str) -> dict:
             "reel_b_alignment_score": verified_output.reel_b_alignment_score,
             "preference_alignment_scores": verified_output.preference_alignment_scores,
             "match_recap": shared_state.match_recap,
+            "evidence_summary": verified_output.evidence_summary,
+            "reel_a_evidence": [
+                {
+                    "segment_id": event.segment_id,
+                    "rag_facts_used": event.evidence.rag_facts if event.evidence else [],
+                    "d17_narrative": event.evidence.d17_fields.get("narrative") if event.evidence else None,
+                    "importance_score": event.evidence.d15_fields.get("importance_score") if event.evidence else None,
+                }
+                for event in verified_output.verified_reel_a
+            ],
+            "reel_b_evidence": [
+                {
+                    "segment_id": event.segment_id,
+                    "rag_facts_used": event.evidence.rag_facts if event.evidence else [],
+                    "d17_narrative": event.evidence.d17_fields.get("narrative") if event.evidence else None,
+                    "importance_score": event.evidence.d15_fields.get("importance_score") if event.evidence else None,
+                }
+                for event in verified_output.verified_reel_b
+            ],
             "status": "success",
         }
     
