@@ -1,0 +1,110 @@
+{
+  "fusion_layer": "cross_modal_attention",
+  "backbone_name": "resnet50",
+  "backbone_mode": "finetune",
+  "event_labels": [
+    "score_change",
+    "celebration",
+    "foul_or_penalty",
+    "stoppage_review",
+    "substitution",
+    "injury_pause",
+    "crowd_peak",
+    "replay_package",
+    "neutral_play"
+  ],
+  "evaluation": {
+    "metric_name": "Average-mAP",
+    "average_map": null,
+    "note": "Reference labels not provided in this seed handoff package."
+  },
+  "highlights": [
+    {
+      "segment_id": "segment_000212",
+      "time_range": {
+        "start": 210.0,
+        "end": 216.0
+      },
+      "predicted_event_type": "score_change",
+      "confidence": 0.91,
+      "importance_score": 0.95,
+      "importance_rank": 1,
+      "top_labels": [
+        {
+          "label": "score_change",
+          "score": 0.91
+        },
+        {
+          "label": "crowd_peak",
+          "score": 0.86
+        }
+      ],
+      "context_summary": "Liverpool chance converted with immediate scoreboard update and commentary lift.",
+      "domain_inference": "soccer_broadcast",
+      "domain_confidence": 0.97,
+      "rationale": [
+        "scoreboard delta observed",
+        "commentator pitch rise",
+        "crowd sustained peak"
+      ]
+    },
+    {
+      "segment_id": "segment_000444",
+      "time_range": {
+        "start": 441.0,
+        "end": 447.0
+      },
+      "predicted_event_type": "foul_or_penalty",
+      "confidence": 0.82,
+      "importance_score": 0.83,
+      "importance_rank": 2,
+      "top_labels": [
+        {
+          "label": "foul_or_penalty",
+          "score": 0.82
+        },
+        {
+          "label": "stoppage_review",
+          "score": 0.71
+        }
+      ],
+      "context_summary": "Heavy challenge in box; whistle and replay sequence indicate penalty/foul moment.",
+      "domain_inference": "soccer_broadcast",
+      "domain_confidence": 0.96,
+      "rationale": [
+        "defensive collision",
+        "whistle + replay pairing",
+        "players appeal"
+      ]
+    },
+    {
+      "segment_id": "segment_000651",
+      "time_range": {
+        "start": 649.0,
+        "end": 655.0
+      },
+      "predicted_event_type": "celebration",
+      "confidence": 0.77,
+      "importance_score": 0.74,
+      "importance_rank": 3,
+      "top_labels": [
+        {
+          "label": "celebration",
+          "score": 0.77
+        },
+        {
+          "label": "crowd_peak",
+          "score": 0.7
+        }
+      ],
+      "context_summary": "Late-game crowd and player reactions following match-defining sequence.",
+      "domain_inference": "soccer_broadcast",
+      "domain_confidence": 0.95,
+      "rationale": [
+        "end-phase emotional response",
+        "camera lingers on fans and bench",
+        "high applause profile"
+      ]
+    }
+  ]
+}

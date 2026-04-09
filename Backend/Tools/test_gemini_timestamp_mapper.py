@@ -24,7 +24,7 @@ known_events = [
     {"minute": "90", "event_type": "goal", "team": "Arsenal", "player": "E. Nwaneri"},
 ]
 
-video_path = Path(__file__).parent.parent / "Source_Videos" / "test_clip.mp4"
+video_path = Path(__file__).parent.parent / "Source_Videos" / "arsenal_5_1_man_city.mp4"
 
 if not video_path.exists():
     print(f"❌ Video not found: {video_path}")

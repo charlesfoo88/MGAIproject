@@ -48,6 +48,9 @@ Source_Videos/*.mp4
 Source_Videos/*.avi
 Source_Videos/*.mov
 
+# FFmpeg binaries (large files, ~600MB)
+Tools/ffmpeg/
+
 # Models - Include bundled sentence-transformers model for teammates
 # (87MB - small enough to commit directly)
 !Models/

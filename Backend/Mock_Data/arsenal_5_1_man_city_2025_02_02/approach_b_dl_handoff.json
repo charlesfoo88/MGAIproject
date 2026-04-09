@@ -7,8 +7,7 @@
     "season": "2024-2025",
     "date": "2025-02-02",
     "venue": "Emirates Stadium",
-    "final_score": "5-1",
-    "video_id": "youtube_f3POqcfPJZ8"
+    "final_score": "5-1"
   },
   "entity_registry": [
     {
@@ -204,8 +203,8 @@
         "K. Havertz"
       ],
       "score_after_event": "1-0",
-      "clip_start_sec": 87,
-      "clip_end_sec": 97,
+      "clip_start_sec": 85,
+      "clip_end_sec": 95,
       "ocr_text": [
         "M. \u00d8degaard",
         "2:00"
@@ -215,32 +214,9 @@
         "previous_event": null,
         "next_event": null,
         "narrative": "M. \u00d8degaard \u2014 Goal for Arsenal at 2 minutes."
-      }
-    },
-    {
-      "clip_id": "segment_002",
-      "time": "25:00",
-      "time_seconds": 1500.0,
-      "event_type": "card",
-      "importance": 0.6,
-      "confidence": 0.99,
-      "team": "Arsenal",
-      "players": [
-        "Jurri\u00ebn Timber"
-      ],
-      "score_after_event": null,
-      "clip_start_sec": null,
-      "clip_end_sec": null,
-      "ocr_text": [
-        "Jurri\u00ebn Timber",
-        "25:00"
-      ],
-      "match_phase": "first_half",
-      "context": {
-        "previous_event": null,
-        "next_event": null,
-        "narrative": "Jurri\u00ebn Timber \u2014 Yellow Card for Arsenal at 25 minutes."
-      }
+      },
+      "scorer": "M. \u00d8degaard",
+      "assist": "K. Havertz"
     },
     {
       "clip_id": "segment_003",
@@ -255,8 +231,8 @@
         "Savinho"
       ],
       "score_after_event": "1-1",
-      "clip_start_sec": 368,
-      "clip_end_sec": 378,
+      "clip_start_sec": 365,
+      "clip_end_sec": 375,
       "ocr_text": [
         "E. Haaland",
         "55:00"
@@ -266,7 +242,9 @@
         "previous_event": null,
         "next_event": null,
         "narrative": "E. Haaland \u2014 Goal for Manchester City at 55 minutes."
-      }
+      },
+      "scorer": "E. Haaland",
+      "assist": "Savinho"
     },
     {
       "clip_id": "segment_004",
@@ -280,8 +258,8 @@
         "T. Partey"
       ],
       "score_after_event": "2-1",
-      "clip_start_sec": 437,
-      "clip_end_sec": 447,
+      "clip_start_sec": 435,
+      "clip_end_sec": 445,
       "ocr_text": [
         "T. Partey",
         "56:00"
@@ -291,7 +269,8 @@
         "previous_event": null,
         "next_event": null,
         "narrative": "T. Partey \u2014 Goal for Arsenal at 56 minutes."
-      }
+      },
+      "scorer": "T. Partey"
     },
     {
       "clip_id": "segment_005",
@@ -306,8 +285,8 @@
         "D. Rice"
       ],
       "score_after_event": "3-1",
-      "clip_start_sec": 484,
-      "clip_end_sec": 494,
+      "clip_start_sec": 482,
+      "clip_end_sec": 492,
       "ocr_text": [
         "M. Lewis-Skelly",
         "62:00"
@@ -317,84 +296,9 @@
         "previous_event": null,
         "next_event": null,
         "narrative": "M. Lewis-Skelly \u2014 Goal for Arsenal at 62 minutes."
-      }
-    },
-    {
-      "clip_id": "segment_006",
-      "time": "71:00",
-      "time_seconds": 4260.0,
-      "event_type": "card",
-      "importance": 0.6,
-      "confidence": 0.99,
-      "team": "Arsenal",
-      "players": [
-        "Martin \u00d8degaard"
-      ],
-      "score_after_event": null,
-      "clip_start_sec": null,
-      "clip_end_sec": null,
-      "ocr_text": [
-        "Martin \u00d8degaard",
-        "71:00"
-      ],
-      "match_phase": "second_half",
-      "context": {
-        "previous_event": null,
-        "next_event": null,
-        "narrative": "Martin \u00d8degaard \u2014 Yellow Card for Arsenal at 71 minutes."
-      }
-    },
-    {
-      "clip_id": "segment_007",
-      "time": "72:00",
-      "time_seconds": 4320.0,
-      "event_type": "substitution",
-      "importance": 0.5,
-      "confidence": 0.99,
-      "team": "Manchester City",
-      "players": [
-        "Omar Marmoush",
-        "K. De Bruyne"
-      ],
-      "score_after_event": null,
-      "clip_start_sec": null,
-      "clip_end_sec": null,
-      "ocr_text": [
-        "Omar Marmoush",
-        "72:00"
-      ],
-      "match_phase": "second_half",
-      "context": {
-        "previous_event": null,
-        "next_event": null,
-        "narrative": "Omar Marmoush \u2014 Substitution 1 for Manchester City at 72 minutes."
-      }
-    },
-    {
-      "clip_id": "segment_008",
-      "time": "72:00",
-      "time_seconds": 4320.0,
-      "event_type": "substitution",
-      "importance": 0.5,
-      "confidence": 0.99,
-      "team": "Manchester City",
-      "players": [
-        "P. Foden",
-        "J. McAtee"
-      ],
-      "score_after_event": null,
-      "clip_start_sec": null,
-      "clip_end_sec": null,
-      "ocr_text": [
-        "P. Foden",
-        "72:00"
-      ],
-      "match_phase": "second_half",
-      "context": {
-        "previous_event": null,
-        "next_event": null,
-        "narrative": "P. Foden \u2014 Substitution 2 for Manchester City at 72 minutes."
-      }
+      },
+      "scorer": "M. Lewis-Skelly",
+      "assist": "D. Rice"
     },
     {
       "clip_id": "segment_009",
@@ -409,8 +313,8 @@
         "Gabriel Martinelli"
       ],
       "score_after_event": "4-1",
-      "clip_start_sec": 541,
-      "clip_end_sec": 551,
+      "clip_start_sec": 538,
+      "clip_end_sec": 548,
       "ocr_text": [
         "K. Havertz",
         "76:00"
@@ -420,111 +324,9 @@
         "previous_event": null,
         "next_event": null,
         "narrative": "K. Havertz \u2014 Goal for Arsenal at 76 minutes."
-      }
-    },
-    {
-      "clip_id": "segment_010",
-      "time": "84:00",
-      "time_seconds": 5040.0,
-      "event_type": "substitution",
-      "importance": 0.5,
-      "confidence": 0.99,
-      "team": "Arsenal",
-      "players": [
-        "M. \u00d8degaard",
-        "Mikel Merino"
-      ],
-      "score_after_event": null,
-      "clip_start_sec": null,
-      "clip_end_sec": null,
-      "ocr_text": [
-        "M. \u00d8degaard",
-        "84:00"
-      ],
-      "match_phase": "second_half",
-      "context": {
-        "previous_event": null,
-        "next_event": null,
-        "narrative": "M. \u00d8degaard \u2014 Substitution 1 for Arsenal at 84 minutes."
-      }
-    },
-    {
-      "clip_id": "segment_011",
-      "time": "84:00",
-      "time_seconds": 5040.0,
-      "event_type": "substitution",
-      "importance": 0.5,
-      "confidence": 0.99,
-      "team": "Arsenal",
-      "players": [
-        "L. Trossard",
-        "E. Nwaneri"
-      ],
-      "score_after_event": null,
-      "clip_start_sec": null,
-      "clip_end_sec": null,
-      "ocr_text": [
-        "L. Trossard",
-        "84:00"
-      ],
-      "match_phase": "second_half",
-      "context": {
-        "previous_event": null,
-        "next_event": null,
-        "narrative": "L. Trossard \u2014 Substitution 2 for Arsenal at 84 minutes."
-      }
-    },
-    {
-      "clip_id": "segment_012",
-      "time": "90:00",
-      "time_seconds": 5400.0,
-      "event_type": "substitution",
-      "importance": 0.5,
-      "confidence": 0.99,
-      "team": "Arsenal",
-      "players": [
-        "K. Havertz",
-        "R. Sterling"
-      ],
-      "score_after_event": null,
-      "clip_start_sec": null,
-      "clip_end_sec": null,
-      "ocr_text": [
-        "K. Havertz",
-        "90:00"
-      ],
-      "match_phase": "second_half",
-      "context": {
-        "previous_event": null,
-        "next_event": null,
-        "narrative": "K. Havertz \u2014 Substitution 3 for Arsenal at 90 minutes."
-      }
-    },
-    {
-      "clip_id": "segment_013",
-      "time": "90:00",
-      "time_seconds": 5400.0,
-      "event_type": "substitution",
-      "importance": 0.5,
-      "confidence": 0.99,
-      "team": "Arsenal",
-      "players": [
-        "M. Lewis-Skelly",
-        "R. Calafiori"
-      ],
-      "score_after_event": null,
-      "clip_start_sec": null,
-      "clip_end_sec": null,
-      "ocr_text": [
-        "M. Lewis-Skelly",
-        "90:00"
-      ],
-      "match_phase": "second_half",
-      "context": {
-        "previous_event": null,
-        "next_event": null,
-        "narrative": "M. Lewis-Skelly \u2014 Substitution 4 for Arsenal at 90 minutes."
-      }
+      },
+      "scorer": "K. Havertz",
+      "assist": "Gabriel Martinelli"
     },
     {
       "clip_id": "segment_014",
@@ -539,8 +341,8 @@
         "D. Rice"
       ],
       "score_after_event": "5-1",
-      "clip_start_sec": 589,
-      "clip_end_sec": 599,
+      "clip_start_sec": 588,
+      "clip_end_sec": 598,
       "ocr_text": [
         "E. Nwaneri",
         "90:00"
@@ -550,7 +352,9 @@
         "previous_event": null,
         "next_event": null,
         "narrative": "E. Nwaneri \u2014 Goal for Arsenal at 90 minutes."
-      }
+      },
+      "scorer": "E. Nwaneri",
+      "assist": "D. Rice"
     }
   ]
 }

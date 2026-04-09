@@ -2,8 +2,8 @@
   {
     "segment_id": "segment_001",
     "time_range": {
-      "start": 87,
-      "end": 97
+      "start": 85,
+      "end": 95
     },
     "predicted_event_type": "goal",
     "confidence": 0.99,
@@ -129,8 +129,8 @@
   {
     "segment_id": "segment_003",
     "time_range": {
-      "start": 368,
-      "end": 378
+      "start": 365,
+      "end": 375
     },
     "predicted_event_type": "goal",
     "confidence": 0.99,
@@ -256,8 +256,8 @@
   {
     "segment_id": "segment_004",
     "time_range": {
-      "start": 437,
-      "end": 447
+      "start": 435,
+      "end": 445
     },
     "predicted_event_type": "goal",
     "confidence": 0.99,
@@ -382,8 +382,8 @@
   {
     "segment_id": "segment_005",
     "time_range": {
-      "start": 484,
-      "end": 494
+      "start": 482,
+      "end": 492
     },
     "predicted_event_type": "goal",
     "confidence": 0.99,
@@ -509,8 +509,8 @@
   {
     "segment_id": "segment_009",
     "time_range": {
-      "start": 541,
-      "end": 551
+      "start": 538,
+      "end": 548
     },
     "predicted_event_type": "goal",
     "confidence": 0.99,
@@ -636,8 +636,8 @@
   {
     "segment_id": "segment_014",
     "time_range": {
-      "start": 589,
-      "end": 599
+      "start": 588,
+      "end": 598
     },
     "predicted_event_type": "goal",
     "confidence": 0.99,

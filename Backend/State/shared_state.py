@@ -46,6 +46,9 @@ class SharedState:
         # Retry tracking
         self.retry_count: int = 0
         
+        # Disagreement tracking
+        self.disagreement_log: List = []
+        
         # Match metadata
         self.match_context: Optional[MatchContext] = None
         self.entity_registry: List[EntityRegistry] = []

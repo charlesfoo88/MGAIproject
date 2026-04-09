@@ -13,6 +13,12 @@ import shutil
 from pathlib import Path
 from typing import List, Dict
 
+# Configure FFmpeg path - use project-local ffmpeg
+# FFmpeg binaries are located in Backend/Tools/ffmpeg/
+FFMPEG_BIN_PATH = str(Path(__file__).parent / "ffmpeg")
+if FFMPEG_BIN_PATH not in os.environ.get("PATH", ""):
+    os.environ["PATH"] = FFMPEG_BIN_PATH + os.pathsep + os.environ.get("PATH", "")
+
 # Handle both module import and direct execution
 try:
     from ..config import OUTPUT_PATH
@@ -86,11 +92,14 @@ def extract_and_stitch(
             print(f"  Extracting clip {idx + 1}/{len(events)}: {clip_start:.2f}s - {clip_end:.2f}s ({duration:.2f}s)")
             
             try:
-                # Extract clip using ffmpeg-python
+                # Extract clip using ffmpeg-python with re-encoding to fix keyframe issues
                 (
                     ffmpeg
                     .input(source_mp4_path, ss=clip_start, t=duration)
-                    .output(clip_path, c='copy', avoid_negative_ts='make_zero')
+                    .output(
+                        clip_path,
+                        **{'c:v': 'libx264', 'c:a': 'aac', 'crf': '18', 'preset': 'fast'}
+                    )
                     .overwrite_output()
                     .run(quiet=True, capture_stdout=True, capture_stderr=True)
                 )
@@ -121,15 +130,33 @@ def extract_and_stitch(
             temp_output = os.path.join(temp_dir, "stitched_no_subs.mp4")
             
             try:
-                # Concatenate using ffmpeg concat demuxer
+                # Concatenate using ffmpeg concat demuxer with re-encoding
                 (
                     ffmpeg
                     .input(concat_file, format='concat', safe=0)
-                    .output(temp_output, c='copy')
+                    .output(
+                        temp_output,
+                        **{'c:v': 'libx264', 'c:a': 'aac', 'crf': '18', 'preset': 'fast'}
+                    )
                     .overwrite_output()
                     .run(quiet=True, capture_stdout=True, capture_stderr=True)
                 )
                 print("  ✓ Clips concatenated successfully")
+                
+                # Step 2.5: Trim to exact duration to fix precision issues
+                expected_duration = sum(event["clip_end_sec"] - event["clip_start_sec"] for event in events)
+                print(f"  Trimming to exact duration: {expected_duration:.2f}s...")
+                
+                temp_trimmed = os.path.join(temp_dir, "stitched_trimmed.mp4")
+                (
+                    ffmpeg
+                    .input(temp_output)
+                    .output(temp_trimmed, t=expected_duration, c='copy')
+                    .overwrite_output()
+                    .run(quiet=True, capture_stdout=True, capture_stderr=True)
+                )
+                temp_output = temp_trimmed  # Use trimmed version
+                print("  ✓ Video trimmed to exact duration")
                 
             except ffmpeg.Error as e:
                 stderr = e.stderr.decode() if e.stderr else "Unknown error"
@@ -140,10 +167,18 @@ def extract_and_stitch(
         vtt_path = os.path.join(temp_dir, "subtitles.vtt")
         print("Generating WebVTT subtitles...")
         
+        # Import config for typing effect settings
+        try:
+            from ..config import ENABLE_TYPING_EFFECT, TYPING_SPEED_CPS
+        except ImportError:
+            from config import ENABLE_TYPING_EFFECT, TYPING_SPEED_CPS
+        
         with open(vtt_path, 'w', encoding='utf-8') as f:
             f.write("WEBVTT\n\n")
             
             cumulative_time = 0.0
+            cue_counter = 1
+            
             for idx, event in enumerate(events):
                 segment_id = event.get("segment_id", f"seg_{idx}")
                 caption_text = captions.get(segment_id, "")
@@ -153,20 +188,53 @@ def extract_and_stitch(
                 
                 # Calculate timing for this clip in the stitched video
                 clip_duration = event["clip_end_sec"] - event["clip_start_sec"]
-                start_time = cumulative_time
-                end_time = cumulative_time + clip_duration
-                cumulative_time = end_time
+                clip_start = cumulative_time
+                clip_end = cumulative_time + clip_duration
+                cumulative_time = clip_end
                 
-                # Format time as HH:MM:SS.mmm
-                start_str = _format_vtt_time(start_time)
-                end_str = _format_vtt_time(end_time)
-                
-                # Write subtitle cue
-                f.write(f"{idx + 1}\n")
-                f.write(f"{start_str} --> {end_str}\n")
-                f.write(f"{caption_text}\n\n")
+                if ENABLE_TYPING_EFFECT and caption_text:
+                    # Create progressive reveal effect (character-by-character)
+                    char_duration = 1.0 / TYPING_SPEED_CPS  # seconds per character
+                    
+                    for char_idx in range(1, len(caption_text) + 1):
+                        partial_text = caption_text[:char_idx]
+                        
+                        # Calculate timing for this character reveal
+                        char_start = clip_start + (char_idx - 1) * char_duration
+                        
+                        # End time: either when next char appears, or end of clip
+                        if char_idx < len(caption_text):
+                            char_end = clip_start + char_idx * char_duration
+                        else:
+                            char_end = clip_end  # Last char stays until clip ends
+                        
+                        # Don't exceed clip duration
+                        char_start = min(char_start, clip_end)
+                        char_end = min(char_end, clip_end)
+                        
+                        if char_start >= clip_end:
+                            break  # No more time for this character
+                        
+                        # Format time as HH:MM:SS.mmm
+                        start_str = _format_vtt_time(char_start)
+                        end_str = _format_vtt_time(char_end)
+                        
+                        # Write subtitle cue
+                        f.write(f"{cue_counter}\n")
+                        f.write(f"{start_str} --> {end_str}\n")
+                        f.write(f"{partial_text}\n\n")
+                        cue_counter += 1
+                else:
+                    # No typing effect - show full caption at once
+                    start_str = _format_vtt_time(clip_start)
+                    end_str = _format_vtt_time(clip_end)
+                    
+                    f.write(f"{cue_counter}\n")
+                    f.write(f"{start_str} --> {end_str}\n")
+                    f.write(f"{caption_text}\n\n")
+                    cue_counter += 1
         
-        print(f"  ✓ Generated {len([c for c in captions.values() if c])} subtitle cues")
+        print(f"  ✓ Generated {cue_counter - 1} subtitle cues")
         
         # Step 4: Attach subtitles to video
         print("Attaching subtitles to video...")
@@ -187,10 +255,7 @@ def extract_and_stitch(
                     video,
                     subtitles,
                     output_path,
-                    vcodec='copy',
-                    acodec='copy',
-                    scodec='mov_text',  # Subtitle codec for MP4
-                    **{'c:s': 'mov_text'}
+                    **{'c:v': 'copy', 'c:a': 'copy', 'c:s': 'mov_text'}
                 )
                 .overwrite_output()
                 .run(quiet=True, capture_stdout=True, capture_stderr=True)
@@ -201,6 +266,11 @@ def extract_and_stitch(
             stderr = e.stderr.decode() if e.stderr else "Unknown error"
             print(f"  ✗ Failed to attach subtitles: {stderr}")
             raise RuntimeError(f"Failed to attach subtitles: {stderr}")
+        
+        # Step 5: Save standalone VTT file alongside MP4
+        standalone_vtt_path = output_path.replace('.mp4', '.vtt')
+        shutil.copy2(vtt_path, standalone_vtt_path)
+        print(f"✓ Standalone subtitle file saved: {standalone_vtt_path}")
         
         print(f"✓ Final video saved to: {output_path}")
         return output_path

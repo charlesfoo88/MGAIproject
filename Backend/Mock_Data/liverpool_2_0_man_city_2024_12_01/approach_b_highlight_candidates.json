@@ -1,0 +1,255 @@
+[
+  {
+    "segment_id": "segment_001",
+    "time_range": {
+      "start": 267,
+      "end": 277
+    },
+    "predicted_event_type": "goal",
+    "confidence": 0.99,
+    "importance_score": 0.95,
+    "importance_rank": 1,
+    "team": "Liverpool",
+    "players": [
+      "C. Gakpo",
+      "Mohamed Salah"
+    ],
+    "score_after_event": "1-0",
+    "score_context": {
+      "home_team": "Liverpool",
+      "away_team": "Manchester City",
+      "home_score": 1,
+      "away_score": 0,
+      "score_change_detected": true
+    },
+    "match_phase": "first_half",
+    "match_time_display": "12:00",
+    "ocr_text": [
+      "C. Gakpo",
+      "12:00"
+    ],
+    "modality_scores": {
+      "audio": 0.95,
+      "visual": 0.94,
+      "context": 0.92
+    },
+    "feature_vector": {
+      "audio_peak": 0.95,
+      "audio_density": 1.0,
+      "audio_excitement": 0.92,
+      "audio_whistle": 0.85,
+      "audio_applause": 0.0,
+      "audio_crowd": 0.96,
+      "audio_commentary": 1.0,
+      "audio_score_update": 1.0,
+      "audio_celebration": 0.88,
+      "audio_foul_or_penalty": 0.0,
+      "audio_stoppage_review": 0.0,
+      "audio_substitution": 0.0,
+      "audio_injury_pause": 0.0,
+      "audio_high_tension": 0.8,
+      "visual_motion": 0.85,
+      "visual_replay": 0.0,
+      "visual_ocr": 1.0,
+      "visual_face": 1.0,
+      "visual_face_count": 6.0,
+      "visual_positive_emotion": 0.91,
+      "visual_negative_emotion": 0.05,
+      "visual_surprise": 0.72,
+      "context_scoreboard_visible": 1.0,
+      "context_crowd_reaction": 0.95,
+      "context_celebration": 0.9,
+      "context_disappointment": 0.0,
+      "context_stoppage_review": 0.0,
+      "context_bench_reaction": 0.6,
+      "context_highlight_package": 0.0,
+      "context_substitution": 0.0,
+      "context_injury": 0.0,
+      "context_high_tension": 0.75
+    },
+    "top_labels": [
+      {
+        "label": "goal",
+        "score": 0.97
+      },
+      {
+        "label": "celebration",
+        "score": 0.88
+      },
+      {
+        "label": "crowd_peak",
+        "score": 0.72
+      }
+    ],
+    "context_tags": [
+      "goal",
+      "score_change",
+      "crowd_eruption"
+    ],
+    "emotion_tags": [
+      "excitement",
+      "celebration"
+    ],
+    "domain_inference": "soccer_broadcast",
+    "domain_confidence": 0.96,
+    "about_summary": "C. Gakpo \u2014 Goal for Liverpool at 12 minutes.",
+    "judgment_criteria": [
+      "Goal event from API-Football",
+      "Video timestamp confirmed by Gemini Vision",
+      "Score progression tracked"
+    ],
+    "context_summary": "C. Gakpo \u2014 Goal for Liverpool at 12 minutes.",
+    "prompt_template": "default_soccer_goal",
+    "analysis_prompt": "Analyze goal scored by C. Gakpo at 12:00",
+    "dynamic_adjustments": {
+      "adjust_for_user_team": true,
+      "adjust_for_player_mention": true,
+      "adjust_for_score_significance": true
+    },
+    "supporting_audio_event_ids": [],
+    "supporting_video_event_ids": [],
+    "rationale": [
+      "Goal scored by C. Gakpo",
+      "Match minute: 12",
+      "Score after: 1-0"
+    ],
+    "heuristic_importance_score": 0.95,
+    "ranking_model": "api_football_gemini_vision",
+    "importance_reasons": [
+      {
+        "reason": "Goal event",
+        "weight": 0.95
+      },
+      {
+        "reason": "Score change",
+        "weight": 0.9
+      }
+    ]
+  },
+  {
+    "segment_id": "segment_012",
+    "time_range": {
+      "start": 711,
+      "end": 721
+    },
+    "predicted_event_type": "penalty_goal",
+    "confidence": 0.99,
+    "importance_score": 0.95,
+    "importance_rank": 2,
+    "team": "Liverpool",
+    "players": [
+      "Mohamed Salah"
+    ],
+    "score_after_event": "2-0",
+    "score_context": {
+      "home_team": "Liverpool",
+      "away_team": "Manchester City",
+      "home_score": 2,
+      "away_score": 0,
+      "score_change_detected": true
+    },
+    "match_phase": "second_half",
+    "match_time_display": "78:00",
+    "ocr_text": [
+      "Mohamed Salah",
+      "78:00"
+    ],
+    "modality_scores": {
+      "audio": 0.95,
+      "visual": 0.94,
+      "context": 0.92
+    },
+    "feature_vector": {
+      "audio_peak": 0.95,
+      "audio_density": 1.0,
+      "audio_excitement": 0.92,
+      "audio_whistle": 0.85,
+      "audio_applause": 0.0,
+      "audio_crowd": 0.96,
+      "audio_commentary": 1.0,
+      "audio_score_update": 1.0,
+      "audio_celebration": 0.88,
+      "audio_foul_or_penalty": 0.85,
+      "audio_stoppage_review": 0.0,
+      "audio_substitution": 0.0,
+      "audio_injury_pause": 0.0,
+      "audio_high_tension": 0.8,
+      "visual_motion": 0.85,
+      "visual_replay": 0.0,
+      "visual_ocr": 1.0,
+      "visual_face": 1.0,
+      "visual_face_count": 6.0,
+      "visual_positive_emotion": 0.91,
+      "visual_negative_emotion": 0.05,
+      "visual_surprise": 0.72,
+      "context_scoreboard_visible": 1.0,
+      "context_crowd_reaction": 0.95,
+      "context_celebration": 0.9,
+      "context_disappointment": 0.0,
+      "context_stoppage_review": 0.0,
+      "context_bench_reaction": 0.6,
+      "context_highlight_package": 0.0,
+      "context_substitution": 0.0,
+      "context_injury": 0.0,
+      "context_high_tension": 0.75
+    },
+    "top_labels": [
+      {
+        "label": "penalty_goal",
+        "score": 0.97
+      },
+      {
+        "label": "celebration",
+        "score": 0.88
+      },
+      {
+        "label": "crowd_peak",
+        "score": 0.72
+      }
+    ],
+    "context_tags": [
+      "goal",
+      "score_change",
+      "crowd_eruption"
+    ],
+    "emotion_tags": [
+      "excitement",
+      "celebration"
+    ],
+    "domain_inference": "soccer_broadcast",
+    "domain_confidence": 0.96,
+    "about_summary": "Mohamed Salah \u2014 Penalty for Liverpool at 78 minutes.",
+    "judgment_criteria": [
+      "Goal event from API-Football",
+      "Video timestamp confirmed by Gemini Vision",
+      "Score progression tracked"
+    ],
+    "context_summary": "Mohamed Salah \u2014 Penalty for Liverpool at 78 minutes.",
+    "prompt_template": "default_soccer_goal",
+    "analysis_prompt": "Analyze goal scored by Mohamed Salah at 78:00",
+    "dynamic_adjustments": {
+      "adjust_for_user_team": true,
+      "adjust_for_player_mention": true,
+      "adjust_for_score_significance": true
+    },
+    "supporting_audio_event_ids": [],
+    "supporting_video_event_ids": [],
+    "rationale": [
+      "Goal scored by Mohamed Salah",
+      "Match minute: 78",
+      "Score after: 2-0"
+    ],
+    "heuristic_importance_score": 0.95,
+    "ranking_model": "api_football_gemini_vision",
+    "importance_reasons": [
+      {
+        "reason": "Goal event",
+        "weight": 0.95
+      },
+      {
+        "reason": "Score change",
+        "weight": 0.9
+      }
+    ]
+  }
+]

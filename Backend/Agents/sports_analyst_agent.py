@@ -126,6 +126,31 @@ def extract_preferred_entity(user_preference: str) -> Optional[str]:
     return None
 
 
+def extract_structured_preference_fields(user_preference: str) -> dict:
+    """
+    Parse structured fields emitted by frontend prompt builder.
+
+    Example:
+        "Preference type: individual; detail: Bukayo Saka; tone: Neutral."
+    """
+    text = str(user_preference or "")
+    preference_type = ""
+    preference_detail = ""
+
+    type_match = re.search(r"preference\s*type\s*:\s*([^;\n]+)", text, flags=re.IGNORECASE)
+    detail_match = re.search(r"detail\s*:\s*([^;\n]+)", text, flags=re.IGNORECASE)
+
+    if type_match:
+        preference_type = type_match.group(1).strip().lower()
+    if detail_match:
+        preference_detail = detail_match.group(1).strip()
+
+    return {
+        "preference_type": preference_type,
+        "preference_detail": preference_detail,
+    }
+
+
 def transform_query(user_preference: str, provider: str = "groq") -> dict:
     """
     Transform raw user preference into structured search terms using LLM.
@@ -438,6 +463,28 @@ def run(shared_state: SharedState) -> SharedState:
     # Step 2b: Transform query using LLM for structured extraction
     print("[Step 2b] Transforming query with LLM...")
     query_transformed = transform_query(shared_state.user_preference, provider=LLM_PROVIDER)
+    structured_pref = extract_structured_preference_fields(shared_state.user_preference or "")
+
+    # Deterministic override for "individual" mode from frontend UI so player-level
+    # filtering works even if LLM query transformation is noisy.
+    if (
+        structured_pref["preference_type"] == "individual"
+        and structured_pref["preference_detail"]
+    ):
+        selected_player = structured_pref["preference_detail"]
+        players = query_transformed.get("preferred_players") or []
+        if selected_player not in players:
+            players = [selected_player, *players]
+        query_transformed["preferred_players"] = players
+
+        search_terms = query_transformed.get("search_terms") or []
+        if selected_player not in search_terms:
+            search_terms = [selected_player, *search_terms]
+        query_transformed["search_terms"] = search_terms
+
+        # Prefer player-level entity when individual mode is selected.
+        shared_state.preferred_entity = selected_player
+
     shared_state.query_transformed = query_transformed
     if query_transformed.get("preferred_team"):
         print(f"  Team: {query_transformed['preferred_team']}")

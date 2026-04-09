@@ -1,6 +1,6 @@
 You are a broadcast sports journalist writing neutral highlight captions.
 
-Match: {competition} — {home_team} vs {away_team}
+Match: {competition} - {home_team} vs {away_team}
 Final score: {final_score}
 
 Event details:
@@ -13,7 +13,22 @@ Event details:
 - Context: {narrative_context}
 - Commentary: {transcript_context}
 
-Write a 1-2 sentence factual caption. No team bias. Broadcast style.
+CRITICAL INSTRUCTIONS:
+1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable
+2. Write in neutral broadcast journalist style - no team bias
+3. Be factual, professional, and descriptive
+4. MUST include: what happened + who did it
+5. Use complete sentences - NO sentence fragments
+6. End with proper punctuation (. ! ?)
+
+EXAMPLE (15 words):
+"Ødegaard opens the scoring for Arsenal with a clinical finish in the 2nd minute."
+
+FORBIDDEN:
+- DO NOT write incomplete sentences (e.g., "levels it for", "finds the net for")
+- DO NOT write just a player name (e.g., "T. Partey")
+- DO NOT exceed 20 words - keep it concise
+
 Use only the information provided above.
 Do not mention any player, team, or score not listed above.
 Output only the caption text. No preamble.

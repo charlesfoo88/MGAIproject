@@ -252,7 +252,7 @@ for match_key, match_info in target_matches.items():
     # Save
     output_dir = Path(__file__).parent.parent / "Mock_Data" / match_key
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / "dl_handoff.json"
+    output_path = output_dir / "approach_b_dl_handoff.json"
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(mgai_json, f, indent=2, ensure_ascii=False)
 

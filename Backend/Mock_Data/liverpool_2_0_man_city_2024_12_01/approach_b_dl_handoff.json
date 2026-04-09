@@ -1,0 +1,366 @@
+{
+  "match_context": {
+    "match_id": "1208147",
+    "home_team": "Liverpool",
+    "away_team": "Manchester City",
+    "competition": "Premier League",
+    "season": "2024-2025",
+    "date": "2024-12-01",
+    "venue": "Anfield",
+    "final_score": "2-0"
+  },
+  "entity_registry": [
+    {
+      "entity_id": "team_liverpool",
+      "entity_type": "team",
+      "canonical_name": "Liverpool",
+      "aliases": [
+        "Liverpool"
+      ],
+      "team_id": "liverpool"
+    },
+    {
+      "entity_id": "team_manchester_city",
+      "entity_type": "team",
+      "canonical_name": "Manchester City",
+      "aliases": [
+        "Manchester City",
+        "City"
+      ],
+      "team_id": "manchester_city"
+    },
+    {
+      "entity_id": "player_c_gakpo",
+      "entity_type": "player",
+      "canonical_name": "C. Gakpo",
+      "aliases": [
+        "C. Gakpo",
+        "Gakpo"
+      ],
+      "team_id": "liverpool"
+    },
+    {
+      "entity_id": "player_matheus_nunes",
+      "entity_type": "player",
+      "canonical_name": "Matheus Nunes",
+      "aliases": [
+        "Matheus Nunes",
+        "Nunes"
+      ],
+      "team_id": "manchester_city"
+    },
+    {
+      "entity_id": "player_phil_foden",
+      "entity_type": "player",
+      "canonical_name": "Phil Foden",
+      "aliases": [
+        "Phil Foden",
+        "Foden"
+      ],
+      "team_id": "manchester_city"
+    },
+    {
+      "entity_id": "player_ryan_gravenberch",
+      "entity_type": "player",
+      "canonical_name": "Ryan Gravenberch",
+      "aliases": [
+        "Ryan Gravenberch",
+        "Gravenberch"
+      ],
+      "team_id": "liverpool"
+    },
+    {
+      "entity_id": "player_manuel_akanji",
+      "entity_type": "player",
+      "canonical_name": "Manuel Akanji",
+      "aliases": [
+        "Manuel Akanji",
+        "Akanji"
+      ],
+      "team_id": "manchester_city"
+    },
+    {
+      "entity_id": "player_i\u0307_g\u00fcndo\u011fan",
+      "entity_type": "player",
+      "canonical_name": "\u0130. G\u00fcndo\u011fan",
+      "aliases": [
+        "\u0130. G\u00fcndo\u011fan",
+        "G\u00fcndo\u011fan"
+      ],
+      "team_id": "manchester_city"
+    },
+    {
+      "entity_id": "player_t_alexander-arnold",
+      "entity_type": "player",
+      "canonical_name": "T. Alexander-Arnold",
+      "aliases": [
+        "T. Alexander-Arnold",
+        "Alexander-Arnold"
+      ],
+      "team_id": "liverpool"
+    },
+    {
+      "entity_id": "player_r_lewis",
+      "entity_type": "player",
+      "canonical_name": "R. Lewis",
+      "aliases": [
+        "R. Lewis",
+        "Lewis"
+      ],
+      "team_id": "manchester_city"
+    },
+    {
+      "entity_id": "player_mohamed_salah",
+      "entity_type": "player",
+      "canonical_name": "Mohamed Salah",
+      "aliases": [
+        "Mohamed Salah",
+        "Salah"
+      ],
+      "team_id": "liverpool"
+    },
+    {
+      "entity_id": "player_l_d\u00edaz",
+      "entity_type": "player",
+      "canonical_name": "L. D\u00edaz",
+      "aliases": [
+        "L. D\u00edaz",
+        "D\u00edaz"
+      ],
+      "team_id": "liverpool"
+    }
+  ],
+  "score_progression": [
+    {
+      "time": "0:00",
+      "score": "0-0",
+      "event": "kickoff"
+    },
+    {
+      "time": "12:00",
+      "score": "1-0",
+      "scorer": "C. Gakpo",
+      "team": "Liverpool",
+      "event": "goal"
+    },
+    {
+      "time": "78:00",
+      "score": "2-0",
+      "scorer": "Mohamed Salah",
+      "team": "Liverpool",
+      "event": "goal"
+    }
+  ],
+  "events": [
+    {
+      "clip_id": "segment_001",
+      "time": "12:00",
+      "time_seconds": 720.0,
+      "event_type": "goal",
+      "importance": 0.95,
+      "confidence": 0.99,
+      "team": "Liverpool",
+      "players": [
+        "C. Gakpo",
+        "Mohamed Salah"
+      ],
+      "score_after_event": "1-0",
+      "clip_start_sec": 267,
+      "clip_end_sec": 277,
+      "ocr_text": [
+        "C. Gakpo",
+        "12:00"
+      ],
+      "match_phase": "first_half",
+      "context": {
+        "previous_event": null,
+        "next_event": null,
+        "narrative": "C. Gakpo \u2014 Goal for Liverpool at 12 minutes."
+      },
+      "scorer": "C. Gakpo",
+      "assist": "Mohamed Salah"
+    },
+    {
+      "clip_id": "segment_006",
+      "time": "57:00",
+      "time_seconds": 3420.0,
+      "event_type": "substitution",
+      "importance": 0.5,
+      "confidence": 0.99,
+      "team": "Manchester City",
+      "players": [
+        "Matheus Nunes",
+        "J. Doku"
+      ],
+      "score_after_event": null,
+      "clip_start_sec": 533,
+      "clip_end_sec": 543,
+      "ocr_text": [
+        "Matheus Nunes",
+        "57:00"
+      ],
+      "match_phase": "second_half",
+      "context": {
+        "previous_event": null,
+        "next_event": null,
+        "narrative": "Matheus Nunes \u2014 Substitution 1 for Manchester City at 57 minutes."
+      }
+    },
+    {
+      "clip_id": "segment_007",
+      "time": "58:00",
+      "time_seconds": 3480.0,
+      "event_type": "substitution",
+      "importance": 0.5,
+      "confidence": 0.99,
+      "team": "Manchester City",
+      "players": [
+        "\u0130. G\u00fcndo\u011fan",
+        "Savinho"
+      ],
+      "score_after_event": null,
+      "clip_start_sec": 533,
+      "clip_end_sec": 543,
+      "ocr_text": [
+        "\u0130. G\u00fcndo\u011fan",
+        "58:00"
+      ],
+      "match_phase": "second_half",
+      "context": {
+        "previous_event": null,
+        "next_event": null,
+        "narrative": "\u0130. G\u00fcndo\u011fan \u2014 Substitution 2 for Manchester City at 58 minutes."
+      }
+    },
+    {
+      "clip_id": "segment_008",
+      "time": "73:00",
+      "time_seconds": 4380.0,
+      "event_type": "substitution",
+      "importance": 0.5,
+      "confidence": 0.99,
+      "team": "Liverpool",
+      "players": [
+        "C. Gakpo",
+        "D. N\u00fa\u00f1ez"
+      ],
+      "score_after_event": null,
+      "clip_start_sec": 625,
+      "clip_end_sec": 635,
+      "ocr_text": [
+        "C. Gakpo",
+        "73:00"
+      ],
+      "match_phase": "second_half",
+      "context": {
+        "previous_event": null,
+        "next_event": null,
+        "narrative": "C. Gakpo \u2014 Substitution 1 for Liverpool at 73 minutes."
+      }
+    },
+    {
+      "clip_id": "segment_009",
+      "time": "73:00",
+      "time_seconds": 4380.0,
+      "event_type": "substitution",
+      "importance": 0.5,
+      "confidence": 0.99,
+      "team": "Liverpool",
+      "players": [
+        "T. Alexander-Arnold",
+        "J. Quansah"
+      ],
+      "score_after_event": null,
+      "clip_start_sec": 625,
+      "clip_end_sec": 635,
+      "ocr_text": [
+        "T. Alexander-Arnold",
+        "73:00"
+      ],
+      "match_phase": "second_half",
+      "context": {
+        "previous_event": null,
+        "next_event": null,
+        "narrative": "T. Alexander-Arnold \u2014 Substitution 2 for Liverpool at 73 minutes."
+      }
+    },
+    {
+      "clip_id": "segment_010",
+      "time": "78:00",
+      "time_seconds": 4680.0,
+      "event_type": "substitution",
+      "importance": 0.5,
+      "confidence": 0.99,
+      "team": "Manchester City",
+      "players": [
+        "P. Foden",
+        "K. De Bruyne"
+      ],
+      "score_after_event": null,
+      "clip_start_sec": 759,
+      "clip_end_sec": 769,
+      "ocr_text": [
+        "P. Foden",
+        "78:00"
+      ],
+      "match_phase": "second_half",
+      "context": {
+        "previous_event": null,
+        "next_event": null,
+        "narrative": "P. Foden \u2014 Substitution 3 for Manchester City at 78 minutes."
+      }
+    },
+    {
+      "clip_id": "segment_011",
+      "time": "78:00",
+      "time_seconds": 4680.0,
+      "event_type": "substitution",
+      "importance": 0.5,
+      "confidence": 0.99,
+      "team": "Manchester City",
+      "players": [
+        "R. Lewis",
+        "J. Grealish"
+      ],
+      "score_after_event": null,
+      "clip_start_sec": 759,
+      "clip_end_sec": 769,
+      "ocr_text": [
+        "R. Lewis",
+        "78:00"
+      ],
+      "match_phase": "second_half",
+      "context": {
+        "previous_event": null,
+        "next_event": null,
+        "narrative": "R. Lewis \u2014 Substitution 4 for Manchester City at 78 minutes."
+      }
+    },
+    {
+      "clip_id": "segment_012",
+      "time": "78:00",
+      "time_seconds": 4680.0,
+      "event_type": "penalty_goal",
+      "importance": 0.95,
+      "confidence": 0.99,
+      "team": "Liverpool",
+      "players": [
+        "Mohamed Salah"
+      ],
+      "score_after_event": "2-0",
+      "clip_start_sec": 711,
+      "clip_end_sec": 721,
+      "ocr_text": [
+        "Mohamed Salah",
+        "78:00"
+      ],
+      "match_phase": "second_half",
+      "context": {
+        "previous_event": null,
+        "next_event": null,
+        "narrative": "Mohamed Salah \u2014 Penalty for Liverpool at 78 minutes."
+      },
+      "scorer": "Mohamed Salah"
+    }
+  ]
+}

@@ -80,7 +80,7 @@ class DynamicAdjustments(BaseModel):
 
 
 class HighlightCandidate(BaseModel):
-    """Model for D15 highlight_candidates.json - Updated for Approach B compatibility"""
+    """Model for D15 approach_b_highlight_candidates.json"""
     # Required fields (present in Approach B)
     segment_id: str
     time_range: TimeRange

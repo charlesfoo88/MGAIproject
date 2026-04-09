@@ -19,13 +19,15 @@ try:
         GEMINI_MODEL,
         MAX_RETRIES,
         ALIGNMENT_THRESHOLD,
+        DISAGREEMENT_IMPORTANCE_THRESHOLD,
+        MAX_HIGHLIGHTS,
         HALLUCINATION_CHECK_PROMPT,
         CAPTION_PERSONALISED_PROMPT,
         CAPTION_NEUTRAL_PROMPT,
     )
     from ..State import SharedState
     from ..Schemas import HandoffEvent, ReelEvent, VerifiedOutput
-    from ..Schemas.verified_output_schema import VerifiedReelEvent
+    from ..Schemas.verified_output_schema import VerifiedReelEvent, DisagreementRecord
     from ..Tools.embedding_tool import encode, cosine_similarity
     from ..Tools import lookup as rag_lookup
 except ImportError:
@@ -40,13 +42,15 @@ except ImportError:
         GEMINI_MODEL,
         MAX_RETRIES,
         ALIGNMENT_THRESHOLD,
+        DISAGREEMENT_IMPORTANCE_THRESHOLD,
+        MAX_HIGHLIGHTS,
         HALLUCINATION_CHECK_PROMPT,
         CAPTION_PERSONALISED_PROMPT,
         CAPTION_NEUTRAL_PROMPT,
     )
     from State import SharedState
     from Schemas import HandoffEvent, ReelEvent, VerifiedOutput
-    from Schemas.verified_output_schema import VerifiedReelEvent
+    from Schemas.verified_output_schema import VerifiedReelEvent, DisagreementRecord
     from Tools.embedding_tool import encode, cosine_similarity
     from Tools import lookup as rag_lookup
 
@@ -397,6 +401,147 @@ def recaption_event(
 
 
 # ============================================================================
+# Disagreement Functions
+# ============================================================================
+
+def run_disagreement(
+    events: List[HandoffEvent],
+    shared_state: SharedState,
+    provider: str
+) -> Tuple[List[HandoffEvent], List]:
+    """
+    Run disagreement dialogue where Critic challenges low-importance clip selections.
+    
+    Args:
+        events: List of HandoffEvent objects
+        shared_state: SharedState with match context
+        provider: LLM provider ("groq" or "gemini")
+        
+    Returns:
+        Tuple of (approved_events, disagreement_log)
+    """
+    # Separate into auto-approved and challenged
+    auto_approved = []
+    challenged = []
+    
+    for event in events:
+        if event.importance >= DISAGREEMENT_IMPORTANCE_THRESHOLD:
+            auto_approved.append(event)
+        else:
+            challenged.append(event)
+    
+    print(f"Auto-approved (importance >= {DISAGREEMENT_IMPORTANCE_THRESHOLD}): {len(auto_approved)} clips")
+    print(f"Challenged (importance < {DISAGREEMENT_IMPORTANCE_THRESHOLD}): {len(challenged)} clips")
+    
+    if not challenged:
+        return events, []
+    
+    # Build simple LLM chain (single prompt/response, no complex chain needed)
+    if provider == "groq":
+        if not GROQ_AVAILABLE or not GROQ_API_KEY:
+            raise ValueError("Groq API key not found or library not installed")
+        llm = ChatGroq(model=GROQ_MODEL, api_key=GROQ_API_KEY, temperature=0.5, max_tokens=100)
+    else:  # gemini
+        if not GEMINI_AVAILABLE or not GEMINI_API_KEY:
+            raise ValueError("Gemini API key not found or library not installed")
+        llm = ChatGoogleGenerativeAI(model=GEMINI_MODEL, google_api_key=GEMINI_API_KEY, temperature=0.5, max_tokens=100)
+    
+    disagreement_log = []
+    confirmed_events = []
+    
+    # Count higher importance clips already selected
+    higher_importance_count = len([e for e in auto_approved if e.importance >= DISAGREEMENT_IMPORTANCE_THRESHOLD])
+    
+    for event in challenged:
+        print(f"\n  Challenging: {event.event_type} @ {event.time} (importance: {event.importance:.2f})")
+        
+        # Round 1: Critic challenges
+        round_1_challenge = (
+            f"You are a Critic Agent reviewing highlight clip selection. "
+            f"Event: {event.event_type} by {', '.join(event.players) if event.players else 'unknown'} at {event.time} "
+            f"(importance: {event.importance:.2f}). "
+            f"Challenge: Why should this clip be included in the highlight reel? "
+            f"Ask for justification in one sentence."
+        )
+        
+        # Round 1: Sports Analyst defends
+        round_1_defence_prompt = (
+            f"You are a Sports Analyst defending a clip selection. "
+            f"Event: {event.event_type} by {', '.join(event.players) if event.players else 'unknown'} at {event.time}. "
+            f"Importance score: {event.importance:.2f}. "
+            f"Available clips in match: {len(events)}. "
+            f"Higher importance clips already selected: {higher_importance_count}. "
+            f"Target reel length: {MAX_HIGHLIGHTS} clips. "
+            f"Defend this clip selection in one sentence."
+        )
+        round_1_defence = llm.invoke(round_1_defence_prompt).content.strip()
+        
+        # Round 2: Critic pushes further
+        round_2_challenge = (
+            f"You are a Critic Agent. The Sports Analyst has defended this clip: "
+            f"Defence: {round_1_defence}. "
+            f"Push further: Is there narrative or match context significance "
+            f"that justifies this clip? Ask in one sentence."
+        )
+        
+        # Round 2: Sports Analyst provides deeper justification
+        match_ctx = shared_state.match_context
+        narrative = event.context.narrative if hasattr(event.context, 'narrative') else "No narrative available"
+        round_2_defence_prompt = (
+            f"You are a Sports Analyst. Provide deeper justification: "
+            f"Event: {event.event_type} at {event.time}. "
+            f"Match context: {match_ctx.final_score if match_ctx else 'Unknown'}, {event.match_phase}. "
+            f"Narrative: {narrative}. "
+            f"Provide one sentence of deeper justification."
+        )
+        round_2_defence = llm.invoke(round_2_defence_prompt).content.strip()
+        
+        # Critic makes final decision
+        decision_prompt = (
+            f"Based on this exchange:\n"
+            f"Round 1 - Defence: {round_1_defence}\n"
+            f"Round 2 - Defence: {round_2_defence}\n"
+            f"Total available clips: {len(events)}\n"
+            f"Higher importance clips selected: {higher_importance_count}\n"
+            f"Target clip count: {MAX_HIGHLIGHTS}\n\n"
+            f"Decision: Should this clip be CONFIRMED or OVERRIDDEN?\n"
+            f"If removing this clip would leave the reel below {MAX_HIGHLIGHTS} clips, confirm it.\n"
+            f"If a better clip exists to replace it, override it.\n"
+            f"Respond with exactly: CONFIRMED: {{reason}} or OVERRIDDEN: {{reason}}"
+        )
+        decision_response = llm.invoke(decision_prompt).content.strip()
+        
+        # Parse decision
+        if "CONFIRMED:" in decision_response:
+            outcome = "confirmed"
+            reason = decision_response.split("CONFIRMED:")[1].strip()
+            confirmed_events.append(event)
+            print(f"    ✓ CONFIRMED: {reason[:60]}...")
+        else:
+            outcome = "overridden"
+            reason = decision_response.split("OVERRIDDEN:")[1].strip() if "OVERRIDDEN:" in decision_response else decision_response
+            print(f"    ✗ OVERRIDDEN: {reason[:60]}...")
+        
+        # Log disagreement
+        disagreement_log.append(DisagreementRecord(
+            segment_id=event.clip_id,
+            event_type=event.event_type,
+            importance_score=event.importance,
+            round_1_challenge=round_1_challenge,
+            round_1_defence=round_1_defence,
+            round_2_challenge=round_2_challenge,
+            round_2_defence=round_2_defence,
+            outcome=outcome,
+            reason=reason
+        ))
+    
+    # Combine approved events
+    approved_events = auto_approved + confirmed_events
+    
+    return approved_events, disagreement_log
+
+
+# ============================================================================
 # Main Agent Function
 # ============================================================================
 
@@ -502,6 +647,7 @@ def run(shared_state: SharedState) -> VerifiedOutput:
             if shared_state.retry_count < MAX_RETRIES:
                 print(f"      Retry {shared_state.retry_count + 1}/{MAX_RETRIES}: Re-captioning...")
                 
+                original_caption = reel_event.caption  # store before overwriting
                 new_caption = recaption_event(
                     handoff_event,
                     shared_state,
@@ -517,6 +663,8 @@ def run(shared_state: SharedState) -> VerifiedOutput:
                     event_type=reel_event.event_type,
                     team=reel_event.team,
                     evidence=reel_event.evidence,
+                    original_caption=original_caption,
+                    was_regenerated=True,
                 )
                 
                 print(f"      ✓ New caption: {new_caption[:60]}...")
@@ -564,6 +712,7 @@ def run(shared_state: SharedState) -> VerifiedOutput:
             if shared_state.retry_count < MAX_RETRIES:
                 print(f"      Retry {shared_state.retry_count + 1}/{MAX_RETRIES}: Re-captioning...")
                 
+                original_caption = reel_event.caption  # store before overwriting
                 new_caption = recaption_event(
                     handoff_event,
                     shared_state,
@@ -579,6 +728,8 @@ def run(shared_state: SharedState) -> VerifiedOutput:
                     event_type=reel_event.event_type,
                     team=reel_event.team,
                     evidence=reel_event.evidence,
+                    original_caption=original_caption,
+                    was_regenerated=True,
                 )
                 
                 print(f"      ✓ New caption: {new_caption[:60]}...")
@@ -678,6 +829,7 @@ def run(shared_state: SharedState) -> VerifiedOutput:
         reel_a_alignment_score=reel_a_alignment_score,
         reel_b_alignment_score=reel_b_alignment_score,
         evidence_summary=evidence_summary,
+        disagreement_log=shared_state.disagreement_log,
     )
     
     return verified_output

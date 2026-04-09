@@ -10,8 +10,12 @@ class EvidenceSource(BaseModel):
     # D17 fields used: narrative, score_after_event, players, context
     rag_facts: List[str] = []
     # List of entity names that had KB facts retrieved
+    rag_fact_texts: List[str] = []
+    # Full RAG fact text (not just entity names)
     transcript_chunks: List[str] = []
     # Narrative chunks used from D4 audio summaries
+    prompt_used: str = ""
+    # Actual prompt sent to LLM
 
 
 class ReelEvent(BaseModel):

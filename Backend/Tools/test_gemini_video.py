@@ -10,13 +10,13 @@ genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 
 # Option 1: Use local video file
 # Download a short clip from https://www.youtube.com/watch?v=f3POqcfPJZ8
-# and save to Backend/Source_Videos/test_clip.mp4
+# and save to Backend/Source_Videos/arsenal_5_1_man_city.mp4
 
 # Option 2: Use YouTube URL directly (if supported)
 # video_url = "https://www.youtube.com/watch?v=f3POqcfPJZ8"
 
 # For this test, we'll use a local file
-video_path = Path(__file__).parent.parent / "Source_Videos" / "test_clip.mp4"
+video_path = Path(__file__).parent.parent / "Source_Videos" / "arsenal_5_1_man_city.mp4"
 
 if not video_path.exists():
     print(f"❌ Video file not found: {video_path}")

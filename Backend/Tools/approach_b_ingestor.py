@@ -19,6 +19,7 @@ import sys
 import time
 import json
 import argparse
+from datetime import datetime
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -97,6 +98,129 @@ def expand_clip_window(event):
         event['clip_end_sec'] = timestamp + 8
     
     return event
+
+
+def retry_failed_events(video_file, failed_events, gemini_client, model_name):
+    """Retry Gemini Vision for events it couldn't find — with API hints"""
+    if not failed_events:
+        return []
+    
+    print(f"\n[Re-grounding] Retrying {len(failed_events)} failed events with API hints...")
+    retried = []
+    
+    for event in failed_events:
+        player = event.get('player', 'Unknown')
+        event_type = event.get('event_type', 'unknown')
+        match_minute = event.get('match_minute', '?')
+        team = event.get('team', 'Unknown')
+        
+        print(f"  [Re-grounding] Retrying: {player} {event_type} at {match_minute} min...")
+        
+        prompt = f"""Watch this football highlights video carefully.
+
+I need you to find ONE specific moment in this video.
+
+Known facts from official match data:
+- Event: {event_type}
+- Player: {player}
+- Team: {team}
+- Match minute: {match_minute}
+- This event DEFINITELY happened in this match
+
+Look for:
+- Scoreboard showing around minute {match_minute}
+- Player name "{player}" appearing on screen
+- {team} players celebrating or reacting
+- Commentary or crowd reaction consistent with a {event_type}
+
+Return JSON only:
+{{
+  "player": "{player}",
+  "event_type": "{event_type}",
+  "team": "{team}",
+  "match_minute": "{match_minute}",
+  "video_timestamp_seconds": <seconds into this video where event occurs>,
+  "clip_start_sec": <video_timestamp - 3>,
+  "clip_end_sec": <video_timestamp + 7>,
+  "found": true or false,
+  "confidence": "high/medium/low",
+  "detection_method": "re_grounded"
+}}
+
+If you still cannot find this event return found=false.
+Return JSON only, no other text."""
+
+        try:
+            response = gemini_client.models.generate_content(
+                model=model_name,
+                contents=[video_file, prompt]
+            )
+            clean = response.text.replace("```json", "").replace("```", "").strip()
+            result = json.loads(clean)
+            result['detection_method'] = 're_grounded'
+            
+            # Apply clip window expansion
+            result = expand_clip_window(result)
+            
+            retried.append(result)
+            status = "✓ FOUND" if result.get('found') else "✗ STILL NOT FOUND"
+            print(f"    {status} — confidence: {result.get('confidence')}")
+        except Exception as e:
+            print(f"    ✗ Error: {e}")
+            event['detection_method'] = 're_grounded_failed'
+            event['found'] = False
+            retried.append(event)
+    
+    return retried
+
+
+def self_consistency_check(mapped_events, api_events):
+    """Cross-check Gemini results against API-Football ground truth"""
+    print("\n[Self-Consistency Check]")
+    issues = []
+    
+    # Check 1: Timestamp ordering — events should be in chronological order
+    found_events = [e for e in mapped_events if e.get('found')]
+    timestamps = [e.get('video_timestamp_seconds', 0) for e in found_events]
+    
+    for i in range(1, len(timestamps)):
+        if timestamps[i] <= timestamps[i-1]:
+            issues.append(f"Timestamp order issue: event {i} ({timestamps[i]}s) <= event {i-1} ({timestamps[i-1]}s)")
+    
+    # Check 2: Team name agreement between Gemini and API-Sports
+    for gemini_event in mapped_events:
+        if not gemini_event.get('found'):
+            continue
+        
+        player = gemini_event.get('player')
+        gemini_team = gemini_event.get('team', '').lower()
+        
+        # Find matching API event by player name
+        for api_event in api_events:
+            api_player = api_event.get('player', {}).get('name', '')
+            if api_player == player:
+                api_team = api_event.get('team', {}).get('name', '').lower()
+                # Check if team names match (partial match allowed)
+                if gemini_team and api_team and gemini_team not in api_team and api_team not in gemini_team:
+                    issues.append(f"Team mismatch for {player}: Gemini='{gemini_team}', API='{api_team}'")
+                break
+    
+    # Check 3: Found count summary
+    total_events = len(mapped_events)
+    found_count = len([e for e in mapped_events if e.get('found')])
+    not_found_count = total_events - found_count
+    
+    print(f"  Events found: {found_count}/{total_events}")
+    print(f"  Events not found: {not_found_count}/{total_events}")
+    
+    if issues:
+        print(f"  ⚠ {len(issues)} consistency issues detected:")
+        for issue in issues:
+            print(f"    - {issue}")
+    else:
+        print(f"  ✓ All consistency checks passed")
+    
+    return issues
 
 
 def map_events_to_video_timestamps(events, video_path: Path):
@@ -185,26 +309,78 @@ If you cannot find an event in the video set found=false.
 Return JSON only, no other text."""
     
     print(f"  → Asking Gemini to map {len(known_events)} events...")
+    model_name = "gemini-2.5-pro"
     response = gemini_client.models.generate_content(
-        model="gemini-2.5-pro",
+        model=model_name,
         contents=[video_file, prompt]
     )
     
-    # Parse response
+    # Parse response - FIRST ATTEMPT
+    first_attempt_events = []
     try:
         clean = response.text.replace("```json", "").replace("```", "").strip()
         result = json.loads(clean)
-        mapped_events = result['mapped_events']
+        first_attempt_events = result['mapped_events']
         
         # Post-process: Recalculate clip boundaries based on event type
         print(f"  → Recalculating clip boundaries based on event types...")
-        mapped_events = [expand_clip_window(event) for event in mapped_events]
+        first_attempt_events = [expand_clip_window(event) for event in first_attempt_events]
         
-        # Update result with expanded events
-        result['mapped_events'] = mapped_events
+        # Mark detection method for first attempt
+        for event in first_attempt_events:
+            if 'detection_method' not in event:
+                event['detection_method'] = 'first_attempt'
         
-        print(f"  ✓ Mapped {len(mapped_events)} events")
-        return result
+        found_count = len([e for e in first_attempt_events if e.get('found')])
+        not_found_count = len(first_attempt_events) - found_count
+        print(f"  ✓ First attempt: {found_count}/{len(first_attempt_events)} events found")
+        
+        # Step 2: RETRY FAILED EVENTS with re-grounding
+        failed_events = [e for e in first_attempt_events if not e.get('found')]
+        retried_events = []
+        
+        if failed_events:
+            retried_events = retry_failed_events(
+                video_file=video_file,
+                failed_events=failed_events,
+                gemini_client=gemini_client,
+                model_name=model_name
+            )
+        
+        # Step 3: MERGE results - replace failed events with retried versions
+        final_mapped_events = []
+        for event in first_attempt_events:
+            if event.get('found'):
+                final_mapped_events.append(event)
+            else:
+                # Find corresponding retried event
+                player = event.get('player')
+                retried = next((e for e in retried_events if e.get('player') == player), event)
+                final_mapped_events.append(retried)
+        
+        # Step 4: SELF-CONSISTENCY CHECK
+        consistency_issues = self_consistency_check(final_mapped_events, events)
+        
+        # Build enhanced result with metadata
+        enhanced_result = {
+            'mapped_events': final_mapped_events,
+            'first_attempt': {
+                'found': len([e for e in first_attempt_events if e.get('found')]),
+                'not_found': len([e for e in first_attempt_events if not e.get('found')])
+            },
+            'after_regrounding': {
+                'found': len([e for e in final_mapped_events if e.get('found')]),
+                'not_found': len([e for e in final_mapped_events if not e.get('found')])
+            },
+            'consistency_issues': consistency_issues
+        }
+        
+        final_found = enhanced_result['after_regrounding']['found']
+        total = len(final_mapped_events)
+        print(f"\n  ✓ Final result: {final_found}/{total} events mapped")
+        
+        return enhanced_result
+        
     except Exception as e:
         print(f"  ❌ Failed to parse Gemini response: {e}")
         return None
@@ -264,19 +440,49 @@ def build_entity_registry(fixture_data, events_data):
     
     # Add players from events
     players_seen = set()
+    player_name_map = {}  # Track variations of same player (e.g., "P. Foden" vs "Phil Foden")
+    
     for event in events_data:
         player_name = event['player']['name']
-        if player_name and player_name not in players_seen:
-            players_seen.add(player_name)
-            team_name = event['team']['name']
+        if not player_name:
+            continue
             
-            registry.append({
-                "entity_id": f"player_{player_name.lower().replace(' ', '_').replace('.', '')}",
-                "entity_type": "player",
-                "canonical_name": player_name,
-                "aliases": [player_name, player_name.split()[-1]],
-                "team_id": team_name.lower().replace(' ', '_')
-            })
+        # Normalize: check if this is a duplicate with abbreviated first name
+        # e.g., "P. Foden" and "Phil Foden" should be same entity
+        last_name = player_name.split()[-1] if ' ' in player_name else player_name
+        
+        # Check if we've seen this last name before
+        existing_name = None
+        for seen_name in players_seen:
+            seen_last = seen_name.split()[-1] if ' ' in seen_name else seen_name
+            if last_name == seen_last:
+                # Same last name - check if one is abbreviated
+                # Keep the longer (full) version
+                if len(player_name) > len(seen_name):
+                    # New name is fuller, replace old one
+                    players_seen.discard(seen_name)
+                    player_name_map[player_name] = player_name
+                    existing_name = None  # Will add the new fuller name
+                    break
+                else:
+                    # Existing name is fuller or same, skip this one
+                    existing_name = seen_name
+                    player_name_map[player_name] = seen_name  # Map abbreviated to full
+                    break
+        
+        if existing_name:
+            continue  # Skip duplicate
+            
+        players_seen.add(player_name)
+        team_name = event['team']['name']
+        
+        registry.append({
+            "entity_id": f"player_{player_name.lower().replace(' ', '_').replace('.', '')}",
+            "entity_type": "player",
+            "canonical_name": player_name,
+            "aliases": [player_name, player_name.split()[-1]],
+            "team_id": team_name.lower().replace(' ', '_')
+        })
     
     return registry
 
@@ -383,7 +589,8 @@ def generate_dl_handoff(fixture_data, events_data, mapped_events, entity_registr
                 score_after = sp['score']
                 break
         
-        events.append({
+        # Build event dict
+        event_dict = {
             "clip_id": f"segment_{idx:03d}",
             "time": f"{minute}:00",
             "time_seconds": int(minute) * 60.0,
@@ -402,7 +609,19 @@ def generate_dl_handoff(fixture_data, events_data, mapped_events, entity_registr
                 "next_event": None,
                 "narrative": f"{player_name} — {event['detail'].replace('Normal Goal', 'Goal')} for {event['team']['name']} at {minute} minutes."
             }
-        })
+        }
+        
+        # For goals/penalties, add explicit scorer/assist fields to avoid LLM confusion
+        if event_type in ['goal', 'penalty_goal']:
+            event_dict['scorer'] = player_name
+            if event.get('assist', {}).get('name'):
+                event_dict['assist'] = event['assist']['name']
+        
+        # ONLY append events with valid video timestamps (skip cards/subs not found by Vision)
+        if clip_start is not None:
+            events.append(event_dict)
+        else:
+            print(f"⚠ Skipping {event_type} ({player_name} {minute}') - no video timestamp")
     
     # Build final JSON
     dl_handoff = {
@@ -565,6 +784,9 @@ def main():
     
     args = parser.parse_args()
     
+    # Start timing
+    ingestor_start_time = time.time()
+    
     print("=" * 60)
     print("APPROACH B INGESTOR — Fully Autonomous")
     print("=" * 60)
@@ -582,7 +804,9 @@ def main():
         sys.exit(1)
     
     # Step 1: Fetch match events from API
+    step1_start = time.time()
     fixture_data, events_data, full_api_response = fetch_match_events_from_api(args.fixture_id)
+    print(f"  ✓ API fetch: {round(time.time() - step1_start, 2)}s")
     
     # Save raw API response for debugging
     api_debug_path = BACKEND_DIR / "Outputs" / f"api_sports_{args.match}_full.json"
@@ -592,7 +816,9 @@ def main():
     print(f"  ✓ API response saved to: {api_debug_path}")
     
     # Step 2: Map events to video timestamps
+    step2_start = time.time()
     gemini_result = map_events_to_video_timestamps(events_data, video_path)
+    print(f"  ✓ Gemini Vision mapping: {round(time.time() - step2_start, 2)}s")
     mapped_events = gemini_result['mapped_events'] if gemini_result else None
     
     # Save Gemini raw mapping for debugging
@@ -602,6 +828,22 @@ def main():
         with open(gemini_debug_path, 'w', encoding='utf-8') as f:
             json.dump(gemini_result, f, indent=2, ensure_ascii=False)
         print(f"  ✓ Gemini mapping saved to: {gemini_debug_path}")
+        
+        # Save extraction report with detailed metadata
+        extraction_report = {
+            "match": args.match,
+            "timestamp": datetime.now().isoformat(),
+            "total_events": len(mapped_events) if mapped_events else 0,
+            "first_attempt": gemini_result.get('first_attempt', {}),
+            "after_regrounding": gemini_result.get('after_regrounding', {}),
+            "consistency_issues": gemini_result.get('consistency_issues', []),
+            "mapped_events": mapped_events
+        }
+        
+        report_path = Path(__file__).parent.parent / "Outputs" / args.match / "extraction_report.json"
+        with open(report_path, 'w', encoding='utf-8') as f:
+            json.dump(extraction_report, f, indent=2, ensure_ascii=False)
+        print(f"  ✓ Extraction report saved to: {report_path}")
     
     # Step 3: Build entity registry
     entity_registry = build_entity_registry(fixture_data, events_data)
@@ -611,15 +853,30 @@ def main():
     score_progression = build_score_progression(fixture_data, events_data)
     print(f"[Score Progression] Tracked {len(score_progression)-1} goals")
     
-    # Step 5: Generate dl_handoff.json
+    # Step 5: Generate approach_b_dl_handoff.json
     dl_handoff = generate_dl_handoff(
         fixture_data, events_data, mapped_events, 
         entity_registry, score_progression, dl_handoff_path,
         youtube_video_id=args.youtube_id
     )
     
-    # Step 6: Generate highlight_candidates.json
+    # Step 6: Generate approach_b_highlight_candidates.json
     highlight_candidates = generate_highlight_candidates(dl_handoff, highlight_candidates_path)
+    
+    # Record and save total timing
+    ingestor_total_time = round(time.time() - ingestor_start_time, 2)
+    print(f"\n[Ingestor] Total time: {ingestor_total_time:.2f}s")
+    
+    # Save timing to outputs
+    timing_path = BACKEND_DIR / "Outputs" / args.match / "ingestor_timing.json"
+    timing_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(timing_path, 'w') as f:
+        json.dump({
+            "match": args.match,
+            "timestamp": datetime.now().isoformat(),
+            "total_seconds": ingestor_total_time,
+        }, f, indent=2)
+    print(f"✓ Timing saved to: {timing_path}")
     
     print("\n" + "=" * 60)
     print("✅ APPROACH B INGESTOR COMPLETE")

@@ -1,0 +1,79 @@
+{
+  "match": "Liverpool 2-0 Manchester City (2025-02-23)",
+  "note": "HUMAN VERIFIED GROUND TRUTH - Manual timestamp annotation from video review",
+  "source": "Human verification after Gemini Vision failure (0/2 goals detected)",
+  "verification_date": "2025-02-23",
+  "total_events": 6,
+  "events": [
+    {
+      "event_id": "near_miss_1",
+      "time": "3:43",
+      "time_seconds": 223,
+      "player": "Virgil van Dijk",
+      "team": "Liverpool",
+      "event_type": "near_miss",
+      "description": "Hit the bar",
+      "importance": 0.7,
+      "clip_start_sec": 223,
+      "clip_end_sec": 233
+    },
+    {
+      "event_id": "goal_1",
+      "time": "4:24",
+      "time_seconds": 264,
+      "player": "Cody Gakpo",
+      "team": "Liverpool",
+      "event_type": "goal",
+      "score_after": "0-1",
+      "importance": 0.95,
+      "clip_start_sec": 264,
+      "clip_end_sec": 274
+    },
+    {
+      "event_id": "near_miss_2",
+      "time": "6:09",
+      "time_seconds": 369,
+      "player": "Cody Gakpo",
+      "team": "Liverpool",
+      "event_type": "near_miss",
+      "importance": 0.6,
+      "clip_start_sec": 369,
+      "clip_end_sec": 379
+    },
+    {
+      "event_id": "near_miss_3",
+      "time": "8:24",
+      "time_seconds": 504,
+      "player": "Mohamed Salah",
+      "team": "Liverpool",
+      "event_type": "near_miss",
+      "importance": 0.65,
+      "clip_start_sec": 504,
+      "clip_end_sec": 514
+    },
+    {
+      "event_id": "penalty_foul",
+      "time": "10:56",
+      "time_seconds": 656,
+      "team": "Liverpool",
+      "event_type": "foul_penalty",
+      "description": "Penalty foul awarded to Liverpool",
+      "importance": 0.85,
+      "clip_start_sec": 656,
+      "clip_end_sec": 665
+    },
+    {
+      "event_id": "goal_2",
+      "time": "11:08",
+      "time_seconds": 668,
+      "player": "Mohamed Salah",
+      "team": "Liverpool",
+      "event_type": "goal",
+      "score_after": "0-2",
+      "description": "Penalty goal",
+      "importance": 0.95,
+      "clip_start_sec": 668,
+      "clip_end_sec": 728
+    }
+  ]
+}

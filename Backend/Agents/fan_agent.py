@@ -18,6 +18,7 @@ try:
         GEMINI_MODEL,
         IMPORTANCE_THRESHOLD,
         MAX_HIGHLIGHTS,
+        EVENT_IMPORTANCE,
         CAPTION_PERSONALISED_PROMPT,
         CAPTION_NEUTRAL_PROMPT,
     )
@@ -37,6 +38,7 @@ except ImportError:
         GEMINI_MODEL,
         IMPORTANCE_THRESHOLD,
         MAX_HIGHLIGHTS,
+        EVENT_IMPORTANCE,
         CAPTION_PERSONALISED_PROMPT,
         CAPTION_NEUTRAL_PROMPT,
     )
@@ -77,11 +79,12 @@ def select_clips_reel_a(
     """
     Select clips for Reel A (personalized).
     
-    Filter events where:
-    - team matches preferred_entity OR players contain preferred_entity
-    - importance >= importance_threshold
-    
-    Rank by importance descending, take top max_highlights.
+    Selection strategy:
+    1. Always include all goals (regardless of which team scored)
+    2. Fill remaining slots with highest importance non-goal events (all teams)
+    3. Never include substitutions unless fewer than 3 other events available
+    4. Captions will provide the fan perspective, not the event selection
+    5. Both teams see the same events, but with different narrative framing
     
     Args:
         events: List of HandoffEvent objects
@@ -93,30 +96,45 @@ def select_clips_reel_a(
         List of selected HandoffEvent objects for Reel A
     """
     if not preferred_entity:
-        print("⚠ No preferred entity specified for Reel A")
-        return []
+        print("⚠ No preferred entity specified for Reel A - using neutral selection")
+        return select_clips_reel_b(events, importance_threshold, max_highlights)
     
-    # Filter events matching preferred entity
-    filtered = []
-    for event in events:
-        # Check if importance meets threshold
-        if event.importance < importance_threshold:
-            continue
+    # Filter events by threshold and valid timestamps
+    valid_events = [
+        e for e in events
+        if e.importance >= importance_threshold
+        and e.clip_start_sec is not None
+        and e.clip_end_sec is not None
+    ]
+    
+    # Separate ALL goals from non-goals (goals shown regardless of team)
+    all_goals = [e for e in valid_events if e.event_type in ['goal', 'penalty_goal']]
+    all_non_goals = [e for e in valid_events if e.event_type not in ['goal', 'penalty_goal']]
+    
+    # Sort all goals by importance
+    all_goals_sorted = sorted(all_goals, key=lambda e: e.importance, reverse=True)
+    
+    # Start with ALL goals (up to max_highlights)
+    selected = all_goals_sorted[:max_highlights]
+    
+    # Fill remaining slots with ALL non-goal events (captions will provide perspective)
+    slots_remaining = max_highlights - len(selected)
+    if slots_remaining > 0:
+        # Include ALL non-goal events, let captions provide the fan perspective
+        # Exclude substitutions unless few events
+        non_subs = [e for e in all_non_goals if e.event_type != 'substitution']
+        subs = [e for e in all_non_goals if e.event_type == 'substitution']
         
-        # Check if event involves preferred entity
-        team_match = event.team and preferred_entity.lower() in event.team.lower()
-        player_match = any(preferred_entity.lower() in player.lower() for player in event.players)
+        non_subs_sorted = sorted(non_subs, key=lambda e: e.importance, reverse=True)
+        selected.extend(non_subs_sorted[:slots_remaining])
         
-        if team_match or player_match:
-            filtered.append(event)
+        # Add substitutions only if still have slots and <3 other events
+        slots_remaining = max_highlights - len(selected)
+        if slots_remaining > 0 and len(non_subs) < 3:
+            subs_sorted = sorted(subs, key=lambda e: e.importance, reverse=True)
+            selected.extend(subs_sorted[:slots_remaining])
     
-    # Rank by importance descending
-    ranked = sorted(filtered, key=lambda e: e.importance, reverse=True)
-    
-    # Take top max_highlights
-    selected = ranked[:max_highlights]
-    
-    print(f"Reel A: {len(events)} events -> {len(filtered)} filtered -> {len(selected)} selected")
+    print(f"Reel A: {len(events)} events -> {len(valid_events)} valid ({len(all_goals)} goals) -> {len(selected)} selected")
     
     return selected
 
@@ -129,10 +147,11 @@ def select_clips_reel_b(
     """
     Select clips for Reel B (neutral).
     
-    Filter events where:
-    - importance >= importance_threshold
-    
-    Rank by importance descending, take top max_highlights.
+    Selection strategy:
+    1. Always include all goals first
+    2. Fill remaining slots with next highest importance events
+    3. Never include substitutions unless fewer than 3 other events available
+    4. Always select exactly max_highlights clips or all available if fewer
     
     Args:
         events: List of HandoffEvent objects
@@ -142,16 +161,44 @@ def select_clips_reel_b(
     Returns:
         List of selected HandoffEvent objects for Reel B
     """
-    # Filter by importance threshold
-    filtered = [event for event in events if event.importance >= importance_threshold]
+    # Filter by importance threshold and valid timestamps
+    filtered = [
+        event for event in events 
+        if event.importance >= importance_threshold
+        and event.clip_start_sec is not None
+        and event.clip_end_sec is not None
+    ]
     
-    # Rank by importance descending
-    ranked = sorted(filtered, key=lambda e: e.importance, reverse=True)
+    # Separate goals from other events
+    goals = [e for e in filtered if e.event_type in ['goal', 'penalty_goal']]
+    non_goals = [e for e in filtered if e.event_type not in ['goal', 'penalty_goal']]
     
-    # Take top max_highlights
-    selected = ranked[:max_highlights]
+    # Sort goals by importance descending
+    goals_sorted = sorted(goals, key=lambda e: e.importance, reverse=True)
     
-    print(f"Reel B: {len(events)} events -> {len(filtered)} filtered -> {len(selected)} selected")
+    # Start with all goals
+    selected = goals_sorted[:max_highlights]
+    
+    # Fill remaining slots with non-goal events
+    slots_remaining = max_highlights - len(selected)
+    if slots_remaining > 0:
+        # Filter out substitutions unless we have fewer than 3 non-substitution events
+        non_subs = [e for e in non_goals if e.event_type != 'substitution']
+        subs = [e for e in non_goals if e.event_type == 'substitution']
+        
+        # Sort by importance
+        non_subs_sorted = sorted(non_subs, key=lambda e: e.importance, reverse=True)
+        
+        # Add non-substitutions first
+        selected.extend(non_subs_sorted[:slots_remaining])
+        
+        # Only add substitutions if we still have slots and fewer than 3 other events
+        slots_remaining = max_highlights - len(selected)
+        if slots_remaining > 0 and len(non_subs) < 3:
+            subs_sorted = sorted(subs, key=lambda e: e.importance, reverse=True)
+            selected.extend(subs_sorted[:slots_remaining])
+    
+    print(f"Reel B: {len(events)} events -> {len(filtered)} filtered ({len(goals)} goals) -> {len(selected)} selected")
     
     return selected
 
@@ -192,14 +239,14 @@ def build_langchain_chain(template_path: Path, provider: str):
             api_key=GROQ_API_KEY,
             model=GROQ_MODEL,
             temperature=0.7,
-            max_tokens=150
+            max_tokens=300
         )
     else:
         llm = ChatGoogleGenerativeAI(
             google_api_key=GEMINI_API_KEY,
             model=GEMINI_MODEL,
             temperature=0.7,
-            max_output_tokens=150
+            max_output_tokens=300
         )
     
     return prompt | llm | StrOutputParser()
@@ -266,7 +313,14 @@ def fill_prompt_template(
         Filled prompt string
     """
     # Extract match context
-    match_ctx = shared_state.match_context
+    match_ctx= shared_state.match_context
+    
+    # For goals, use explicit scorer/assist if available to avoid LLM confusion
+    players_str = ", ".join(event.players) if event.players else "Unknown"
+    if hasattr(event, 'scorer') and event.scorer:
+        players_str = f"Scorer: {event.scorer}"
+        if hasattr(event, 'assist') and event.assist:
+            players_str += f", Assist: {event.assist}"
     
     # Prepare variables
     variables = {
@@ -278,7 +332,7 @@ def fill_prompt_template(
         'event_type': event.event_type,
         'minute': event.time,
         'team': event.team or "Unknown",
-        'players': ", ".join(event.players) if event.players else "Unknown",
+        'players': players_str,
         'score_after_event': event.score_after_event,
         'emotion_tags': ", ".join(event.context.narrative.split()[:5]) if hasattr(event.context, 'narrative') else "Unknown",
         'narrative_context': event.context.narrative if hasattr(event.context, 'narrative') else "Unknown",
@@ -382,6 +436,13 @@ def generate_captions(
         rag_context, rag_entities_found = build_event_rag_context(event, shared_state)
         transcript_context = event.context.narrative if hasattr(event.context, 'narrative') else None
         
+        # For goals, use explicit scorer/assist if available
+        players_str = ", ".join(event.players) if event.players else "Unknown"
+        if hasattr(event, 'scorer') and event.scorer:
+            players_str = f"Scorer: {event.scorer}"
+            if hasattr(event, 'assist') and event.assist:
+                players_str += f", Assist: {event.assist}"
+        
         variables = {
             'competition': match_ctx.competition if match_ctx else "Unknown",
             'home_team': match_ctx.home_team if match_ctx else "Unknown",
@@ -391,7 +452,7 @@ def generate_captions(
             'event_type': event.event_type,
             'minute': event.time,
             'team': event.team or "Unknown",
-            'players': ", ".join(event.players) if event.players else "Unknown",
+            'players': players_str,
             'score_after_event': event.score_after_event,
             'emotion_tags': ", ".join(event.context.narrative.split()[:5]) if hasattr(event.context, 'narrative') else "Unknown",
             'narrative_context': event.context.narrative if hasattr(event.context, 'narrative') else "Unknown",
@@ -399,10 +460,46 @@ def generate_captions(
             'transcript_context': transcript_context or "No commentary available",
         }
         
-        # Invoke LangChain chain with variables
-        caption = chain.invoke(variables)
+        # Build prompt_used by manually filling template
+        try:
+            with open(template_path, 'r', encoding='utf-8') as f:
+                template_text = f.read()
+            prompt_used = template_text.format(**variables)
+        except Exception as e:
+            print(f"⚠ Could not build prompt_used: {e}")
+            prompt_used = ""
+        
+        # Invoke LangChain chain with variables - retry once if caption incomplete
+        max_retries = 2
+        caption = None
+        
+        for retry in range(max_retries):
+            temp_caption = chain.invoke(variables)
+            word_count = len(temp_caption.split())
+            
+            # Validate: must be at least 8 words and end with punctuation (complete sentence)
+            is_complete = word_count >= 8
+            ends_properly = temp_caption.strip() and temp_caption.strip()[-1] in '.!?'
+            
+            if is_complete and ends_properly:
+                caption = temp_caption
+                if retry > 0:
+                    print(f"[OK-retry:{retry}] ", end="")
+                break
+            else:
+                if retry < max_retries - 1:
+                    print(f"[!{word_count}w] ", end="")
+                    import time
+                    time.sleep(0.5)  # Brief pause between retries
+                else:
+                    # Use it anyway after max retries
+                    caption = temp_caption
+                    print(f"[!INCOMPLETE:{word_count}w] ", end="")
         
         # Build evidence record for this caption
+        # Split rag_context into individual fact strings
+        rag_fact_texts = rag_context.split("\n\n") if rag_context else []
+        
         evidence = EvidenceSource(
             d15_fields={
                 "importance_score": event.importance,
@@ -416,7 +513,9 @@ def generate_captions(
                 "event_type": event.event_type,
             },
             rag_facts=rag_entities_found,
-            transcript_chunks=[event.context.narrative] if event.context else []
+            rag_fact_texts=rag_fact_texts,
+            transcript_chunks=[event.context.narrative] if event.context else [],
+            prompt_used=prompt_used
         )
         
         # Create ReelEvent

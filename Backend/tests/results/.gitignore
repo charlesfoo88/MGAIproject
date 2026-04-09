@@ -1,5 +1,0 @@
-# Ignore all test result files
-*.txt
-
-# Keep this folder in git
-!.gitignore
