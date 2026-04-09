@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" role="img" aria-label="Player placeholder headshot">
+  <circle cx="120" cy="120" r="108" fill="#334155" fill-opacity="0.92"/>
+  <circle cx="120" cy="98" r="44" fill="#cbd5e1" fill-opacity="0.92"/>
+  <path d="M46 205c6-39 33-62 74-62s68 23 74 62" fill="#cbd5e1" fill-opacity="0.92"/>
+  <text x="120" y="224" text-anchor="middle" fill="#f8fafc" font-size="22" font-weight="700" font-family="Arial, sans-serif">PLAYER</text>
+</svg>

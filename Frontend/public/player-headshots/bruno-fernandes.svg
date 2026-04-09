@@ -1,0 +1,12 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" role="img" aria-label="Bruno Fernandes headshot placeholder">
+  <defs>
+    <radialGradient id="g-bruno-fernandes" cx="35%" cy="25%" r="75%">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0e7490" stop-opacity="0.95"/>
+    </radialGradient>
+  </defs>
+  <circle cx="120" cy="120" r="108" fill="url(#g-bruno-fernandes)" opacity="0.95"/>
+  <circle cx="120" cy="98" r="44" fill="#e2e8f0" fill-opacity="0.92"/>
+  <path d="M46 205c6-39 33-62 74-62s68 23 74 62" fill="#e2e8f0" fill-opacity="0.92"/>
+  <text x="120" y="224" text-anchor="middle" fill="#f8fafc" font-size="24" font-weight="700" font-family="Arial, sans-serif">BF</text>
+</svg>
