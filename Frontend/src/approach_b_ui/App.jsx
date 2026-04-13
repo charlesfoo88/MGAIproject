@@ -56,6 +56,248 @@ const WEATHER_CODE_LABELS = {
   95: "Thunderstorm"
 };
 
+const CARD_COLLECTION_STORAGE_KEY = "mgai_collectible_cards_v1";
+const CARD_COLLECTION_LIMIT = 120;
+const CARD_PULL_INVENTORY_STORAGE_KEY = "mgai_reel_pull_inventory_v1";
+
+function readCardCollection() {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(CARD_COLLECTION_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((entry) => entry && typeof entry === "object") : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeCardCollection(entries) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(
+      CARD_COLLECTION_STORAGE_KEY,
+      JSON.stringify((Array.isArray(entries) ? entries : []).slice(0, CARD_COLLECTION_LIMIT))
+    );
+  } catch {
+    // Ignore storage write failures (private mode, quota exceeded, etc.).
+  }
+}
+
+function buildCardCollectionId(cardUrl, cardFilename) {
+  const filename = String(cardFilename || "").trim();
+  if (filename) return filename;
+  return String(cardUrl || "").trim();
+}
+
+function extractCardNumber(cardFilename) {
+  const match = String(cardFilename || "").match(/(\d{6})(?=\.svg$|$)/i);
+  if (!match) return null;
+  const numeric = Number(match[1]);
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
+function formatCardNumber(cardNumber) {
+  if (cardNumber === null || cardNumber === undefined || cardNumber === "") return "??????";
+  if (!Number.isFinite(Number(cardNumber))) return "??????";
+  return String(Number(cardNumber)).padStart(6, "0");
+}
+
+function deriveCardRarity(cardNumber) {
+  if (!Number.isFinite(Number(cardNumber))) {
+    return { key: "prototype", label: "Prototype" };
+  }
+  const value = Number(cardNumber);
+  if (value % 50 === 0) return { key: "mythic", label: "Mythic" };
+  if (value % 20 === 0) return { key: "legendary", label: "Legendary" };
+  if (value % 10 === 0) return { key: "epic", label: "Epic" };
+  if (value % 5 === 0) return { key: "rare", label: "Rare" };
+  return { key: "uncommon", label: "Uncommon" };
+}
+
+function buildCardSetCode(matchupLabel) {
+  const chunks = String(matchupLabel || "MGAI")
+    .toUpperCase()
+    .replace(/[^A-Z0-9 ]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 3);
+  const initialism = chunks.map((chunk) => chunk[0]).join("");
+  return initialism || "MGA";
+}
+
+function readCardPullInventory() {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(CARD_PULL_INVENTORY_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+    return parsed;
+  } catch {
+    return {};
+  }
+}
+
+function writeCardPullInventory(inventory) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(
+      CARD_PULL_INVENTORY_STORAGE_KEY,
+      JSON.stringify(inventory && typeof inventory === "object" ? inventory : {})
+    );
+  } catch {
+    // Ignore storage write failures.
+  }
+}
+
+function normalizeHighlightScore(rawScore, fallback = 0.5) {
+  const numeric = Number(rawScore);
+  if (!Number.isFinite(numeric)) return fallback;
+
+  const clipped = Math.max(0, numeric);
+  if (clipped <= 1) return clipped;
+  if (clipped <= 10) return Math.min(1, clipped / 10);
+  if (clipped <= 100) return Math.min(1, clipped / 100);
+  return 1;
+}
+
+function assignRarityFromHighlightScore(score) {
+  const normalized = normalizeHighlightScore(score, 0.5);
+  if (normalized >= 0.9) return "ultra";
+  if (normalized >= 0.75) return "rare";
+  if (normalized >= 0.5) return "uncommon";
+  return "common";
+}
+
+function rarityWeight(rarity) {
+  // Pull probability profile by rarity (applied at spin time).
+  if (rarity === "ultra") return 2;
+  if (rarity === "rare") return 10;
+  if (rarity === "uncommon") return 28;
+  return 60;
+}
+
+function rarityLabel(rarity) {
+  if (rarity === "ultra") return "Ultra Rare";
+  if (rarity === "rare") return "Rare";
+  if (rarity === "uncommon") return "Uncommon";
+  return "Common";
+}
+
+function weightedPullCard(cards) {
+  const normalized = (Array.isArray(cards) ? cards : []).filter(Boolean);
+  if (normalized.length === 0) return null;
+
+  const totalWeight = normalized.reduce((sum, card) => {
+    const weight = Math.max(0, Number(card?.pullWeight) || rarityWeight(card?.rarity));
+    return sum + weight;
+  }, 0);
+  if (totalWeight <= 0) {
+    return normalized[Math.floor(Math.random() * normalized.length)] || null;
+  }
+
+  let cursor = Math.random() * totalWeight;
+  for (const card of normalized) {
+    cursor -= Math.max(0, Number(card?.pullWeight) || rarityWeight(card?.rarity));
+    if (cursor <= 0) return card;
+  }
+  return normalized[normalized.length - 1] || null;
+}
+
+function summarizeSetRarity(cards) {
+  return (Array.isArray(cards) ? cards : []).reduce((acc, card) => {
+    const key = String(card?.rarity || "common");
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+function normalizeMomentTextForDisplay(text) {
+  const raw = String(text || "").trim();
+  if (!raw) return raw;
+  return raw
+    .replace(/\bT\.\s*Partey\b/gi, "Thomas Partey")
+    .replace(/\bM\.\s*Odegaard\b/gi, "Martin Odegaard");
+}
+
+function normalizeHighlightItem(highlight, index, setId, setName, setIndex) {
+  const isObject = highlight && typeof highlight === "object" && !Array.isArray(highlight);
+  const rawCaption = isObject
+    ? (
+      highlight.caption
+      || highlight.text
+      || highlight.moment
+      || highlight.commentary
+      || highlight.description
+      || highlight.narrative
+      || highlight.label
+      || highlight.title
+      || ""
+    )
+    : String(highlight || "");
+  const fallbackCaption = `Highlight ${index + 1}`;
+  const caption = normalizeMomentTextForDisplay(rawCaption || fallbackCaption) || fallbackCaption;
+
+  const rawScore = isObject
+    ? (highlight.score ?? highlight.confidence ?? highlight.relevance ?? highlight.importance)
+    : undefined;
+  const highlightScore = normalizeHighlightScore(rawScore, 0.5);
+  const rarity = assignRarityFromHighlightScore(highlightScore);
+
+  return {
+    id: `${setId}_card_${String(index + 1).padStart(2, "0")}`,
+    setId,
+    setName,
+    setIndex,
+    cardIndex: index + 1,
+    moment: caption,
+    caption,
+    highlightScore,
+    rarity,
+    rarityLabel: rarityLabel(rarity),
+    pullWeight: rarityWeight(rarity)
+  };
+}
+
+function buildReelSetCatalog(result, matchInfo) {
+  if (!result || !Array.isArray(result.reels)) {
+    return { seasonCode: SEASON_CODE, sets: [] };
+  }
+
+  const sets = result.reels
+    .map((reel, setIndex) => {
+      const highlightsSource = Array.isArray(reel?.highlights)
+        ? reel.highlights
+        : (Array.isArray(reel?.captions) ? reel.captions : []);
+      const normalizedHighlights = highlightsSource
+        .filter((item) => item !== null && item !== undefined)
+        .filter((item) => {
+          if (typeof item === "string") return String(item).trim().length > 0;
+          if (typeof item === "object") return true;
+          return String(item).trim().length > 0;
+        });
+      if (normalizedHighlights.length === 0) return null;
+
+      const rawSetName = String(reel?.title || reel?.side || `Reel Set ${setIndex + 1}`);
+      const setId = `${slugifyText(result?.matchup || matchInfo?.matchTitle || "match")}_${slugifyText(rawSetName)}_${setIndex + 1}`;
+      const cards = normalizedHighlights
+        .map((highlight, momentIndex) => normalizeHighlightItem(highlight, momentIndex, setId, rawSetName, setIndex + 1))
+        .filter(Boolean);
+
+      return {
+        id: setId,
+        name: rawSetName,
+        cardCount: cards.length,
+        cards,
+        rarityBreakdown: summarizeSetRarity(cards)
+      };
+    })
+    .filter(Boolean);
+
+  return { seasonCode: SEASON_CODE, sets };
+}
+
 function hasRealHeadshot(value) {
   const url = String(value || "").trim();
   if (!url) return false;
@@ -653,19 +895,31 @@ function buildLocalRecapCardDataUri(
     const frameClass = `featureFrame frame${idx + 1}`;
     const fillClass = framePalette[idx % framePalette.length];
     const crest = idx % 2 === 0 ? logoA : logoB;
+    const secondaryCrest = idx % 2 === 0 ? logoB : logoA;
+    const bannerLogos = Array.from({ length: 12 }, (_, logoIdx) => {
+      const bannerCrest = logoIdx % 2 === 0 ? crest : secondaryCrest;
+      return `<image href="${bannerCrest}" x="${160 + (logoIdx * 48)}" y="713" width="32" height="32" preserveAspectRatio="xMidYMid meet" opacity="0.78"/>`;
+    }).join("");
     return `<g class="${frameClass}">
       <rect x="84" y="292" width="732" height="650" rx="26" class="${fillClass}"/>
       <image href="${crest}" x="282" y="388" width="336" height="336" preserveAspectRatio="xMidYMid meet" opacity="0.16"/>
       <text x="450" y="356" class="frameLabel">FEATURE REEL ${idx + 1}</text>
       ${lineNodes}
+      <rect x="146" y="706" width="608" height="46" rx="13" class="teamBannerBg"/>
+      ${bannerLogos}
       <rect x="146" y="760" width="608" height="112" rx="14" class="frameTagBg"/>
       <text x="450" y="814" class="frameTag">Animated screen capture sequence</text>
     </g>`;
   }).join("");
 
   const recapLines = wrappedCommentary.slice(0, 5);
+  const recapPanelBottom = 1242;
+  const recapPanelY = 980;
+  const recapPanelHeight = recapPanelBottom - recapPanelY;
+  const recapTitleY = recapPanelY + 34;
+  const recapBodyStartY = recapPanelY + 70;
   const recapSvg = recapLines.map(
-    (line, idx) => `<text x="84" y="${1040 + (idx * 28)}" class="body">${escapeXml(line)}</text>`
+    (line, idx) => `<text x="84" y="${recapBodyStartY + (idx * 28)}" class="body">${escapeXml(line)}</text>`
   ).join("");
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1300" viewBox="0 0 900 1300" role="img" aria-label="Shiny recap trading card">
@@ -740,8 +994,8 @@ function buildLocalRecapCardDataUri(
     <text x="72" y="256" class="label">Focus: ${escapeXml(preferenceDetail)}</text>
     <rect x="70" y="278" width="760" height="680" rx="28" class="featureShell"/>
     ${frameSvg}
-    <rect x="70" y="970" width="760" height="188" rx="18" class="recapShell"/>
-    <text x="84" y="1004" class="tilelabel">MATCH STORYLINE</text>
+    <rect x="70" y="${recapPanelY}" width="760" height="${recapPanelHeight}" rx="18" class="recapShell"/>
+    <text x="84" y="${recapTitleY}" class="tilelabel">MATCH STORYLINE</text>
     ${recapSvg}
     <style>
       .title { fill:#f8fafc; font:900 46px Arial,sans-serif; text-anchor:middle; }
@@ -759,6 +1013,7 @@ function buildLocalRecapCardDataUri(
       .featureFillD { fill: url(#featureD); }
       .frameLabel { fill:#e0f2fe; font:800 24px Arial,sans-serif; letter-spacing:0.08em; text-anchor:middle; }
       .featureText { fill:#ffffff; font:700 34px Arial,sans-serif; text-anchor:middle; }
+      .teamBannerBg { fill: rgba(2,6,23,0.56); stroke: rgba(250,204,21,0.28); stroke-width:1.2; }
       .frameTagBg { fill: rgba(2,6,23,0.58); stroke: rgba(186,230,253,0.24); stroke-width:1.5; }
       .frameTag { fill:#a5f3fc; font:700 24px Arial,sans-serif; text-anchor:middle; }
       .featureFrame { opacity:0; animation: frameCycle 12s linear infinite; }
@@ -847,6 +1102,18 @@ function buildPipelineResult(pipelineData, sourceMode, teamA, teamB, matchInfo, 
     ? `${API_BASE_URL}${pipelineData.pokemon_card_url}`
     : fallbackCardUrl;
   const pokemonCardFilename = pipelineData.pokemon_card_filename || "pipeline_recap_card.svg";
+  const reelAVideoUrl = pipelineData.reel_a_path
+    ? `${API_BASE_URL}/api/videos/reel_a?match_name=${encodeURIComponent(matchInfo.matchName)}`
+    : "";
+  const reelBVideoUrl = pipelineData.reel_b_path
+    ? `${API_BASE_URL}/api/videos/reel_b?match_name=${encodeURIComponent(matchInfo.matchName)}`
+    : "";
+  const reelAVttUrl = pipelineData.reel_a_path
+    ? `${API_BASE_URL}/api/output-files/${encodeURIComponent(matchInfo.matchName)}/reel_a.vtt`
+    : "";
+  const reelBVttUrl = pipelineData.reel_b_path
+    ? `${API_BASE_URL}/api/output-files/${encodeURIComponent(matchInfo.matchName)}/reel_b.vtt`
+    : "";
 
   return {
     title: "Dual-Reel Analyst Output",
@@ -864,14 +1131,18 @@ function buildPipelineResult(pipelineData, sourceMode, teamA, teamB, matchInfo, 
         title: `${leftTeam} Analysis Feed`,
         logo: TEAM_LOGOS[leftTeam],
         teamName: leftTeam,
-        highlights: leftHighlights
+        highlights: leftHighlights,
+        videoUrl: reelAVideoUrl,
+        vttUrl: reelAVttUrl
       },
       {
         side: "Right Reel",
         title: `${rightTeam} Analysis Feed`,
         logo: TEAM_LOGOS[rightTeam],
         teamName: rightTeam,
-        highlights: rightHighlights
+        highlights: rightHighlights,
+        videoUrl: reelBVideoUrl,
+        vttUrl: reelBVttUrl
       }
     ],
     pokemonCardUrl,
@@ -1325,6 +1596,15 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
+  const [cardCollectionItems, setCardCollectionItems] = useState(() => readCardCollection());
+  const [cardCollectionCount, setCardCollectionCount] = useState(() => readCardCollection().length);
+  const [cardPullInventory, setCardPullInventory] = useState(() => readCardPullInventory());
+  const [isSpinningCard, setIsSpinningCard] = useState(false);
+  const [revealedPulledCard, setRevealedPulledCard] = useState(null);
+  const [selectedSetId, setSelectedSetId] = useState("");
+  const [lastPulledCard, setLastPulledCard] = useState(null);
+  const [hasUsedSpinForResult, setHasUsedSpinForResult] = useState(false);
+  const [hasCollectedForResult, setHasCollectedForResult] = useState(false);
   const [healthLoading, setHealthLoading] = useState(false);
   const [healthStatus, setHealthStatus] = useState("");
   const [healthStatusKind, setHealthStatusKind] = useState("");
@@ -1404,6 +1684,20 @@ export default function App() {
   const widgetMatch = matchFromTeams || selectedTickerMatch || backendWidgetMatch || eplTickerMatches[0] || eplFixtureMatches[0] || null;
   const weatherLocation = TEAM_WEATHER_LOCATIONS[widgetMatch?.home] || TEAM_WEATHER_LOCATIONS[teamA] || null;
   const matchInfo = getMatchInfo(sourceMode, teamA, teamB, youtubeUrl, youtubeTitle, sourcePrompt);
+  const reelSetCatalog = buildReelSetCatalog(result, matchInfo);
+  const selectedReelSet = reelSetCatalog.sets.find((set) => set.id === selectedSetId) || reelSetCatalog.sets[0] || null;
+  const activePullPool = selectedReelSet?.cards || [];
+  const selectedSetOwnedCount = selectedReelSet
+    ? selectedReelSet.cards.filter((card) => cardCollectionItems.some((owned) => owned?.id === card.id)).length
+    : 0;
+  const reelVideoBySetName = Object.fromEntries(
+    (Array.isArray(result?.reels) ? result.reels : [])
+      .map((reel) => [String(reel?.title || "").trim(), String(reel?.videoUrl || "").trim()])
+      .filter(([setName, videoUrl]) => Boolean(setName) && Boolean(videoUrl))
+  );
+  const spinFeatureVideo = Array.isArray(result?.reels)
+    ? (result.reels.find((reel) => String(reel?.videoUrl || "").trim())?.videoUrl || "")
+    : "";
   const fallbackPlayers = sourceMode === "teams"
     ? FALLBACK_PLAYER_DATABASE.filter((player) => selectedTeams.includes(player.team))
     : FALLBACK_PLAYER_DATABASE;
@@ -1471,6 +1765,11 @@ export default function App() {
     setPlayerHeadshotFailed({});
     setError("");
     setResult(null);
+    setIsSpinningCard(false);
+    setRevealedPulledCard(null);
+    setLastPulledCard(null);
+    setHasUsedSpinForResult(false);
+    setHasCollectedForResult(false);
   };
 
   const handleTickerMatchSelect = (match) => {
@@ -1856,12 +2155,36 @@ export default function App() {
     backendFeed?.commentary
   ]);
 
+  useEffect(() => {
+    const totalCollected = cardCollectionItems.reduce(
+      (sum, entry) => sum + Math.max(1, Number(entry?.quantity) || 1),
+      0
+    );
+    setCardCollectionCount(totalCollected);
+  }, [cardCollectionItems]);
+
+  useEffect(() => {
+    if (!reelSetCatalog.sets.length) {
+      setSelectedSetId("");
+      return;
+    }
+    const stillValid = reelSetCatalog.sets.some((set) => set.id === selectedSetId);
+    if (!selectedSetId || !stillValid) {
+      setSelectedSetId(reelSetCatalog.sets[0].id);
+    }
+  }, [reelSetCatalog, selectedSetId]);
+
   const handleGenerate = async () => {
     if (!isFormComplete) return;
 
     setLoading(true);
     setError("");
     setResult(null);
+    setIsSpinningCard(false);
+    setRevealedPulledCard(null);
+    setLastPulledCard(null);
+    setHasUsedSpinForResult(false);
+    setHasCollectedForResult(false);
 
     try {
       const showcaseMatchName = sourceMode === "teams"
@@ -1962,6 +2285,88 @@ export default function App() {
     } finally {
       setHealthLoading(false);
     }
+  };
+
+  const handleSpinPull = () => {
+    if (isSpinningCard) return;
+    if (hasUsedSpinForResult) return;
+    if (!activePullPool.length) return;
+
+    setIsSpinningCard(true);
+    setHasUsedSpinForResult(true);
+    setHasCollectedForResult(false);
+    setRevealedPulledCard(null);
+    const pulled = weightedPullCard(activePullPool);
+    if (!pulled) {
+      setIsSpinningCard(false);
+      setHasUsedSpinForResult(false);
+      return;
+    }
+
+    setTimeout(() => {
+      const nextInventory = {
+        ...cardPullInventory,
+        [pulled.id]: (Number(cardPullInventory[pulled.id]) || 0) + 1
+      };
+      writeCardPullInventory(nextInventory);
+      setCardPullInventory(nextInventory);
+
+      const pulledWithMeta = {
+        ...pulled,
+        pulledAt: new Date().toISOString(),
+        ownedCount: nextInventory[pulled.id] || 1
+      };
+      setLastPulledCard(pulledWithMeta);
+      setRevealedPulledCard(pulledWithMeta);
+      setIsSpinningCard(false);
+    }, 1800);
+  };
+
+  const handleCollectPulledCard = () => {
+    if (!revealedPulledCard) return;
+    if (hasCollectedForResult) return;
+    const reelVideoUrl = reelVideoBySetName[String(revealedPulledCard.setName || "").trim()] || "";
+    const existingIndex = cardCollectionItems.findIndex((entry) => entry?.id === revealedPulledCard.id);
+
+    if (existingIndex >= 0) {
+      const nextCollection = cardCollectionItems.map((entry, idx) => {
+        if (idx !== existingIndex) return entry;
+        return {
+          ...entry,
+          quantity: Math.max(1, Number(entry?.quantity) || 1) + 1,
+          caption: entry?.caption || entry?.moment || revealedPulledCard.caption || revealedPulledCard.moment,
+          highlightScore: Number.isFinite(Number(entry?.highlightScore))
+            ? normalizeHighlightScore(entry.highlightScore, 0.5)
+            : normalizeHighlightScore(revealedPulledCard.highlightScore, 0.5),
+          reelVideoUrl: entry?.reelVideoUrl || reelVideoUrl,
+          lastCollectedAt: new Date().toISOString()
+        };
+      });
+      writeCardCollection(nextCollection);
+      setCardCollectionItems(nextCollection);
+      setHasCollectedForResult(true);
+      return;
+    }
+
+    const collectibleEntry = {
+      id: revealedPulledCard.id,
+      setId: revealedPulledCard.setId,
+      setName: revealedPulledCard.setName,
+      cardIndex: revealedPulledCard.cardIndex,
+      rarity: revealedPulledCard.rarity,
+      rarityLabel: revealedPulledCard.rarityLabel,
+      caption: revealedPulledCard.caption || revealedPulledCard.moment,
+      moment: revealedPulledCard.moment,
+      highlightScore: normalizeHighlightScore(revealedPulledCard.highlightScore, 0.5),
+      quantity: 1,
+      reelVideoUrl,
+      collectedAt: new Date().toISOString()
+    };
+
+    const nextCollection = [collectibleEntry, ...cardCollectionItems].slice(0, CARD_COLLECTION_LIMIT);
+    writeCardCollection(nextCollection);
+    setCardCollectionItems(nextCollection);
+    setHasCollectedForResult(true);
   };
 
   return (
@@ -2401,68 +2806,202 @@ export default function App() {
             ))}
           </div>
 
-          {result.pokemonCardUrl && (
+          {reelSetCatalog.sets.length > 0 && (
             <section className="pokemon-card-section">
-              <h3>Recap Wallpaper Card</h3>
+              <h3>Reel Highlight Cards</h3>
               <p className="output-context" style={{ marginTop: "6px", marginBottom: "10px" }}>
-                Generated from your request and recap summary.
+                Spin first, reveal after, then collect.
               </p>
-              <div className="pokemon-card-shell">
-                {result.reels?.some((reel) => reel.videoUrl) && (
-                  <div className="pokemon-card-feature-window" aria-hidden="true">
-                    <video
-                      className="pokemon-card-feature-video"
-                      src={result.reels.find((reel) => reel.videoUrl)?.videoUrl}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                    />
+
+              <div className="collectible-meta-row" aria-label="Selected reel metadata">
+                <span className="collectible-chip">{selectedReelSet?.name || "No Set"}</span>
+                <span className="collectible-chip">Total {selectedReelSet?.cardCount || 0}</span>
+                <span className="collectible-chip">Owned {selectedSetOwnedCount}/{selectedReelSet?.cardCount || 0}</span>
+              </div>
+
+              <div className="spin-stage">
+                {!isSpinningCard && !revealedPulledCard && (
+                  <div className="spin-placeholder">Spin to reveal card</div>
+                )}
+
+                {isSpinningCard && (
+                  <div className="spin-spinner-wrap" aria-live="polite">
+                    <div className="spin-spinner" />
+                    <p>Spinning...</p>
                   </div>
                 )}
-                {isSvgAssetUrl(result.pokemonCardUrl) ? (
-                  <object
-                    className="pokemon-card-image"
-                    data={result.pokemonCardUrl}
-                    type="image/svg+xml"
-                    aria-label="Animated recap wallpaper card"
-                  >
-                    <img
-                      className="pokemon-card-image"
-                      src={result.pokemonCardUrl}
-                      alt="Recap wallpaper card"
-                      loading="lazy"
-                    />
-                  </object>
-                ) : (
-                  <img
-                    className="pokemon-card-image"
-                    src={result.pokemonCardUrl}
-                    alt="Recap wallpaper card"
-                    loading="lazy"
-                  />
+
+                {!isSpinningCard && revealedPulledCard && (
+                  <div className="spin-reveal-card-wrap">
+                    {result?.pokemonCardUrl ? (
+                      <div className={`pokemon-card-shell rarity-${revealedPulledCard.rarity}`}>
+                        {isSvgAssetUrl(result.pokemonCardUrl) ? (
+                          <object
+                            className="pokemon-card-image"
+                            type="image/svg+xml"
+                            data={result.pokemonCardUrl}
+                            aria-label="Generated recap wallpaper card"
+                          />
+                        ) : (
+                          <img className="pokemon-card-image" src={result.pokemonCardUrl} alt="Generated recap wallpaper card" />
+                        )}
+                        {spinFeatureVideo && (
+                          <div className="pokemon-card-feature-window" aria-hidden="true">
+                            <video
+                              className="pokemon-card-feature-video"
+                              src={spinFeatureVideo}
+                              autoPlay
+                              muted
+                              loop
+                              playsInline
+                            />
+                          </div>
+                        )}
+                        <span className="pokemon-card-holo" aria-hidden="true" />
+                        <span className="pokemon-card-glint" aria-hidden="true" />
+                      </div>
+                    ) : (
+                      <article className={`pulled-highlight-card rarity-${revealedPulledCard.rarity}`}>
+                        <div className="pulled-highlight-shell">
+                          <span className="pulled-highlight-holo" aria-hidden="true" />
+                          <span className="pulled-highlight-glint" aria-hidden="true" />
+                          <header className="pulled-highlight-top">
+                            <span className={`collectible-chip rarity-chip rarity-${revealedPulledCard.rarity}`}>
+                              {revealedPulledCard.rarityLabel}
+                            </span>
+                            <span className="pulled-highlight-number">
+                              Card {String(revealedPulledCard.cardIndex).padStart(2, "0")}
+                            </span>
+                          </header>
+                          <div className="pulled-highlight-title-row">
+                            <h4>{revealedPulledCard.setName}</h4>
+                            <span className="pulled-highlight-set-code">{buildCardSetCode(revealedPulledCard.setName)}</span>
+                          </div>
+                          <div className="pulled-highlight-body">
+                            <p>{revealedPulledCard.caption || revealedPulledCard.moment}</p>
+                          </div>
+                        </div>
+                      </article>
+                    )}
+
+                    <div className="spin-reveal-meta">
+                      <span className={`collectible-chip rarity-chip rarity-${revealedPulledCard.rarity}`}>
+                        {revealedPulledCard.rarityLabel}
+                      </span>
+                      <span className="collectible-chip">Card {String(revealedPulledCard.cardIndex).padStart(2, "0")}</span>
+                      <span className="collectible-chip">{revealedPulledCard.setName}</span>
+                      <span className="collectible-chip">Score {normalizeHighlightScore(revealedPulledCard.highlightScore, 0.5).toFixed(2)}</span>
+                    </div>
+                    <p className="spin-reveal-moment">Pulled highlight: {revealedPulledCard.caption || revealedPulledCard.moment}</p>
+                  </div>
                 )}
-                <span className="pokemon-card-holo" aria-hidden="true" />
-                <span className="pokemon-card-glint" aria-hidden="true" />
               </div>
-              <div className="pokemon-card-actions">
-                <a
-                  href={result.pokemonCardUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="pokemon-card-link"
+
+              <div className="spin-button-row">
+                <button
+                  type="button"
+                  className="generate-btn reel-spin-btn"
+                  onClick={handleSpinPull}
+                  disabled={!activePullPool.length || isSpinningCard || hasUsedSpinForResult}
                 >
-                  Open wallpaper ({result.pokemonCardFilename || "recap_wallpaper.svg"})
-                </a>
-                <a
-                  href={result.pokemonCardUrl}
-                  download={result.pokemonCardFilename || "recap_wallpaper.svg"}
-                  className="pokemon-card-link download"
-                >
-                  Download wallpaper
-                </a>
+                  {isSpinningCard ? "Spinning..." : (hasUsedSpinForResult ? "Spin Used - Regenerate" : "Spin for Card")}
+                </button>
+                {revealedPulledCard && (
+                  <button
+                    type="button"
+                    className="pokemon-card-link collect-btn"
+                    onClick={handleCollectPulledCard}
+                    disabled={hasCollectedForResult}
+                  >
+                    {hasCollectedForResult ? "Collected This Round" : (() => {
+                      const existingQty = Math.max(
+                        0,
+                        Number(
+                          cardCollectionItems.find((entry) => entry?.id === revealedPulledCard.id)?.quantity
+                        ) || 0
+                      );
+                      return existingQty > 0 ? `Collect +1 (Current ${existingQty}x)` : "Collect Card";
+                    })()}
+                  </button>
+                )}
+                {revealedPulledCard && result?.pokemonCardUrl && (
+                  <a className="pokemon-card-link" href={result.pokemonCardUrl} target="_blank" rel="noreferrer">
+                    Open Card
+                  </a>
+                )}
+                {revealedPulledCard && result?.pokemonCardUrl && (
+                  <a
+                    className="pokemon-card-link download"
+                    href={result.pokemonCardUrl}
+                    download={result.pokemonCardFilename || "generated_recap_card.svg"}
+                  >
+                    Download Card
+                  </a>
+                )}
               </div>
+              {hasUsedSpinForResult && (
+                <p className="spin-lock-note">One spin used for this run. Click Generate again to spin another card.</p>
+              )}
+              {hasCollectedForResult && (
+                <p className="spin-lock-note">One collect used for this run. Click Generate to collect again.</p>
+              )}
+
+              {cardCollectionItems.length > 0 && (
+                <section className="my-collection-section" aria-label="My collectible cards">
+                  <div className="my-collection-header">
+                    <h4>My Collection</h4>
+                    <span>{cardCollectionCount} cards</span>
+                  </div>
+                  <div className="my-collection-grid">
+                    {cardCollectionItems.map((card, index) => {
+                      const rarityKey = String(card?.rarity || "common").toLowerCase();
+                      const cardNumber = String(card?.cardIndex || "").padStart(2, "0");
+                      const isLatest = String(revealedPulledCard?.id || "") === String(card?.id || "");
+                      const quantity = Math.max(1, Number(card?.quantity) || 1);
+                      const collectionVideoUrl = String(
+                        card?.reelVideoUrl || reelVideoBySetName[String(card?.setName || "").trim()] || ""
+                      ).trim();
+                      return (
+                        <article
+                          key={String(card?.id || `${card?.setId}-${card?.cardIndex}-${index}`)}
+                          className={`collection-mini-card rarity-${rarityKey}${isLatest ? " latest" : ""}`}
+                        >
+                          <div className="collection-mini-shell">
+                            <span className="collection-mini-holo" aria-hidden="true" />
+                            <span className="collection-mini-glint" aria-hidden="true" />
+                            <header className="collection-mini-top">
+                              <span className={`collectible-chip rarity-chip rarity-${rarityKey}`}>
+                                {String(card?.rarityLabel || card?.rarity || "Unknown")}
+                              </span>
+                              <span className="collection-mini-no">#{cardNumber}</span>
+                            </header>
+                            {quantity > 1 && <span className="collection-mini-qty">{quantity}x</span>}
+                            <div className="collection-mini-title-row">
+                              <h5>{String(card?.setName || "Set")}</h5>
+                            </div>
+                            <div className={`collection-mini-preview${collectionVideoUrl ? "" : " placeholder"}`}>
+                              {collectionVideoUrl && (
+                                <video
+                                  className="collection-mini-video"
+                                  src={collectionVideoUrl}
+                                  autoPlay
+                                  muted
+                                  loop
+                                  playsInline
+                                  preload="metadata"
+                                />
+                              )}
+                            </div>
+                            <div className="collection-mini-body">
+                              <p className="collection-mini-moment">{String(card?.caption || card?.moment || "")}</p>
+                            </div>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </section>
+              )}
             </section>
           )}
         </section>
