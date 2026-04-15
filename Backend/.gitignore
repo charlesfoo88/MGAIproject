@@ -40,7 +40,6 @@ wheels/
 Thumbs.db
 
 # Project specific
-Outputs/
 *.mp4
 *.avi
 *.mov

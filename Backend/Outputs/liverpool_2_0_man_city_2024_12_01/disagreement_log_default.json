@@ -1,0 +1,68 @@
+[
+  {
+    "segment_id": "segment_006",
+    "event_type": "substitution",
+    "importance_score": 0.5,
+    "round_1_challenge": "You are a Critic Agent reviewing highlight clip selection. Event: substitution by Matheus Nunes, J. Doku at 57:00 (importance: 0.50). Challenge: Why should this clip be included in the highlight reel? Ask for justification in one sentence.",
+    "round_1_defence": "The substitution of Matheus Nunes for J. Doku at 57:00, with an importance score of 0.50, is a justified clip selection as it provides a crucial tactical insight into the game's progression, and its moderate importance score makes it a suitable addition to the target reel without overshadowing the two higher-importance clips already selected.",
+    "round_2_challenge": "You are a Critic Agent. The Sports Analyst has defended this clip: Defence: The substitution of Matheus Nunes for J. Doku at 57:00, with an importance score of 0.50, is a justified clip selection as it provides a crucial tactical insight into the game's progression, and its moderate importance score makes it a suitable addition to the target reel without overshadowing the two higher-importance clips already selected.. Push further: Is there narrative or match context significance that justifies this clip? Ask in one sentence.",
+    "round_2_defence": "The substitution of Matheus Nunes at 57 minutes was likely a tactical decision by Manchester City's manager to inject fresh legs and maintain control in the midfield, allowing the team to conserve energy and protect their 2-0 lead in the second half.",
+    "outcome": "confirmed",
+    "reason": "The target clip count is 6 and removing this clip would leave the reel with 5 clips, which is below the target count, and there is no mention of a better clip to replace it."
+  },
+  {
+    "segment_id": "segment_007",
+    "event_type": "substitution",
+    "importance_score": 0.5,
+    "round_1_challenge": "You are a Critic Agent reviewing highlight clip selection. Event: substitution by İ. Gündoğan, Savinho at 58:00 (importance: 0.50). Challenge: Why should this clip be included in the highlight reel? Ask for justification in one sentence.",
+    "round_1_defence": "I defend the selection of the İ. Gündoğan substitution clip, despite its moderate importance score of 0.50, as it provides valuable context to the game's dynamics and strategy, and its inclusion helps to reach the target reel length of 6 clips without compromising the overall quality of the highlight reel.",
+    "round_2_challenge": "You are a Critic Agent. The Sports Analyst has defended this clip: Defence: I defend the selection of the İ. Gündoğan substitution clip, despite its moderate importance score of 0.50, as it provides valuable context to the game's dynamics and strategy, and its inclusion helps to reach the target reel length of 6 clips without compromising the overall quality of the highlight reel.. Push further: Is there narrative or match context significance that justifies this clip? Ask in one sentence.",
+    "round_2_defence": "The substitution of İ. Gündoğan at 58 minutes was likely a tactical move by Manchester City to maintain their 2-0 lead, as Gündoğan's fresh legs and creative playmaking ability could help the team control the tempo of the game and see out the victory.",
+    "outcome": "confirmed",
+    "reason": "Removing this clip would leave the reel below 6 clips, as there are already 2 higher importance clips selected and a total of 8 clips available, and removing this one would result in 5 clips if no other replacements are made."
+  },
+  {
+    "segment_id": "segment_008",
+    "event_type": "substitution",
+    "importance_score": 0.5,
+    "round_1_challenge": "You are a Critic Agent reviewing highlight clip selection. Event: substitution by C. Gakpo, D. Núñez at 73:00 (importance: 0.50). Challenge: Why should this clip be included in the highlight reel? Ask for justification in one sentence.",
+    "round_1_defence": "The substitution of C. Gakpo for D. Núñez at 73:00, with an importance score of 0.50, is a strategic and notable moment in the match that warrants inclusion in the target reel, as it offers valuable insight into the team's tactical adjustments and player management, and its moderate importance score makes it a suitable addition to round out the 6-clip reel.",
+    "round_2_challenge": "You are a Critic Agent. The Sports Analyst has defended this clip: Defence: The substitution of C. Gakpo for D. Núñez at 73:00, with an importance score of 0.50, is a strategic and notable moment in the match that warrants inclusion in the target reel, as it offers valuable insight into the team's tactical adjustments and player management, and its moderate importance score makes it a suitable addition to round out the 6-clip reel.. Push further: Is there narrative or match context significance that justifies this clip? Ask in one sentence.",
+    "round_2_defence": "The substitution of C. Gakpo at 73 minutes was likely a tactical decision by Liverpool's manager to introduce fresh legs and maintain pressure on the opponent, while also allowing Gakpo to gain valuable playing experience in a relatively comfortable 2-0 lead.",
+    "outcome": "confirmed",
+    "reason": "Removing this clip would leave the reel below 6 clips, as there are currently 2 higher importance clips selected and a total of 8 available clips, and removing this one would result in only 5 clips if no other clips of lower importance are added."
+  },
+  {
+    "segment_id": "segment_009",
+    "event_type": "substitution",
+    "importance_score": 0.5,
+    "round_1_challenge": "You are a Critic Agent reviewing highlight clip selection. Event: substitution by T. Alexander-Arnold, J. Quansah at 73:00 (importance: 0.50). Challenge: Why should this clip be included in the highlight reel? Ask for justification in one sentence.",
+    "round_1_defence": "I defend the selection of the T. Alexander-Arnold substitution clip, despite its moderate importance score of 0.50, as it provides valuable context to the game's dynamics and strategy, and its inclusion helps to fill out the target reel length of 6 clips without displacing higher-importance clips.",
+    "round_2_challenge": "You are a Critic Agent. The Sports Analyst has defended this clip: Defence: I defend the selection of the T. Alexander-Arnold substitution clip, despite its moderate importance score of 0.50, as it provides valuable context to the game's dynamics and strategy, and its inclusion helps to fill out the target reel length of 6 clips without displacing higher-importance clips.. Push further: Is there narrative or match context significance that justifies this clip? Ask in one sentence.",
+    "round_2_defence": "The substitution of T. Alexander-Arnold at 73 minutes was likely a tactical decision by Liverpool's manager to introduce fresh legs and maintain defensive solidity, given their 2-0 lead, allowing them to see out the remainder of the match without conceding.",
+    "outcome": "confirmed",
+    "reason": "Removing this clip would leave the reel below 6 clips, as there are already 2 higher-importance clips selected and a total of 8 clips available, and replacing it would displace another clip of potentially similar or lower importance."
+  },
+  {
+    "segment_id": "segment_010",
+    "event_type": "substitution",
+    "importance_score": 0.5,
+    "round_1_challenge": "You are a Critic Agent reviewing highlight clip selection. Event: substitution by P. Foden, K. De Bruyne at 78:00 (importance: 0.50). Challenge: Why should this clip be included in the highlight reel? Ask for justification in one sentence.",
+    "round_1_defence": "The substitution of P. Foden for K. De Bruyne at 78:00, with an importance score of 0.50, is a crucial tactical decision that warrants inclusion in the target reel as it showcases the team's strategic adjustments in the late stages of the game, and its moderate importance score makes it a valuable addition to fill out the remaining spots in the 6-clip reel.",
+    "round_2_challenge": "You are a Critic Agent. The Sports Analyst has defended this clip: Defence: The substitution of P. Foden for K. De Bruyne at 78:00, with an importance score of 0.50, is a crucial tactical decision that warrants inclusion in the target reel as it showcases the team's strategic adjustments in the late stages of the game, and its moderate importance score makes it a valuable addition to fill out the remaining spots in the 6-clip reel.. Push further: Is there narrative or match context significance that justifies this clip? Ask in one sentence.",
+    "round_2_defence": "The substitution of P. Foden at 78 minutes was likely a strategic move by Manchester City to conserve energy and protect their 2-0 lead, as Foden had already made a significant impact on the game and introducing a fresh player would help maintain the team's defensive solidity and see out the remaining minutes.",
+    "outcome": "confirmed",
+    "reason": "The target clip count is 6 and removing this clip would leave the reel with 5 clips, which is below the target, and there is no information about a better clip existing to replace it."
+  },
+  {
+    "segment_id": "segment_011",
+    "event_type": "substitution",
+    "importance_score": 0.5,
+    "round_1_challenge": "You are a Critic Agent reviewing highlight clip selection. Event: substitution by R. Lewis, J. Grealish at 78:00 (importance: 0.50). Challenge: Why should this clip be included in the highlight reel? Ask for justification in one sentence.",
+    "round_1_defence": "The substitution of R. Lewis for J. Grealish at 78:00, with an importance score of 0.50, is a valuable addition to the target reel as it provides insight into the team's strategic decisions in the late stages of the game, and its moderate importance score makes it a worthy inclusion alongside the two higher-importance clips already selected.",
+    "round_2_challenge": "You are a Critic Agent. The Sports Analyst has defended this clip: Defence: The substitution of R. Lewis for J. Grealish at 78:00, with an importance score of 0.50, is a valuable addition to the target reel as it provides insight into the team's strategic decisions in the late stages of the game, and its moderate importance score makes it a worthy inclusion alongside the two higher-importance clips already selected.. Push further: Is there narrative or match context significance that justifies this clip? Ask in one sentence.",
+    "round_2_defence": "The substitution of R. Lewis at 78 minutes was a strategic move by Manchester City to bring in fresh legs and maintain defensive solidity, allowing them to see out the remaining 12 minutes of the match and preserve their 2-0 lead.",
+    "outcome": "confirmed",
+    "reason": "Removing this clip would leave the reel with 5 clips, which is below the target clip count of 6."
+  }
+]

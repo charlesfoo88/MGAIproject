@@ -1,0 +1,147 @@
+{
+  "match_name": "arsenal_5_1_man_city_2025_02_02",
+  "timestamp": "2026-04-15T09:21:14",
+  "baseline": "single_prompt",
+  "description": "Single LLM call per preference. No RAG, no disagreement, no hallucination check, no retry.",
+  "model": "llama-3.3-70b-versatile",
+  "clips_used": 6,
+  "summary": {
+    "total_runs": 5,
+    "successful_runs": 5,
+    "avg_alignment_score": 0.364,
+    "avg_time_seconds": 1.17,
+    "hallucination_rate": "N/A — not checked"
+  },
+  "results": [
+    {
+      "preference": "I am a Arsenal fan and I love watching Arsenal play",
+      "captions": [
+        "Ødegaard scores early goal for Arsenal at 2 minutes.",
+        "Haaland equalizes for Manchester City at 55 minutes.",
+        "Partey restores Arsenal lead at 56 minutes quickly.",
+        "Lewis-Skelly extends Arsenal lead with great finish.",
+        "Havertz scores fourth goal for Arsenal at 76.",
+        "Nwaneri seals dominant Arsenal win with late goal."
+      ],
+      "alignment_score": 0.379,
+      "per_clip_scores": [
+        0.43,
+        0.22,
+        0.39,
+        0.381,
+        0.449,
+        0.403
+      ],
+      "time_taken": 1.1,
+      "tokens_used": 635,
+      "prompt_tokens": 541,
+      "completion_tokens": 94,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I support Manchester City and I follow Manchester City closely",
+      "captions": [
+        "Arsenal's M. Ødegaard scores early, Manchester City trails 1-0.",
+        "E. Haaland equalizes for Manchester City at 55 minutes.",
+        "T. Partey puts Arsenal ahead, concerns for Manchester City.",
+        "M. Lewis-Skelly extends Arsenal's lead, tough for City.",
+        "K. Havertz scores, Arsenal dominates, Manchester City struggles.",
+        "E. Nwaneri seals 5-1 win, disappointing loss for City."
+      ],
+      "alignment_score": 0.362,
+      "per_clip_scores": [
+        0.326,
+        0.425,
+        0.448,
+        0.325,
+        0.446,
+        0.204
+      ],
+      "time_taken": 1.96,
+      "tokens_used": 655,
+      "prompt_tokens": 540,
+      "completion_tokens": 115,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I am a neutral viewer and I want to see all the goals from this match",
+      "captions": [
+        "Ødegaard scores for Arsenal with Havertz assist at 2 minutes.",
+        "Haaland equalizes for Manchester City with Savinho assist.",
+        "Partey scores for Arsenal at 56 minutes quickly.",
+        "Lewis-Skelly nets for Arsenal with Rice assist.",
+        "Havertz scores for Arsenal with Martinelli assist.",
+        "Nwaneri seals win for Arsenal with Rice assist."
+      ],
+      "alignment_score": 0.332,
+      "per_clip_scores": [
+        0.375,
+        0.252,
+        0.362,
+        0.269,
+        0.413,
+        0.322
+      ],
+      "time_taken": 0.88,
+      "tokens_used": 641,
+      "prompt_tokens": 546,
+      "completion_tokens": 95,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I love watching M. Ødegaard play for Arsenal, he is my favourite player",
+      "captions": [
+        "Ødegaard scores early goal for Arsenal at 2 minutes with Havertz assist.",
+        "Haaland equalizes for Manchester City at 55 minutes with Savinho assist.",
+        "Partey restores Arsenal lead at 56 minutes with quick goal.",
+        "Lewis-Skelly scores third goal for Arsenal at 62 minutes with Rice.",
+        "Havertz nets fourth goal for Arsenal at 76 minutes with Martinelli.",
+        "Nwaneri seals 5-1 win for Arsenal at 90 minutes with Rice assist."
+      ],
+      "alignment_score": 0.331,
+      "per_clip_scores": [
+        0.623,
+        0.211,
+        0.295,
+        0.235,
+        0.316,
+        0.303
+      ],
+      "time_taken": 0.91,
+      "tokens_used": 668,
+      "prompt_tokens": 547,
+      "completion_tokens": 121,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I love watching E. Haaland play for Manchester City, he is my favourite player",
+      "captions": [
+        "Ødegaard scores early for Arsenal at 2 minutes, Haaland's City trails.",
+        "Haaland equalizes for Manchester City at 55 minutes, what a strike.",
+        "Partey quickly regains Arsenal's lead after Haaland's equalizer.",
+        "Lewis-Skelly extends Arsenal's lead, Haaland's City struggles.",
+        "Havertz scores again, Haaland's comeback hopes fading fast.",
+        "Nwaneri seals Arsenal's win, Haaland's City falls 5-1 short."
+      ],
+      "alignment_score": 0.416,
+      "per_clip_scores": [
+        0.384,
+        0.53,
+        0.424,
+        0.413,
+        0.398,
+        0.344
+      ],
+      "time_taken": 1.0,
+      "tokens_used": 668,
+      "prompt_tokens": 547,
+      "completion_tokens": 121,
+      "clip_count": 6,
+      "status": "success"
+    }
+  ]
+}

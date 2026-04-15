@@ -1,0 +1,250 @@
+{
+  "match": "liverpool_2_0_man_city_2024_12_01",
+  "timestamp": "2026-04-07T08:10:35.049270",
+  "timestamp_tolerance_seconds": 30,
+  "gemini_blind_detections": [
+    {
+      "event_type": "goal",
+      "player": "Cody Gakpo",
+      "team": "Liverpool",
+      "video_timestamp_seconds": 270,
+      "confidence": "high"
+    },
+    {
+      "event_type": "substitution",
+      "player": "Jérémy Doku",
+      "team": "Manchester City",
+      "video_timestamp_seconds": 354,
+      "confidence": "high"
+    },
+    {
+      "event_type": "substitution",
+      "player": "Matheus Nunes",
+      "team": "Manchester City",
+      "video_timestamp_seconds": 354,
+      "confidence": "high"
+    },
+    {
+      "event_type": "substitution",
+      "player": "Jarell Quansah",
+      "team": "Liverpool",
+      "video_timestamp_seconds": 447,
+      "confidence": "high"
+    },
+    {
+      "event_type": "substitution",
+      "player": "Darwin Núñez",
+      "team": "Liverpool",
+      "video_timestamp_seconds": 447,
+      "confidence": "high"
+    },
+    {
+      "event_type": "substitution",
+      "player": "Jack Grealish",
+      "team": "Manchester City",
+      "video_timestamp_seconds": 534,
+      "confidence": "high"
+    },
+    {
+      "event_type": "substitution",
+      "player": "Kevin De Bruyne",
+      "team": "Manchester City",
+      "video_timestamp_seconds": 534,
+      "confidence": "high"
+    },
+    {
+      "event_type": "penalty_goal",
+      "player": "Mohamed Salah",
+      "team": "Liverpool",
+      "video_timestamp_seconds": 715,
+      "confidence": "high"
+    }
+  ],
+  "results": {
+    "total_api_events": 8,
+    "total_gemini_detections": 8,
+    "matched": 4,
+    "unmatched_gemini": 4,
+    "unmatched_api": 4,
+    "agreement_rate": 0.5,
+    "mean_deviation_seconds": 2.2,
+    "matched_events": [
+      {
+        "event_type": "goal",
+        "player_api": "C. Gakpo",
+        "player_gemini": "Cody Gakpo",
+        "api_clip_start_sec": 267,
+        "gemini_timestamp_seconds": 270,
+        "deviation_seconds": 3,
+        "confidence": "high",
+        "agreement": "high"
+      },
+      {
+        "event_type": "substitution",
+        "player_api": "Matheus Nunes",
+        "player_gemini": "Jack Grealish",
+        "api_clip_start_sec": 533,
+        "gemini_timestamp_seconds": 534,
+        "deviation_seconds": 1,
+        "confidence": "high",
+        "agreement": "high"
+      },
+      {
+        "event_type": "substitution",
+        "player_api": "İ. Gündoğan",
+        "player_gemini": "Kevin De Bruyne",
+        "api_clip_start_sec": 533,
+        "gemini_timestamp_seconds": 534,
+        "deviation_seconds": 1,
+        "confidence": "high",
+        "agreement": "high"
+      },
+      {
+        "event_type": "penalty_goal",
+        "player_api": "Mohamed Salah",
+        "player_gemini": "Mohamed Salah",
+        "api_clip_start_sec": 711,
+        "gemini_timestamp_seconds": 715,
+        "deviation_seconds": 4,
+        "confidence": "high",
+        "agreement": "high"
+      }
+    ],
+    "unmatched_api_events": [
+      {
+        "clip_id": "segment_008",
+        "time": "73:00",
+        "time_seconds": 4380.0,
+        "event_type": "substitution",
+        "importance": 0.5,
+        "confidence": 0.99,
+        "team": "Liverpool",
+        "players": [
+          "C. Gakpo",
+          "D. Núñez"
+        ],
+        "score_after_event": null,
+        "clip_start_sec": 625,
+        "clip_end_sec": 635,
+        "ocr_text": [
+          "C. Gakpo",
+          "73:00"
+        ],
+        "match_phase": "second_half",
+        "context": {
+          "previous_event": null,
+          "next_event": null,
+          "narrative": "C. Gakpo — Substitution 1 for Liverpool at 73 minutes."
+        }
+      },
+      {
+        "clip_id": "segment_009",
+        "time": "73:00",
+        "time_seconds": 4380.0,
+        "event_type": "substitution",
+        "importance": 0.5,
+        "confidence": 0.99,
+        "team": "Liverpool",
+        "players": [
+          "T. Alexander-Arnold",
+          "J. Quansah"
+        ],
+        "score_after_event": null,
+        "clip_start_sec": 625,
+        "clip_end_sec": 635,
+        "ocr_text": [
+          "T. Alexander-Arnold",
+          "73:00"
+        ],
+        "match_phase": "second_half",
+        "context": {
+          "previous_event": null,
+          "next_event": null,
+          "narrative": "T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes."
+        }
+      },
+      {
+        "clip_id": "segment_010",
+        "time": "78:00",
+        "time_seconds": 4680.0,
+        "event_type": "substitution",
+        "importance": 0.5,
+        "confidence": 0.99,
+        "team": "Manchester City",
+        "players": [
+          "P. Foden",
+          "K. De Bruyne"
+        ],
+        "score_after_event": null,
+        "clip_start_sec": 759,
+        "clip_end_sec": 769,
+        "ocr_text": [
+          "P. Foden",
+          "78:00"
+        ],
+        "match_phase": "second_half",
+        "context": {
+          "previous_event": null,
+          "next_event": null,
+          "narrative": "P. Foden — Substitution 3 for Manchester City at 78 minutes."
+        }
+      },
+      {
+        "clip_id": "segment_011",
+        "time": "78:00",
+        "time_seconds": 4680.0,
+        "event_type": "substitution",
+        "importance": 0.5,
+        "confidence": 0.99,
+        "team": "Manchester City",
+        "players": [
+          "R. Lewis",
+          "J. Grealish"
+        ],
+        "score_after_event": null,
+        "clip_start_sec": 759,
+        "clip_end_sec": 769,
+        "ocr_text": [
+          "R. Lewis",
+          "78:00"
+        ],
+        "match_phase": "second_half",
+        "context": {
+          "previous_event": null,
+          "next_event": null,
+          "narrative": "R. Lewis — Substitution 4 for Manchester City at 78 minutes."
+        }
+      }
+    ],
+    "unmatched_gemini_events": [
+      {
+        "event_type": "substitution",
+        "player": "Jérémy Doku",
+        "team": "Manchester City",
+        "video_timestamp_seconds": 354,
+        "confidence": "high"
+      },
+      {
+        "event_type": "substitution",
+        "player": "Matheus Nunes",
+        "team": "Manchester City",
+        "video_timestamp_seconds": 354,
+        "confidence": "high"
+      },
+      {
+        "event_type": "substitution",
+        "player": "Jarell Quansah",
+        "team": "Liverpool",
+        "video_timestamp_seconds": 447,
+        "confidence": "high"
+      },
+      {
+        "event_type": "substitution",
+        "player": "Darwin Núñez",
+        "team": "Liverpool",
+        "video_timestamp_seconds": 447,
+        "confidence": "high"
+      }
+    ]
+  }
+}

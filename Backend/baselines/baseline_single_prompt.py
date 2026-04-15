@@ -28,7 +28,7 @@ except ImportError:
     print("Warning: groq package not installed")
     GROQ_AVAILABLE = False
 
-MATCH_NAME = "arsenal_5_1_man_city_2025_02_02"
+MATCH_NAME = ACTIVE_MATCH
 
 
 def load_eval_preferences() -> list:
@@ -221,10 +221,16 @@ def run_baseline_single_prompt():
             for j, caption in enumerate(captions, 1):
                 print(f"  {j}. {caption}")
 
+            pref_embedding = encode(preference)
+            per_clip_scores = [
+                round(cosine_similarity(encode(caption), pref_embedding), 3)
+                for caption in captions
+            ]
             all_results.append({
                 "preference": preference,
                 "captions": captions,
                 "alignment_score": alignment_score,
+                "per_clip_scores": per_clip_scores,
                 "time_taken": time_taken,
                 "tokens_used": response['tokens_used'],
                 "prompt_tokens": response['prompt_tokens'],

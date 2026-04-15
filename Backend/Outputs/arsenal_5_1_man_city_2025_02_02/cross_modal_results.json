@@ -1,0 +1,122 @@
+{
+  "match": "arsenal_5_1_man_city_2025_02_02",
+  "timestamp": "2026-04-07T13:57:17.141608",
+  "timestamp_tolerance_seconds": 30,
+  "gemini_blind_detections": [
+    {
+      "event_type": "goal",
+      "player": "Ødegaard",
+      "team": "Arsenal",
+      "video_timestamp_seconds": 88,
+      "confidence": "high"
+    },
+    {
+      "event_type": "goal",
+      "player": "Haaland",
+      "team": "Manchester City",
+      "video_timestamp_seconds": 369,
+      "confidence": "high"
+    },
+    {
+      "event_type": "goal",
+      "player": "Thomas Partey",
+      "team": "Arsenal",
+      "video_timestamp_seconds": 438,
+      "confidence": "high"
+    },
+    {
+      "event_type": "goal",
+      "player": "Myles Lewis-Skelly",
+      "team": "Arsenal",
+      "video_timestamp_seconds": 485,
+      "confidence": "high"
+    },
+    {
+      "event_type": "goal",
+      "player": "Kai Havertz",
+      "team": "Arsenal",
+      "video_timestamp_seconds": 542,
+      "confidence": "high"
+    },
+    {
+      "event_type": "goal",
+      "player": "Nwaneri",
+      "team": "Arsenal",
+      "video_timestamp_seconds": 591,
+      "confidence": "high"
+    }
+  ],
+  "results": {
+    "total_api_events": 6,
+    "total_gemini_detections": 6,
+    "matched": 6,
+    "unmatched_gemini": 0,
+    "unmatched_api": 0,
+    "agreement_rate": 1.0,
+    "mean_deviation_seconds": 3.3,
+    "matched_events": [
+      {
+        "event_type": "goal",
+        "player_api": "M. Ødegaard",
+        "player_gemini": "Ødegaard",
+        "api_clip_start_sec": 85,
+        "gemini_timestamp_seconds": 88,
+        "deviation_seconds": 3,
+        "confidence": "high",
+        "agreement": "high"
+      },
+      {
+        "event_type": "goal",
+        "player_api": "E. Haaland",
+        "player_gemini": "Haaland",
+        "api_clip_start_sec": 365,
+        "gemini_timestamp_seconds": 369,
+        "deviation_seconds": 4,
+        "confidence": "high",
+        "agreement": "high"
+      },
+      {
+        "event_type": "goal",
+        "player_api": "T. Partey",
+        "player_gemini": "Thomas Partey",
+        "api_clip_start_sec": 435,
+        "gemini_timestamp_seconds": 438,
+        "deviation_seconds": 3,
+        "confidence": "high",
+        "agreement": "high"
+      },
+      {
+        "event_type": "goal",
+        "player_api": "M. Lewis-Skelly",
+        "player_gemini": "Myles Lewis-Skelly",
+        "api_clip_start_sec": 482,
+        "gemini_timestamp_seconds": 485,
+        "deviation_seconds": 3,
+        "confidence": "high",
+        "agreement": "high"
+      },
+      {
+        "event_type": "goal",
+        "player_api": "K. Havertz",
+        "player_gemini": "Kai Havertz",
+        "api_clip_start_sec": 538,
+        "gemini_timestamp_seconds": 542,
+        "deviation_seconds": 4,
+        "confidence": "high",
+        "agreement": "high"
+      },
+      {
+        "event_type": "goal",
+        "player_api": "E. Nwaneri",
+        "player_gemini": "Nwaneri",
+        "api_clip_start_sec": 588,
+        "gemini_timestamp_seconds": 591,
+        "deviation_seconds": 3,
+        "confidence": "high",
+        "agreement": "high"
+      }
+    ],
+    "unmatched_api_events": [],
+    "unmatched_gemini_events": []
+  }
+}

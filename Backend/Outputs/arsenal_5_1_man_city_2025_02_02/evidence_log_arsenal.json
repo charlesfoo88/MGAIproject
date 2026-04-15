@@ -1,0 +1,349 @@
+{
+  "match_name": "arsenal_5_1_man_city_2025_02_02",
+  "timestamp": "2026-04-07T12:23:23.796621",
+  "user_preference": "I am a Arsenal fan",
+  "clip_evidence": [
+    {
+      "segment_id": "segment_001",
+      "event_type": "goal",
+      "team": "Arsenal",
+      "players": [
+        "M. Ødegaard",
+        "K. Havertz"
+      ],
+      "d15_fields": {
+        "importance_score": 0.95,
+        "confidence": 0.99,
+        "predicted_event_type": "goal"
+      },
+      "d17_fields": {
+        "narrative": "M. Ødegaard — Goal for Arsenal at 2 minutes.",
+        "score_after_event": "1-0",
+        "players": [
+          "M. Ødegaard",
+          "K. Havertz"
+        ],
+        "event_type": "goal"
+      },
+      "rag_entities_used": [
+        "Arsenal",
+        "M. Ødegaard",
+        "K. Havertz",
+        "Emirates Stadium"
+      ],
+      "rag_fact_texts": [
+        "[Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.",
+        "[M. Ødegaard] Martin Ødegaard (Norwegian pronunciation: [ˈmɑ̀ʈːɪn ˈø̀ːdəˌɡoːɾ]; born 17 December 1998) is a Norwegian professional footballer who plays as a midfielder for and captains both Premier League club Arsenal and the Norway national team.\nØdegaard began his senior club career at age 15 in 2014, playing for Strømsgodset; he set the Tippeligaen record for its youngest goalscorer, and in 2015, signed for Real Madrid in a transfer worth an initial €4 million (Kr. 35 million), where he set the club record for its youngest player. After enduring sporadic playing time, Ødegaard joined Eredivisie clubs Heerenveen and Vitesse, and La Liga club Real Sociedad, on successive loans between 2017 and 2019; winning the Copa del Rey with Real Sociedad in 2019.",
+        "[K. Havertz] Kai Lukas Havertz (born 11 June 1999) is a German professional footballer who plays as a forward or attacking midfielder for Premier League club Arsenal and the Germany national team.\nHaving graduated from Bayer Leverkusen's youth academy in 2016, Havertz made his senior debut with the club in the same year. Upon his debut, Havertz became the club's youngest-ever debutant in the Bundesliga, and he became their youngest-ever goalscorer when he scored his first goal the following year. Havertz holds the record for being the youngest player to reach 50 and 100 league appearances in the German top flight.\nHavertz's performances sparked the interest of several European clubs, with Chelsea signing him in 2020 for a transfer worth €73.4 million (£62 million), making him Chelsea's second-most expensive signing at the time.",
+        "[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC."
+      ],
+      "transcript_chunks": [
+        "M. Ødegaard — Goal for Arsenal at 2 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Arsenal vs Manchester City\nFinal score5-1\nPreferred team/player: Arsenal\n\nEvent details:\n- Event: goal\n- Time: 2:00\n- Team: Arsenal\n- Players involved: M. Ødegaard, K. Havertz\n- Score after event: 1-0\n- Emotions detected: M., Ødegaard, —, Goal, for\n- Context: M. Ødegaard — Goal for Arsenal at 2 minutes.\n- Additional context: [Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.\n\n[M. Ødegaard] Martin Ødegaard (Norwegian pronunciation: [ˈmɑ̀ʈːɪn ˈø̀ːdəˌɡoːɾ]; born 17 December 1998) is a Norwegian professional footballer who plays as a midfielder for and captains both Premier League club Arsenal and the Norway national team.\nØdegaard began his senior club career at age 15 in 2014, playing for Strømsgodset; he set the Tippeligaen record for its youngest goalscorer, and in 2015, signed for Real Madrid in a transfer worth an initial €4 million (Kr. 35 million), where he set the club record for its youngest player. After enduring sporadic playing time, Ødegaard joined Eredivisie clubs Heerenveen and Vitesse, and La Liga club Real Sociedad, on successive loans between 2017 and 2019; winning the Copa del Rey with Real Sociedad in 2019.\n\n[K. Havertz] Kai Lukas Havertz (born 11 June 1999) is a German professional footballer who plays as a forward or attacking midfielder for Premier League club Arsenal and the Germany national team.\nHaving graduated from Bayer Leverkusen's youth academy in 2016, Havertz made his senior debut with the club in the same year. Upon his debut, Havertz became the club's youngest-ever debutant in the Bundesliga, and he became their youngest-ever goalscorer when he scored his first goal the following year. Havertz holds the record for being the youngest player to reach 50 and 100 league appearances in the German top flight.\nHavertz's performances sparked the interest of several European clubs, with Chelsea signing him in 2020 for a transfer worth €73.4 million (£62 million), making him Chelsea's second-most expensive signing at the time.\n\n[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC.\n- Commentary: M. Ødegaard — Goal for Arsenal at 2 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Arsenal fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Ødegaard scores for Arsenal at 2 minutes with Havertz's help, what a start!",
+      "caption_reel_b": "Ødegaard scores for Arsenal with a goal in the 2nd minute, assisted by Havertz.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.4748361589209383
+    },
+    {
+      "segment_id": "segment_003",
+      "event_type": "goal",
+      "team": "Manchester City",
+      "players": [
+        "E. Haaland",
+        "Savinho"
+      ],
+      "d15_fields": {
+        "importance_score": 0.95,
+        "confidence": 0.99,
+        "predicted_event_type": "goal"
+      },
+      "d17_fields": {
+        "narrative": "E. Haaland — Goal for Manchester City at 55 minutes.",
+        "score_after_event": "1-1",
+        "players": [
+          "E. Haaland",
+          "Savinho"
+        ],
+        "event_type": "goal"
+      },
+      "rag_entities_used": [
+        "Arsenal",
+        "Manchester City",
+        "E. Haaland",
+        "Emirates Stadium"
+      ],
+      "rag_fact_texts": [
+        "[Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.",
+        "[Manchester City] Manchester City Football Club is a professional football club based in Manchester, England, that competes in the Premier League, the top flight of English football. Founded in 1880 as St. Mark's (West Gorton), they became Ardwick Association Football Club in 1887 and Manchester City in 1894.",
+        "[E. Haaland] Erling Braut Haaland (né Håland; Urban East Norwegian: [ˈhòːlɑn]; born 21 July 2000) is a Norwegian professional footballer who plays as a striker for Premier League club Manchester City and the Norway national team. Considered one of the best players in the world, and the greatest Norwegian player ever, he is known for his speed, strength, positioning, and finishing inside the box.\nHaaland began his senior career with Bryne and Molde before signing with Red Bull Salzburg in 2019, where he won the Austrian Bundesliga and Austrian Cup. He joined Bundesliga club Borussia Dortmund in 2020, where he won the DFB-Pokal in 2021.",
+        "[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC."
+      ],
+      "transcript_chunks": [
+        "E. Haaland — Goal for Manchester City at 55 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Arsenal vs Manchester City\nFinal score5-1\nPreferred team/player: Arsenal\n\nEvent details:\n- Event: goal\n- Time: 55:00\n- Team: Manchester City\n- Players involved: E. Haaland, Savinho\n- Score after event: 1-1\n- Emotions detected: E., Haaland, —, Goal, for\n- Context: E. Haaland — Goal for Manchester City at 55 minutes.\n- Additional context: [Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.\n\n[Manchester City] Manchester City Football Club is a professional football club based in Manchester, England, that competes in the Premier League, the top flight of English football. Founded in 1880 as St. Mark's (West Gorton), they became Ardwick Association Football Club in 1887 and Manchester City in 1894.\n\n[E. Haaland] Erling Braut Haaland (né Håland; Urban East Norwegian: [ˈhòːlɑn]; born 21 July 2000) is a Norwegian professional footballer who plays as a striker for Premier League club Manchester City and the Norway national team. Considered one of the best players in the world, and the greatest Norwegian player ever, he is known for his speed, strength, positioning, and finishing inside the box.\nHaaland began his senior career with Bryne and Molde before signing with Red Bull Salzburg in 2019, where he won the Austrian Bundesliga and Austrian Cup. He joined Bundesliga club Borussia Dortmund in 2020, where he won the DFB-Pokal in 2021.\n\n[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC.\n- Commentary: E. Haaland — Goal for Manchester City at 55 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Arsenal fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Haaland scores for Manchester City at 55 minutes, leveling it up!",
+      "caption_reel_b": "Haaland scores for Manchester City, leveling the match at 55 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.31268986606012195
+    },
+    {
+      "segment_id": "segment_004",
+      "event_type": "goal",
+      "team": "Arsenal",
+      "players": [
+        "T. Partey"
+      ],
+      "d15_fields": {
+        "importance_score": 0.95,
+        "confidence": 0.99,
+        "predicted_event_type": "goal"
+      },
+      "d17_fields": {
+        "narrative": "T. Partey — Goal for Arsenal at 56 minutes.",
+        "score_after_event": "2-1",
+        "players": [
+          "T. Partey"
+        ],
+        "event_type": "goal"
+      },
+      "rag_entities_used": [
+        "Arsenal",
+        "T. Partey",
+        "Emirates Stadium"
+      ],
+      "rag_fact_texts": [
+        "[Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.",
+        "[T. Partey] Thomas Partey is a Ghanaian professional footballer who plays as a midfielder for Arsenal.",
+        "[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC."
+      ],
+      "transcript_chunks": [
+        "T. Partey — Goal for Arsenal at 56 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Arsenal vs Manchester City\nFinal score5-1\nPreferred team/player: Arsenal\n\nEvent details:\n- Event: goal\n- Time: 56:00\n- Team: Arsenal\n- Players involved: T. Partey\n- Score after event: 2-1\n- Emotions detected: T., Partey, —, Goal, for\n- Context: T. Partey — Goal for Arsenal at 56 minutes.\n- Additional context: [Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.\n\n[T. Partey] Thomas Partey is a Ghanaian professional footballer who plays as a midfielder for Arsenal.\n\n[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC.\n- Commentary: T. Partey — Goal for Arsenal at 56 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Arsenal fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Partey scores a great goal for Arsenal at 56 minutes, what a strike!",
+      "caption_reel_b": "T. Partey scores for Arsenal with a goal at 56 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.5281961593316707
+    },
+    {
+      "segment_id": "segment_005",
+      "event_type": "goal",
+      "team": "Arsenal",
+      "players": [
+        "M. Lewis-Skelly",
+        "D. Rice"
+      ],
+      "d15_fields": {
+        "importance_score": 0.95,
+        "confidence": 0.99,
+        "predicted_event_type": "goal"
+      },
+      "d17_fields": {
+        "narrative": "M. Lewis-Skelly — Goal for Arsenal at 62 minutes.",
+        "score_after_event": "3-1",
+        "players": [
+          "M. Lewis-Skelly",
+          "D. Rice"
+        ],
+        "event_type": "goal"
+      },
+      "rag_entities_used": [
+        "Arsenal",
+        "M. Lewis-Skelly",
+        "Emirates Stadium"
+      ],
+      "rag_fact_texts": [
+        "[Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.",
+        "[M. Lewis-Skelly] Myles Anthony Lewis-Skelly (born 26 September 2006) is an English professional footballer who plays as a left-back for Premier League club Arsenal and the England national team.\nLewis-Skelly has been with Arsenal since the age of eight, making his first-team debut with the club in September 2024, during the 2024–25 season.\nHaving representing England at multiple youth levels, Lewis-Skelly was selected for the senior squad in March 2025 for 2026 FIFA World Cup qualification, making his debut and scoring his first international goal against Albania.",
+        "[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC."
+      ],
+      "transcript_chunks": [
+        "M. Lewis-Skelly — Goal for Arsenal at 62 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Arsenal vs Manchester City\nFinal score5-1\nPreferred team/player: Arsenal\n\nEvent details:\n- Event: goal\n- Time: 62:00\n- Team: Arsenal\n- Players involved: M. Lewis-Skelly, D. Rice\n- Score after event: 3-1\n- Emotions detected: M., Lewis-Skelly, —, Goal, for\n- Context: M. Lewis-Skelly — Goal for Arsenal at 62 minutes.\n- Additional context: [Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.\n\n[M. Lewis-Skelly] Myles Anthony Lewis-Skelly (born 26 September 2006) is an English professional footballer who plays as a left-back for Premier League club Arsenal and the England national team.\nLewis-Skelly has been with Arsenal since the age of eight, making his first-team debut with the club in September 2024, during the 2024–25 season.\nHaving representing England at multiple youth levels, Lewis-Skelly was selected for the senior squad in March 2025 for 2026 FIFA World Cup qualification, making his debut and scoring his first international goal against Albania.\n\n[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC.\n- Commentary: M. Lewis-Skelly — Goal for Arsenal at 62 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Arsenal fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "M. Lewis-Skelly scores a great goal for Arsenal at 62 minutes!",
+      "caption_reel_b": "M. Lewis-Skelly scores for Arsenal with D. Rice involved at 62 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.4035228786985724
+    },
+    {
+      "segment_id": "segment_009",
+      "event_type": "goal",
+      "team": "Arsenal",
+      "players": [
+        "K. Havertz",
+        "Gabriel Martinelli"
+      ],
+      "d15_fields": {
+        "importance_score": 0.95,
+        "confidence": 0.99,
+        "predicted_event_type": "goal"
+      },
+      "d17_fields": {
+        "narrative": "K. Havertz — Goal for Arsenal at 76 minutes.",
+        "score_after_event": "4-1",
+        "players": [
+          "K. Havertz",
+          "Gabriel Martinelli"
+        ],
+        "event_type": "goal"
+      },
+      "rag_entities_used": [
+        "Arsenal",
+        "K. Havertz",
+        "Emirates Stadium"
+      ],
+      "rag_fact_texts": [
+        "[Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.",
+        "[K. Havertz] Kai Lukas Havertz (born 11 June 1999) is a German professional footballer who plays as a forward or attacking midfielder for Premier League club Arsenal and the Germany national team.\nHaving graduated from Bayer Leverkusen's youth academy in 2016, Havertz made his senior debut with the club in the same year. Upon his debut, Havertz became the club's youngest-ever debutant in the Bundesliga, and he became their youngest-ever goalscorer when he scored his first goal the following year. Havertz holds the record for being the youngest player to reach 50 and 100 league appearances in the German top flight.\nHavertz's performances sparked the interest of several European clubs, with Chelsea signing him in 2020 for a transfer worth €73.4 million (£62 million), making him Chelsea's second-most expensive signing at the time.",
+        "[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC."
+      ],
+      "transcript_chunks": [
+        "K. Havertz — Goal for Arsenal at 76 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Arsenal vs Manchester City\nFinal score5-1\nPreferred team/player: Arsenal\n\nEvent details:\n- Event: goal\n- Time: 76:00\n- Team: Arsenal\n- Players involved: K. Havertz, Gabriel Martinelli\n- Score after event: 4-1\n- Emotions detected: K., Havertz, —, Goal, for\n- Context: K. Havertz — Goal for Arsenal at 76 minutes.\n- Additional context: [Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.\n\n[K. Havertz] Kai Lukas Havertz (born 11 June 1999) is a German professional footballer who plays as a forward or attacking midfielder for Premier League club Arsenal and the Germany national team.\nHaving graduated from Bayer Leverkusen's youth academy in 2016, Havertz made his senior debut with the club in the same year. Upon his debut, Havertz became the club's youngest-ever debutant in the Bundesliga, and he became their youngest-ever goalscorer when he scored his first goal the following year. Havertz holds the record for being the youngest player to reach 50 and 100 league appearances in the German top flight.\nHavertz's performances sparked the interest of several European clubs, with Chelsea signing him in 2020 for a transfer worth €73.4 million (£62 million), making him Chelsea's second-most expensive signing at the time.\n\n[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC.\n- Commentary: K. Havertz — Goal for Arsenal at 76 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Arsenal fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Havertz scores a great goal for Arsenal at 76 minutes, what a finish!",
+      "caption_reel_b": "K. Havertz scores for Arsenal with a goal at 76 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": true,
+      "original_caption": "Havertz scores a great goal for Arsenal at 76 minutes, what a finish!",
+      "alignment_score_reel_a": 0.5468219011760211
+    },
+    {
+      "segment_id": "segment_014",
+      "event_type": "goal",
+      "team": "Arsenal",
+      "players": [
+        "E. Nwaneri",
+        "D. Rice"
+      ],
+      "d15_fields": {
+        "importance_score": 0.95,
+        "confidence": 0.99,
+        "predicted_event_type": "goal"
+      },
+      "d17_fields": {
+        "narrative": "E. Nwaneri — Goal for Arsenal at 90 minutes.",
+        "score_after_event": "5-1",
+        "players": [
+          "E. Nwaneri",
+          "D. Rice"
+        ],
+        "event_type": "goal"
+      },
+      "rag_entities_used": [
+        "Arsenal",
+        "E. Nwaneri",
+        "Emirates Stadium"
+      ],
+      "rag_fact_texts": [
+        "[Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.",
+        "[E. Nwaneri] Ethan Nwaneri is an English professional footballer who plays as a midfielder for Arsenal.",
+        "[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC."
+      ],
+      "transcript_chunks": [
+        "E. Nwaneri — Goal for Arsenal at 90 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Arsenal vs Manchester City\nFinal score5-1\nPreferred team/player: Arsenal\n\nEvent details:\n- Event: goal\n- Time: 90:00\n- Team: Arsenal\n- Players involved: E. Nwaneri, D. Rice\n- Score after event: 5-1\n- Emotions detected: E., Nwaneri, —, Goal, for\n- Context: E. Nwaneri — Goal for Arsenal at 90 minutes.\n- Additional context: [Arsenal] The Arsenal Football Club is an English professional football club based in Islington, North London, England. They compete in the Premier League, the top tier of English football. In domestic football, Arsenal have won 13 league titles (including one unbeaten title), a record 14 FA Cups, 2 League Cups, 17 FA Community Shields and a Football League Centenary Trophy.\n\n[E. Nwaneri] Ethan Nwaneri is an English professional footballer who plays as a midfielder for Arsenal.\n\n[Emirates Stadium] Emirates Stadium is the home stadium of Arsenal FC.\n- Commentary: E. Nwaneri — Goal for Arsenal at 90 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Arsenal fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Ethan Nwaneri scores the fifth goal for Arsenal at 90 minutes!",
+      "caption_reel_b": "E. Nwaneri scores for Arsenal with a goal in the 90th minute.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.46325407522471546
+    }
+  ],
+  "match_recap_evidence": {
+    "match_context": {
+      "home_team": "Arsenal",
+      "away_team": "Manchester City",
+      "venue": "Emirates Stadium",
+      "competition": "Premier League",
+      "final_score": "5-1"
+    },
+    "score_progression_used": [
+      {
+        "time": "0:00",
+        "scorer": null,
+        "team": null,
+        "score": "0-0"
+      },
+      {
+        "time": "2:00",
+        "scorer": "M. Ødegaard",
+        "team": "Arsenal",
+        "score": "1-0"
+      },
+      {
+        "time": "55:00",
+        "scorer": "E. Haaland",
+        "team": "Manchester City",
+        "score": "1-1"
+      },
+      {
+        "time": "56:00",
+        "scorer": "T. Partey",
+        "team": "Arsenal",
+        "score": "2-1"
+      },
+      {
+        "time": "62:00",
+        "scorer": "M. Lewis-Skelly",
+        "team": "Arsenal",
+        "score": "3-1"
+      },
+      {
+        "time": "76:00",
+        "scorer": "K. Havertz",
+        "team": "Arsenal",
+        "score": "4-1"
+      },
+      {
+        "time": "90:00",
+        "scorer": "E. Nwaneri",
+        "team": "Arsenal",
+        "score": "5-1"
+      }
+    ],
+    "recap_generated": "The match at Emirates Stadium got off to a blistering start as Martin Ødegaard scored for Arsenal in just the 2nd minute, setting the tone for a high-intensity clash. However, Manchester City managed to level the score through Erling Haaland in the 55th minute, momentarily shifting the momentum in their favor. But Arsenal quickly regained control, with Thomas Partey scoring just a minute later, and the hosts never looked back, adding three more goals to secure a resounding 5-1 victory. The final result reflected Arsenal's dominance, as they capitalized on key turning points to overwhelm their opponents and claim a convincing win."
+  },
+  "summary": {
+    "total_clips": 6,
+    "hallucination_flagged": true,
+    "unsupported_mentions": [
+      "Reel A [segment_009]: None of the entities are unconfirmed, however the fact that Havertz plays for Arsenal is not confirmed in the KB context, it is only confirmed that he plays for Chelsea and the Germany national team.",
+      "Reel B [segment_001]: Havertz"
+    ],
+    "total_retries": 2,
+    "reel_a_alignment_score": 0.4548868399020067,
+    "reel_b_alignment_score": 0.40339913051636955,
+    "rag_entities_used": [
+      "Arsenal",
+      "E. Haaland",
+      "E. Nwaneri",
+      "Emirates Stadium",
+      "K. Havertz",
+      "M. Lewis-Skelly",
+      "M. Ødegaard",
+      "Manchester City",
+      "T. Partey"
+    ]
+  }
+}

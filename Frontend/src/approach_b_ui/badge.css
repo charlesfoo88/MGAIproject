@@ -149,35 +149,59 @@
 }
 
 .generator-shell {
-  width: 100%;
-  max-width: none;
-  margin: 0;
+  width: min(1380px, 96vw);
+  max-width: 100%;
+  margin: 0 auto;
   padding: 28px 0 40px;
-  font-family: Arial, sans-serif;
+  font-family: "Avenir Next", Avenir, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   text-align: center;
+  display: grid;
+  grid-template-columns: minmax(360px, 460px) minmax(0, 1fr);
+  column-gap: 20px;
+  row-gap: 14px;
+  align-items: start;
 }
 
 .generator-main {
-  width: min(1380px, 96vw);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
-  gap: 18px;
-  align-items: start;
+  width: 100%;
+  margin: 0;
+  display: block;
+  grid-column: 1;
+  grid-row: 2;
 }
 
 .generator-primary {
   min-width: 0;
 }
 
+.generator-shell > .analyst-output {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.generator-shell > .generator-error {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.generator-shell > .pokemon-card-section-standalone {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: min(1280px, 96vw);
+  max-width: 100%;
+  margin-top: 18px;
+}
+
 .espn-header {
+  grid-column: 1 / -1;
   width: 100vw;
-  margin: 0 0 20px;
+  margin: 0 0 14px;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  padding: 10px 18px 12px;
+  padding: 8px 14px 9px;
   border-radius: 0;
   text-align: left;
+  font-family: "Avenir Next", Avenir, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background:
     linear-gradient(180deg, rgba(10, 14, 20, 0.95), rgba(15, 23, 42, 0.8)),
     rgba(10, 14, 20, 0.86);
@@ -190,18 +214,72 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.espn-live-center {
+  flex: 1 1 560px;
+  min-width: 300px;
+  max-width: 760px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.espn-live-widget {
+  display: grid;
+  gap: 2px;
+  padding: 5px 9px;
+  border-radius: 9px;
+  background: rgba(2, 6, 23, 0.56);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+.espn-live-widget-title {
+  margin: 0;
+  color: #93c5fd;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.espn-live-matchline {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.espn-live-weather {
+  margin: 0;
+  color: #bae6fd;
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.espn-live-commentary {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 10px;
+  line-height: 1.25;
+  min-height: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .espn-brand {
   display: inline-flex;
   align-items: center;
-  padding: 6px 10px;
+  padding: 5px 9px;
   border-radius: 6px;
   background: linear-gradient(135deg, #c1121f, #ef233c);
   color: #f8fafc;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -218,12 +296,12 @@
 .espn-nav-btn {
   display: inline-flex;
   align-items: center;
-  padding: 4px 8px;
+  padding: 3px 7px;
   border: none;
   cursor: pointer;
   border-radius: 999px;
   color: #cbd5e1;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -254,24 +332,24 @@
 .espn-meta-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
 .espn-league-badge {
   display: inline-flex;
   align-items: center;
-  padding: 3px 9px;
+  padding: 2px 8px;
   border-radius: 999px;
   color: #f8fafc;
   background: rgba(3, 105, 161, 0.72);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.08em;
 }
 
 .espn-meta-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 750;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -303,11 +381,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 6px;
-  border-radius: 10px;
-  min-height: 104px;
-  padding: 12px 16px;
-  font-size: 14px;
+  gap: 5px;
+  border-radius: 8px;
+  min-height: 86px;
+  padding: 9px 12px;
+  font-size: 12px;
   font-weight: 700;
   color: #e5e7eb;
   background:
@@ -348,41 +426,41 @@
 }
 
 .espn-score-pill {
-  min-width: 300px;
+  min-width: 260px;
 }
 
 .espn-highlight-pill {
-  min-width: 390px;
-  max-width: 480px;
+  min-width: 320px;
+  max-width: 420px;
 }
 
 .espn-pill-detail {
   color: #cbd5e1;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 560;
-  line-height: 1.45;
+  line-height: 1.35;
 }
 
 .espn-table-pill {
-  min-width: 300px;
+  min-width: 260px;
 }
 
 .espn-table-team {
   color: #f8fafc;
-  font-size: 19px;
+  font-size: 16px;
   font-weight: 800;
 }
 
 .espn-table-stats {
   color: #bfdbfe;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 650;
   letter-spacing: 0.02em;
 }
 
 .espn-pill-date {
   color: #94a3b8;
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.09em;
@@ -390,7 +468,7 @@
 
 .espn-pill-match {
   color: #f8fafc;
-  font-size: 19px;
+  font-size: 16px;
   font-weight: 800;
   line-height: 1.25;
 }
@@ -421,7 +499,8 @@
 }
 
 .select-block {
-  width: min(92vw, 720px);
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto 14px;
   text-align: left;
 }
@@ -441,14 +520,23 @@
 }
 
 .select-wrap::after {
-  content: "v";
+  content: "";
   position: absolute;
-  right: 22px;
+  right: 16px;
   top: 50%;
-  transform: translateY(-50%);
-  color: rgba(241, 245, 249, 0.88);
-  font-size: 24px;
+  width: 9px;
+  height: 9px;
+  border-right: 1.6px solid rgba(241, 245, 249, 0.72);
+  border-bottom: 1.6px solid rgba(241, 245, 249, 0.72);
+  transform: translateY(-62%) rotate(45deg);
   pointer-events: none;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.select-wrap:focus-within::after {
+  border-right-color: rgba(186, 230, 253, 0.98);
+  border-bottom-color: rgba(186, 230, 253, 0.98);
+  transform: translateY(-60%) rotate(45deg);
 }
 
 .player-picker-grid {
@@ -614,7 +702,8 @@
 }
 
 .action-row {
-  width: min(92vw, 720px);
+  width: 100%;
+  max-width: 100%;
   margin: 22px auto 0;
   display: flex;
   justify-content: center;
@@ -626,6 +715,29 @@
 
 .secondary-btn {
   background: linear-gradient(135deg, #bae6fd, #93c5fd 45%, #a5b4fc);
+}
+
+/* Action row buttons: override default blue React/Vite-like tones */
+.action-row .generate-btn {
+  background: linear-gradient(135deg, #991b1b, #dc2626 58%, #f59e0b);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  box-shadow: 0 14px 24px rgba(127, 29, 29, 0.42);
+}
+
+.action-row .generate-btn:hover:not(:disabled) {
+  box-shadow: 0 18px 28px rgba(127, 29, 29, 0.52);
+}
+
+.action-row .secondary-btn {
+  background: linear-gradient(135deg, #111827, #1f2937 58%, #374151);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  box-shadow: 0 14px 24px rgba(2, 6, 23, 0.44);
+}
+
+.action-row .secondary-btn:hover:not(:disabled) {
+  box-shadow: 0 18px 28px rgba(2, 6, 23, 0.56);
 }
 
 .health-status {
@@ -644,14 +756,15 @@
 }
 
 .match-live-widget {
-  position: sticky;
-  top: 12px;
-  justify-self: end;
-  transform: translateX(calc((100vw - min(1380px, 96vw)) / 2));
+  position: static;
+  top: auto;
+  justify-self: stretch;
+  transform: none;
   width: 100%;
-  max-width: 320px;
+  max-width: 100%;
   display: grid;
   gap: 12px;
+  margin-top: 14px;
   align-self: start;
 }
 
@@ -721,10 +834,105 @@
 
 .analyst-output {
   width: 100%;
-  max-width: 1280px;
-  margin-top: 132px;
-  margin-inline: auto;
+  max-width: 100%;
+  margin-top: 0;
+  margin-inline: 0;
   text-align: center;
+}
+
+.generator-error {
+  margin: 6px 0 0;
+  color: #fecaca;
+  font-weight: 700;
+  text-align: left;
+}
+
+/* Layout and sizing tune: keep generated reel size, compress controls, restore right widget */
+.generator-shell {
+  width: min(1860px, 99vw);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 18px;
+}
+
+.generator-main {
+  display: contents;
+}
+
+.generator-primary {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.match-live-widget {
+  display: none;
+}
+
+.generator-shell > .analyst-output {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.generator-main .generator-title {
+  margin: 10px 0 8px;
+  max-width: 100%;
+  text-wrap: balance;
+  white-space: normal;
+  font-size: clamp(26px, 2.1vw, 34px);
+}
+
+.generator-main .select-label {
+  margin-bottom: 6px;
+  font-size: 17px;
+}
+
+.generator-main .fifa-select {
+  font-size: clamp(18px, 1.6vw, 22px);
+  padding: 14px 44px 14px 16px;
+  border-radius: 14px;
+}
+
+.generator-main .source-textarea {
+  min-height: 120px;
+  font-size: 17px;
+}
+
+.generator-main .preference-type-btn {
+  padding: 11px 12px;
+  font-size: 15px;
+  border-radius: 12px;
+}
+
+.generator-main .player-option-btn {
+  border-radius: 12px;
+  padding: 8px 10px;
+  gap: 10px;
+}
+
+.generator-main .player-headshot-wrap,
+.generator-main .player-headshot {
+  width: 60px;
+  height: 60px;
+}
+
+.generator-main .player-option-name {
+  font-size: 15px;
+}
+
+.generator-main .player-option-team {
+  font-size: 12px;
+}
+
+.generator-main .generate-btn {
+  min-width: 180px;
+  padding: 11px 18px;
+  font-size: 17px;
+  border-radius: 10px;
+}
+
+.generator-main .action-row {
+  margin-top: 14px;
+  gap: 8px;
+  padding-bottom: 10px;
 }
 
 .output-context {
@@ -752,17 +960,137 @@
 .commentary-box h3 {
   margin: 0 0 10px;
   color: #e0f2fe;
-  font-size: clamp(28px, 4.2vw, 42px);
+  font-size: clamp(20px, 2.6vw, 28px);
   letter-spacing: 0.03em;
 }
 
 .commentary-box p {
   margin: 0;
   color: #f8fafc;
-  font-size: clamp(18px, 2.2vw, 24px);
+  font-size: clamp(15px, 1.4vw, 20px);
   line-height: 1.45;
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+.commentary-box.below-reel-commentary {
+  margin-top: 14px;
+}
+
+.commentary-current-compare,
+.commentary-neutral-compare {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.commentary-current-compare {
+  background: rgba(15, 23, 42, 0.46);
+  border: 1px solid rgba(125, 211, 252, 0.28);
+}
+
+.commentary-neutral-compare {
+  margin-top: 8px;
+  background: rgba(15, 23, 42, 0.42);
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  color: #dbeafe;
+}
+
+.commentary-compare-label {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #f8fafc;
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+}
+
+.commentary-compare-score {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.03em;
+  color: #dbeafe;
+  background: rgba(14, 116, 144, 0.28);
+  border: 1px solid rgba(125, 211, 252, 0.4);
+}
+
+.factual-alert-toast {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9999;
+  width: min(430px, calc(100vw - 24px));
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: left;
+  background: rgba(36, 3, 5, 0.95);
+  border: 1px solid rgba(248, 113, 113, 0.6);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.42),
+    inset 0 0 0 1px rgba(252, 165, 165, 0.2);
+  animation: factual-alert-enter 180ms ease-out;
+}
+
+.factual-alert-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.factual-alert-title {
+  margin: 0;
+  color: #fca5a5;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.factual-alert-dismiss {
+  min-width: auto;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.72);
+  color: #fee2e2;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.factual-alert-meta {
+  margin: 6px 0 0;
+  color: #fecdd3;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.factual-alert-caption {
+  margin: 7px 0 0;
+  color: #f8fafc;
+  font-size: 13px;
+  line-height: 1.32;
+}
+
+@keyframes factual-alert-enter {
+  from {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .reels-grid {
@@ -944,6 +1272,55 @@
   transform: scale(1.09);
   filter: blur(4px) saturate(1.04) contrast(1.02) brightness(0.72);
   pointer-events: none;
+}
+
+.preference-type-toggle {
+  display: flex;
+  gap: 10px;
+}
+
+.preference-type-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  border: none;
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #e2e8f0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  background:
+    linear-gradient(130deg, rgba(148, 163, 184, 0.18), rgba(30, 41, 59, 0.2)),
+    rgba(15, 23, 42, 0.48);
+  box-shadow:
+    inset 0 0 0 1px rgba(226, 232, 240, 0.22),
+    0 10px 24px rgba(2, 6, 23, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+}
+
+.preference-type-btn:hover {
+  transform: translateY(-1px);
+  color: #f8fafc;
+}
+
+.preference-type-btn.active {
+  color: #ecfeff;
+  background:
+    linear-gradient(130deg, rgba(56, 189, 248, 0.2), rgba(8, 145, 178, 0.15)),
+    rgba(15, 23, 42, 0.6);
+  box-shadow:
+    inset 0 0 0 2px rgba(125, 211, 252, 0.78),
+    0 10px 24px rgba(2, 6, 23, 0.35);
+}
+
+.preference-type-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 0 0 0 2px rgba(125, 211, 252, 0.9),
+    0 0 0 3px rgba(14, 116, 144, 0.35);
 }
 
 .pulled-highlight-art-mask {
@@ -1894,15 +2271,28 @@ object.pokemon-card-image {
 }
 
 @media (max-width: 1040px) {
-  .generator-main {
+  .generator-shell {
+    display: block;
     width: min(92vw, 960px);
-    grid-template-columns: 1fr;
+  }
+
+  .generator-main {
+    display: block;
+    width: 100%;
+  }
+
+  .generator-shell > .analyst-output,
+  .generator-shell > .generator-error,
+  .generator-primary,
+  .match-live-widget {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .match-live-widget {
     position: static;
-    width: min(92vw, 720px);
-    max-width: none;
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto 14px;
     transform: none;
   }
@@ -1910,6 +2300,23 @@ object.pokemon-card-image {
   .espn-topbar {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .espn-live-center {
+    width: 100%;
+    max-width: none;
+    flex: 1 1 auto;
+    grid-template-columns: 1fr;
+  }
+
+  .espn-live-widget {
+    width: 100%;
+  }
+
+  .espn-live-commentary {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
   }
 
   .generator-title {
@@ -1926,26 +2333,31 @@ object.pokemon-card-image {
   }
 
   .epl-pill {
-    min-height: 96px;
-    min-width: 250px;
-    padding: 10px 14px;
+    min-height: 78px;
+    min-width: 220px;
+    padding: 8px 10px;
   }
 
   .espn-pill-date {
-    font-size: 12px;
+    font-size: 10px;
   }
 
   .espn-pill-match {
-    font-size: 17px;
+    font-size: 14px;
   }
 
   .espn-pill-detail,
   .espn-table-stats {
-    font-size: 13px;
+    font-size: 11px;
   }
 
   .player-picker-grid {
     grid-template-columns: 1fr;
+  }
+
+  .preference-type-btn {
+    padding: 11px 12px;
+    font-size: 16px;
   }
 
   .reels-grid {
@@ -2006,6 +2418,7 @@ body,
 .espn-header,
 .epl-pill,
 .fifa-select,
+.preference-type-btn,
 .player-option-btn,
 .reel-panel,
 .commentary-box,
@@ -2020,6 +2433,7 @@ body,
 .espn-header,
 .epl-pill,
 .fifa-select,
+.preference-type-btn,
 .player-option-btn,
 .reel-panel,
 .commentary-box,
@@ -2033,6 +2447,9 @@ body,
 .espn-nav-btn,
 .espn-nav-btn.active,
 .espn-nav-btn:hover,
+.preference-type-btn,
+.preference-type-btn.active,
+.preference-type-btn:hover,
 .espn-meta-label,
 .espn-pill-date,
 .espn-pill-match,
@@ -2050,8 +2467,9 @@ body,
 .espn-header {
   position: relative;
   overflow: hidden;
-  margin-bottom: 28px;
-  padding: 14px 18px 16px;
+  margin-bottom: 18px;
+  padding: 8px 14px 10px;
+  font-family: "Avenir Next", Avenir, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
     #020202 !important;
@@ -2065,22 +2483,22 @@ body,
 .espn-header::after {
   content: "";
   position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 8px;
+  left: 14px;
+  right: 14px;
+  bottom: 6px;
   height: 1px;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0));
   pointer-events: none;
 }
 
 .espn-topbar {
-  padding-bottom: 8px;
+  padding-bottom: 5px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .espn-meta-row {
-  margin-top: 8px;
-  padding-top: 6px;
+  margin-top: 5px;
+  padding-top: 4px;
 }
 
 @media (max-width: 1040px) {
@@ -2102,4 +2520,517 @@ body,
   background: linear-gradient(135deg, rgba(22, 101, 52, 0.72), rgba(34, 197, 94, 0.45)) !important;
   border: 1px solid rgba(134, 239, 172, 0.7) !important;
   color: #bbf7d0 !important;
+}
+
+/* Compact fit mode: reduce overall scale so the page fits directly on screen */
+.generator-shell {
+  width: min(1660px, 96vw) !important;
+  grid-template-columns: minmax(360px, 1fr) minmax(360px, 1fr) !important;
+  column-gap: 14px !important;
+  row-gap: 10px !important;
+}
+
+.generator-main .generator-title {
+  margin: 8px 0 6px !important;
+  font-size: clamp(20px, 1.6vw, 26px) !important;
+}
+
+.generator-main .select-label {
+  font-size: 14px !important;
+}
+
+.generator-main .fifa-select {
+  font-size: clamp(15px, 1.15vw, 18px) !important;
+  padding: 10px 38px 10px 12px !important;
+  border-radius: 12px !important;
+}
+
+.generator-main .source-textarea {
+  min-height: 92px !important;
+  font-size: 14px !important;
+}
+
+.generator-main .preference-type-btn {
+  padding: 8px 10px !important;
+  font-size: 13px !important;
+}
+
+.generator-main .player-option-btn {
+  padding: 7px 9px !important;
+  gap: 8px !important;
+}
+
+.generator-main .player-headshot-wrap,
+.generator-main .player-headshot {
+  width: 48px !important;
+  height: 48px !important;
+}
+
+.generator-main .player-option-name {
+  font-size: 13px !important;
+}
+
+.generator-main .player-option-team {
+  font-size: 10px !important;
+}
+
+.generator-main .generate-btn {
+  min-width: 150px !important;
+  padding: 9px 14px !important;
+  font-size: 15px !important;
+}
+
+.generator-main .action-row {
+  margin-top: 10px !important;
+  padding-bottom: 8px !important;
+}
+
+.match-live-widget {
+  max-width: 290px !important;
+}
+
+.widget-box {
+  padding: 10px !important;
+}
+
+.widget-box h3 {
+  font-size: 14px !important;
+}
+
+.widget-matchline,
+.widget-scoreline {
+  font-size: 12px !important;
+}
+
+.widget-meta,
+.widget-weather-grid p,
+.widget-commentary-log p {
+  font-size: 11px !important;
+}
+
+.output-context {
+  font-size: 15px !important;
+}
+
+.commentary-box {
+  padding: 14px 16px !important;
+  margin-bottom: 16px !important;
+}
+
+.commentary-box h3 {
+  font-size: clamp(18px, 1.8vw, 24px) !important;
+}
+
+.commentary-box p {
+  font-size: clamp(14px, 1.1vw, 17px) !important;
+}
+
+.reels-grid {
+  gap: 16px !important;
+}
+
+.reel-panel {
+  width: min(100%, 560px) !important;
+  max-width: 560px !important;
+  min-height: 500px !important;
+  padding: 14px 16px 16px !important;
+}
+
+.reel-header h3 {
+  font-size: 23px !important;
+}
+
+.reel-caption-live {
+  font-size: 16px !important;
+  padding: 10px 12px !important;
+}
+
+.pokemon-card-section h3 {
+  font-size: 20px !important;
+}
+
+.spin-stage {
+  width: min(88vw, 520px) !important;
+  min-height: 360px !important;
+}
+
+/* Final desktop fit pass: keep the whole page visible with less scrolling */
+@media (min-width: 1041px) {
+  .generator-shell {
+    width: min(1520px, 95vw) !important;
+    padding: 16px 0 22px !important;
+    grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr) !important;
+    column-gap: 12px !important;
+    row-gap: 8px !important;
+  }
+
+  .generator-main .generator-title {
+    margin: 6px 0 4px !important;
+    font-size: clamp(18px, 1.35vw, 24px) !important;
+  }
+
+  .output-context {
+    margin-bottom: 10px !important;
+    font-size: 14px !important;
+  }
+
+  .select-block {
+    margin-bottom: 10px !important;
+  }
+
+  .generator-main .select-label {
+    margin-bottom: 4px !important;
+    font-size: 13px !important;
+  }
+
+  .generator-main .fifa-select {
+    font-size: 14px !important;
+    padding: 8px 34px 8px 10px !important;
+    border-radius: 10px !important;
+  }
+
+  .generator-main .source-textarea {
+    min-height: 78px !important;
+    font-size: 13px !important;
+  }
+
+  .player-picker-grid {
+    gap: 6px !important;
+  }
+
+  .generator-main .player-option-btn {
+    padding: 6px 8px !important;
+    gap: 7px !important;
+  }
+
+  .generator-main .player-headshot-wrap,
+  .generator-main .player-headshot {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .generator-main .player-option-name {
+    font-size: 12px !important;
+  }
+
+  .generator-main .player-option-team {
+    font-size: 10px !important;
+  }
+
+  .generator-main .generate-btn {
+    min-width: 132px !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+  }
+
+  .generator-main .action-row {
+    margin-top: 8px !important;
+    gap: 6px !important;
+    padding-bottom: 4px !important;
+  }
+
+  .badge-stage {
+    width: calc(var(--badge-size) + 20px) !important;
+    height: calc(var(--badge-size) + 20px) !important;
+  }
+
+  .commentary-box {
+    padding: 12px 14px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .commentary-box h3 {
+    font-size: clamp(17px, 1.6vw, 22px) !important;
+  }
+
+  .commentary-box p {
+    font-size: clamp(13px, 1.0vw, 15px) !important;
+    line-height: 1.38 !important;
+  }
+
+  .reels-grid {
+    gap: 12px !important;
+  }
+
+  .reel-panel {
+    width: min(100%, 520px) !important;
+    max-width: 520px !important;
+    min-height: 450px !important;
+    padding: 12px 14px 14px !important;
+  }
+
+  .reel-header h3 {
+    font-size: 20px !important;
+  }
+
+  .reel-caption-live {
+    font-size: 14px !important;
+    padding: 8px 10px !important;
+  }
+
+  .match-live-widget {
+    max-width: 270px !important;
+  }
+
+  .widget-box {
+    padding: 8px !important;
+  }
+
+  .widget-box h3 {
+    font-size: 13px !important;
+  }
+
+  .widget-matchline,
+  .widget-scoreline {
+    font-size: 11px !important;
+  }
+
+  .widget-meta,
+  .widget-weather-grid p,
+  .widget-commentary-log p {
+    font-size: 10px !important;
+    line-height: 1.3 !important;
+  }
+
+  .pokemon-card-section {
+    padding: 14px 12px 16px !important;
+  }
+
+  .pokemon-card-section h3 {
+    font-size: 18px !important;
+  }
+
+  .spin-stage {
+    width: min(86vw, 480px) !important;
+    min-height: 330px !important;
+  }
+
+  .my-collection-grid {
+    gap: 8px !important;
+  }
+
+  .collection-mini-card {
+    width: 148px !important;
+    min-height: 220px !important;
+  }
+}
+
+/* Strict fit override: keep full page inside viewport without horizontal overflow */
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+@media (min-width: 1041px) {
+  .generator-shell {
+    width: min(1380px, 92vw) !important;
+    grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr) !important;
+    column-gap: 20px !important;
+    row-gap: 6px !important;
+    padding: 12px 0 18px !important;
+  }
+
+  .generator-primary {
+    padding-right: 6px !important;
+  }
+
+  .generator-shell > .analyst-output {
+    padding-left: 6px !important;
+  }
+
+  .espn-header {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    border-radius: 10px !important;
+  }
+
+  .generator-main .generator-title {
+    font-size: clamp(24px, 2vw, 32px) !important;
+    margin: 6px 0 !important;
+  }
+
+  .output-context {
+    font-size: 13px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .generator-main .select-label {
+    font-size: 12px !important;
+  }
+
+  .generator-main .fifa-select {
+    font-size: 13px !important;
+    padding: 7px 30px 7px 9px !important;
+  }
+
+  .generator-main .source-textarea {
+    min-height: 70px !important;
+    font-size: 12px !important;
+  }
+
+  .generator-main .preference-type-btn {
+    font-size: 12px !important;
+    padding: 7px 9px !important;
+  }
+
+  .generator-main .player-headshot-wrap,
+  .generator-main .player-headshot {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .generator-main .player-option-name {
+    font-size: 11px !important;
+  }
+
+  .generator-main .player-option-team {
+    font-size: 9px !important;
+  }
+
+  .generator-main .generate-btn {
+    min-width: 118px !important;
+    font-size: 13px !important;
+    padding: 7px 10px !important;
+  }
+
+  .match-live-widget {
+    max-width: 240px !important;
+  }
+
+  .widget-box {
+    padding: 7px !important;
+  }
+
+  .widget-box h3 {
+    font-size: 12px !important;
+  }
+
+  .widget-matchline,
+  .widget-scoreline {
+    font-size: 10px !important;
+  }
+
+  .widget-meta,
+  .widget-weather-grid p,
+  .widget-commentary-log p {
+    font-size: 9px !important;
+  }
+
+  .commentary-box {
+    padding: 10px 12px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .commentary-box h3 {
+    font-size: clamp(15px, 1.3vw, 19px) !important;
+  }
+
+  .commentary-box p {
+    font-size: clamp(12px, 0.95vw, 14px) !important;
+  }
+
+  .reels-grid {
+    gap: 10px !important;
+  }
+
+  .reel-panel {
+    width: min(100%, 480px) !important;
+    max-width: 480px !important;
+    min-height: 410px !important;
+    padding: 10px 12px 12px !important;
+  }
+
+  .reel-header h3 {
+    font-size: 18px !important;
+  }
+
+  .reel-caption-live {
+    font-size: 13px !important;
+    padding: 7px 9px !important;
+  }
+
+  .spin-stage {
+    width: min(82vw, 440px) !important;
+    min-height: 300px !important;
+  }
+}
+
+/* Unified thin white outline for all dropdowns and buttons */
+.generator-shell select,
+.generator-shell button,
+.generator-shell .pokemon-card-link {
+  border: 1px solid rgba(255, 255, 255, 0.58) !important;
+}
+
+.generator-shell select:focus-visible,
+.generator-shell button:focus-visible,
+.generator-shell .pokemon-card-link:focus-visible {
+  border-color: rgba(255, 255, 255, 0.86) !important;
+}
+
+.generator-shell select:disabled,
+.generator-shell button:disabled {
+  border-color: rgba(255, 255, 255, 0.34) !important;
+}
+
+/* Banner typography: smaller and less dominant */
+.espn-brand {
+  font-size: 10px !important;
+  padding: 4px 8px !important;
+}
+
+.espn-nav-btn {
+  font-size: 9px !important;
+  padding: 2px 6px !important;
+}
+
+.espn-league-badge {
+  font-size: 9px !important;
+}
+
+.espn-meta-label {
+  font-size: 10px !important;
+}
+
+.espn-pill-date {
+  font-size: 10px !important;
+}
+
+.espn-pill-match {
+  font-size: 14px !important;
+}
+
+.espn-pill-detail {
+  font-size: 11px !important;
+}
+
+.espn-table-team {
+  font-size: 14px !important;
+}
+
+.espn-table-stats {
+  font-size: 10px !important;
+}
+
+.espn-header .espn-brand,
+.espn-header .espn-nav-btn,
+.espn-header .espn-league-badge,
+.espn-header .espn-meta-label,
+.espn-header .espn-pill-date,
+.espn-header .espn-pill-match,
+.espn-header .espn-pill-detail,
+.espn-header .espn-table-team,
+.espn-header .espn-table-stats,
+.espn-header .espn-pill-match strong {
+  font-weight: 500 !important;
+}
+
+/* Compact banner match boxes */
+.espn-header .epl-pill {
+  min-height: 62px !important;
+  padding: 6px 10px !important;
+  gap: 2px !important;
 }

@@ -1,0 +1,314 @@
+{
+  "match_name": "liverpool_2_0_man_city_2024_12_01",
+  "timestamp": "2026-04-07T01:07:21.962972",
+  "user_preference": "I am a Liverpool fan",
+  "clip_evidence": [
+    {
+      "segment_id": "segment_001",
+      "event_type": "goal",
+      "team": "Liverpool",
+      "players": [
+        "C. Gakpo",
+        "Mohamed Salah"
+      ],
+      "d15_fields": {
+        "importance_score": 0.95,
+        "confidence": 0.99,
+        "predicted_event_type": "goal"
+      },
+      "d17_fields": {
+        "narrative": "C. Gakpo — Goal for Liverpool at 12 minutes.",
+        "score_after_event": "1-0",
+        "players": [
+          "C. Gakpo",
+          "Mohamed Salah"
+        ],
+        "event_type": "goal"
+      },
+      "rag_entities_used": [
+        "Liverpool",
+        "Mohamed Salah",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.",
+        "[Mohamed Salah] Mohamed Salah Hamed Mahrous Ghaly (born 15 June 1992) is an Egyptian professional footballer who plays as a right winger or right midfielder for Premier League club Liverpool and captains the Egypt national team. He is widely regarded as one of the best players of his generation and one of the greatest wingers of all time. Dubbed the \"Egyptian King\", he is the all-time top foreign goalscorer in the Premier League and the all-time top African goalscorer in the UEFA Champions League.\nSalah began his senior career in 2010 at Al-Mokawloon, departing in 2012 to join Basel, where he won two Swiss Super League titles.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "C. Gakpo — Goal for Liverpool at 12 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Liverpool\n\nEvent details:\n- Event: goal\n- Time: 12:00\n- Team: Liverpool\n- Players involved: C. Gakpo, Mohamed Salah\n- Score after event: 1-0\n- Emotions detected: C., Gakpo, —, Goal, for\n- Context: C. Gakpo — Goal for Liverpool at 12 minutes.\n- Additional context: [Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.\n\n[Mohamed Salah] Mohamed Salah Hamed Mahrous Ghaly (born 15 June 1992) is an Egyptian professional footballer who plays as a right winger or right midfielder for Premier League club Liverpool and captains the Egypt national team. He is widely regarded as one of the best players of his generation and one of the greatest wingers of all time. Dubbed the \"Egyptian King\", he is the all-time top foreign goalscorer in the Premier League and the all-time top African goalscorer in the UEFA Champions League.\nSalah began his senior career in 2010 at Al-Mokawloon, departing in 2012 to join Basel, where he won two Swiss Super League titles.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: C. Gakpo — Goal for Liverpool at 12 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Liverpool fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Gakpo scores for Liverpool at 12 minutes with Salah's assist, what a goal!",
+      "caption_reel_b": "Gakpo scores for Liverpool with a goal at 12 minutes, assisted by Mohamed Salah.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.3973792601124153
+    },
+    {
+      "segment_id": "segment_012",
+      "event_type": "penalty_goal",
+      "team": "Liverpool",
+      "players": [
+        "Mohamed Salah"
+      ],
+      "d15_fields": {
+        "importance_score": 0.95,
+        "confidence": 0.99,
+        "predicted_event_type": "penalty_goal"
+      },
+      "d17_fields": {
+        "narrative": "Mohamed Salah — Penalty for Liverpool at 78 minutes.",
+        "score_after_event": "2-0",
+        "players": [
+          "Mohamed Salah"
+        ],
+        "event_type": "penalty_goal"
+      },
+      "rag_entities_used": [
+        "Liverpool",
+        "Mohamed Salah",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.",
+        "[Mohamed Salah] Mohamed Salah Hamed Mahrous Ghaly (born 15 June 1992) is an Egyptian professional footballer who plays as a right winger or right midfielder for Premier League club Liverpool and captains the Egypt national team. He is widely regarded as one of the best players of his generation and one of the greatest wingers of all time. Dubbed the \"Egyptian King\", he is the all-time top foreign goalscorer in the Premier League and the all-time top African goalscorer in the UEFA Champions League.\nSalah began his senior career in 2010 at Al-Mokawloon, departing in 2012 to join Basel, where he won two Swiss Super League titles.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "Mohamed Salah — Penalty for Liverpool at 78 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Liverpool\n\nEvent details:\n- Event: penalty_goal\n- Time: 78:00\n- Team: Liverpool\n- Players involved: Mohamed Salah\n- Score after event: 2-0\n- Emotions detected: Mohamed, Salah, —, Penalty, for\n- Context: Mohamed Salah — Penalty for Liverpool at 78 minutes.\n- Additional context: [Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.\n\n[Mohamed Salah] Mohamed Salah Hamed Mahrous Ghaly (born 15 June 1992) is an Egyptian professional footballer who plays as a right winger or right midfielder for Premier League club Liverpool and captains the Egypt national team. He is widely regarded as one of the best players of his generation and one of the greatest wingers of all time. Dubbed the \"Egyptian King\", he is the all-time top foreign goalscorer in the Premier League and the all-time top African goalscorer in the UEFA Champions League.\nSalah began his senior career in 2010 at Al-Mokawloon, departing in 2012 to join Basel, where he won two Swiss Super League titles.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: Mohamed Salah — Penalty for Liverpool at 78 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Liverpool fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Mohamed Salah scores a penalty for Liverpool at 78 minutes, sealing the win!",
+      "caption_reel_b": "Mohamed Salah scores a penalty for Liverpool at 78 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.4796103032279834
+    },
+    {
+      "segment_id": "segment_006",
+      "event_type": "substitution",
+      "team": "Manchester City",
+      "players": [
+        "Matheus Nunes",
+        "J. Doku"
+      ],
+      "d15_fields": {
+        "importance_score": 0.5,
+        "confidence": 0.99,
+        "predicted_event_type": "substitution"
+      },
+      "d17_fields": {
+        "narrative": "Matheus Nunes — Substitution 1 for Manchester City at 57 minutes.",
+        "score_after_event": null,
+        "players": [
+          "Matheus Nunes",
+          "J. Doku"
+        ],
+        "event_type": "substitution"
+      },
+      "rag_entities_used": [
+        "Liverpool",
+        "Manchester City",
+        "Matheus Nunes",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.",
+        "[Manchester City] Manchester City Football Club is a professional football club based in Manchester, England, that competes in the Premier League, the top flight of English football. Founded in 1880 as St. Mark's (West Gorton), they became Ardwick Association Football Club in 1887 and Manchester City in 1894.",
+        "[Matheus Nunes] Matheus Luiz Nunes  (born 27 August 1998) is a professional footballer who plays as a midfielder or right-back for Premier League club Manchester City and the Portugal national team.\nNunes started his career with Ericeirense, before moving to LigaPro side Estoril. During his time with the club, Nunes played mostly in the reserve team, before moving to Primeira Liga side Sporting CP in January 2019. With Sporting, Nunes won a Primeira Liga title and back-to-back Taças da Liga in 2021 and 2022, while being part of the squad that won a double in 2021.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "Matheus Nunes — Substitution 1 for Manchester City at 57 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Liverpool\n\nEvent details:\n- Event: substitution\n- Time: 57:00\n- Team: Manchester City\n- Players involved: Matheus Nunes, J. Doku\n- Score after event: None\n- Emotions detected: Matheus, Nunes, —, Substitution, 1\n- Context: Matheus Nunes — Substitution 1 for Manchester City at 57 minutes.\n- Additional context: [Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.\n\n[Manchester City] Manchester City Football Club is a professional football club based in Manchester, England, that competes in the Premier League, the top flight of English football. Founded in 1880 as St. Mark's (West Gorton), they became Ardwick Association Football Club in 1887 and Manchester City in 1894.\n\n[Matheus Nunes] Matheus Luiz Nunes  (born 27 August 1998) is a professional footballer who plays as a midfielder or right-back for Premier League club Manchester City and the Portugal national team.\nNunes started his career with Ericeirense, before moving to LigaPro side Estoril. During his time with the club, Nunes played mostly in the reserve team, before moving to Primeira Liga side Sporting CP in January 2019. With Sporting, Nunes won a Primeira Liga title and back-to-back Taças da Liga in 2021 and 2022, while being part of the squad that won a double in 2021.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: Matheus Nunes — Substitution 1 for Manchester City at 57 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Liverpool fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Matheus Nunes substituted out for Manchester City at 57 minutes by J. Doku.",
+      "caption_reel_b": "Matheus Nunes is substituted out for J. Doku by Manchester City at 57 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": true,
+      "original_caption": "Matheus Nunes is subbed in for Manchester City at 57 minutes by J. Doku.",
+      "alignment_score_reel_a": 0.1737440054323935
+    },
+    {
+      "segment_id": "segment_007",
+      "event_type": "substitution",
+      "team": "Manchester City",
+      "players": [
+        "İ. Gündoğan",
+        "Savinho"
+      ],
+      "d15_fields": {
+        "importance_score": 0.5,
+        "confidence": 0.99,
+        "predicted_event_type": "substitution"
+      },
+      "d17_fields": {
+        "narrative": "İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes.",
+        "score_after_event": null,
+        "players": [
+          "İ. Gündoğan",
+          "Savinho"
+        ],
+        "event_type": "substitution"
+      },
+      "rag_entities_used": [
+        "Liverpool",
+        "Manchester City",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.",
+        "[Manchester City] Manchester City Football Club is a professional football club based in Manchester, England, that competes in the Premier League, the top flight of English football. Founded in 1880 as St. Mark's (West Gorton), they became Ardwick Association Football Club in 1887 and Manchester City in 1894.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Liverpool\n\nEvent details:\n- Event: substitution\n- Time: 58:00\n- Team: Manchester City\n- Players involved: İ. Gündoğan, Savinho\n- Score after event: None\n- Emotions detected: İ., Gündoğan, —, Substitution, 2\n- Context: İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes.\n- Additional context: [Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.\n\n[Manchester City] Manchester City Football Club is a professional football club based in Manchester, England, that competes in the Premier League, the top flight of English football. Founded in 1880 as St. Mark's (West Gorton), they became Ardwick Association Football Club in 1887 and Manchester City in 1894.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Liverpool fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Gündoğan subs out for Savinho at 58 minutes for Manchester City.",
+      "caption_reel_b": "İ. Gündoğan is substituted out for Savinho by Manchester City at 58 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.23625355482003388
+    },
+    {
+      "segment_id": "segment_008",
+      "event_type": "substitution",
+      "team": "Liverpool",
+      "players": [
+        "C. Gakpo",
+        "D. Núñez"
+      ],
+      "d15_fields": {
+        "importance_score": 0.5,
+        "confidence": 0.99,
+        "predicted_event_type": "substitution"
+      },
+      "d17_fields": {
+        "narrative": "C. Gakpo — Substitution 1 for Liverpool at 73 minutes.",
+        "score_after_event": null,
+        "players": [
+          "C. Gakpo",
+          "D. Núñez"
+        ],
+        "event_type": "substitution"
+      },
+      "rag_entities_used": [
+        "Liverpool",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "C. Gakpo — Substitution 1 for Liverpool at 73 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Liverpool\n\nEvent details:\n- Event: substitution\n- Time: 73:00\n- Team: Liverpool\n- Players involved: C. Gakpo, D. Núñez\n- Score after event: None\n- Emotions detected: C., Gakpo, —, Substitution, 1\n- Context: C. Gakpo — Substitution 1 for Liverpool at 73 minutes.\n- Additional context: [Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: C. Gakpo — Substitution 1 for Liverpool at 73 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Liverpool fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Gakpo makes way for Núñez in a tactical substitution at 73 minutes!",
+      "caption_reel_b": "C. Gakpo is substituted out for D. Núñez at 73 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.0748069530340306
+    },
+    {
+      "segment_id": "segment_009",
+      "event_type": "substitution",
+      "team": "Liverpool",
+      "players": [
+        "T. Alexander-Arnold",
+        "J. Quansah"
+      ],
+      "d15_fields": {
+        "importance_score": 0.5,
+        "confidence": 0.99,
+        "predicted_event_type": "substitution"
+      },
+      "d17_fields": {
+        "narrative": "T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes.",
+        "score_after_event": null,
+        "players": [
+          "T. Alexander-Arnold",
+          "J. Quansah"
+        ],
+        "event_type": "substitution"
+      },
+      "rag_entities_used": [
+        "Liverpool",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Liverpool\n\nEvent details:\n- Event: substitution\n- Time: 73:00\n- Team: Liverpool\n- Players involved: T. Alexander-Arnold, J. Quansah\n- Score after event: None\n- Emotions detected: T., Alexander-Arnold, —, Substitution, 2\n- Context: T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes.\n- Additional context: [Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Liverpool fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Trent Alexander-Arnold exits, Jordon Quansah subs in for Liverpool at 73 minutes!",
+      "caption_reel_b": "Trent Alexander-Arnold is substituted out for J. Quansah at 73 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.5006225211242437
+    }
+  ],
+  "match_recap_evidence": {
+    "match_context": {
+      "home_team": "Liverpool",
+      "away_team": "Manchester City",
+      "venue": "Anfield",
+      "competition": "Premier League",
+      "final_score": "2-0"
+    },
+    "score_progression_used": [
+      {
+        "time": "0:00",
+        "scorer": null,
+        "team": null,
+        "score": "0-0"
+      },
+      {
+        "time": "12:00",
+        "scorer": "C. Gakpo",
+        "team": "Liverpool",
+        "score": "1-0"
+      },
+      {
+        "time": "78:00",
+        "scorer": "Mohamed Salah",
+        "team": "Liverpool",
+        "score": "2-0"
+      }
+    ],
+    "recap_generated": "Liverpool secured a convincing 2-0 victory over Manchester City at Anfield, with Cody Gakpo's 12th-minute strike setting the tone for the match. The early goal allowed Liverpool to dictate the flow of the game, and although Manchester City created some scoring opportunities, they were unable to find a breakthrough. The match's momentum remained in Liverpool's favor, particularly after Mohamed Salah doubled their lead in the 78th minute, effectively sealing the win. Ultimately, Liverpool's clinical finishing and solid defensive performance earned them a valuable three points in the Premier League."
+  },
+  "summary": {
+    "total_clips": 6,
+    "hallucination_flagged": true,
+    "unsupported_mentions": [
+      "Reel A [segment_006]: J. Doku"
+    ],
+    "total_retries": 1,
+    "reel_a_alignment_score": 0.31040276629185004,
+    "reel_b_alignment_score": 0.22908924262211997,
+    "rag_entities_used": [
+      "Anfield",
+      "Liverpool",
+      "Manchester City",
+      "Matheus Nunes",
+      "Mohamed Salah"
+    ]
+  }
+}

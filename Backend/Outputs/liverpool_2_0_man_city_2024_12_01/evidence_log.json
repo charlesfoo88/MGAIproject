@@ -1,0 +1,321 @@
+{
+  "match_name": "liverpool_2_0_man_city_2024_12_01",
+  "timestamp": "2026-04-15T14:31:03.388498",
+  "user_preference": "I love watching C. Gakpo play for Liverpool, he is my favourite player",
+  "clip_evidence": [
+    {
+      "segment_id": "segment_001",
+      "event_type": "goal",
+      "team": "Liverpool",
+      "players": [
+        "C. Gakpo",
+        "Mohamed Salah"
+      ],
+      "d15_fields": {
+        "importance_score": 0.95,
+        "confidence": 0.99,
+        "predicted_event_type": "goal"
+      },
+      "d17_fields": {
+        "narrative": "C. Gakpo — Goal for Liverpool at 12 minutes.",
+        "score_after_event": "1-0",
+        "players": [
+          "C. Gakpo",
+          "Mohamed Salah"
+        ],
+        "event_type": "goal"
+      },
+      "rag_entities_used": [
+        "Gakpo",
+        "Liverpool",
+        "Mohamed Salah",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.",
+        "[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.",
+        "[Mohamed Salah] Mohamed Salah Hamed Mahrous Ghaly (born 15 June 1992) is an Egyptian professional footballer who plays as a right winger or right midfielder for Premier League club Liverpool and captains the Egypt national team. He is widely regarded as one of the best players of his generation and one of the greatest wingers of all time. Dubbed the \"Egyptian King\", he is the all-time top foreign goalscorer in the Premier League and the all-time top African goalscorer in the UEFA Champions League.\nSalah began his senior career in 2010 at Al-Mokawloon, departing in 2012 to join Basel, where he won two Swiss Super League titles.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "C. Gakpo — Goal for Liverpool at 12 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Gakpo\n\nEvent details:\n- Event: goal\n- Time: 12:00\n- Team: Liverpool\n- Players involved: C. Gakpo, Mohamed Salah\n- Score after event: 1-0\n- Emotions detected: C., Gakpo, —, Goal, for\n- Context: C. Gakpo — Goal for Liverpool at 12 minutes.\n- Additional context: [Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.\n\n[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.\n\n[Mohamed Salah] Mohamed Salah Hamed Mahrous Ghaly (born 15 June 1992) is an Egyptian professional footballer who plays as a right winger or right midfielder for Premier League club Liverpool and captains the Egypt national team. He is widely regarded as one of the best players of his generation and one of the greatest wingers of all time. Dubbed the \"Egyptian King\", he is the all-time top foreign goalscorer in the Premier League and the all-time top African goalscorer in the UEFA Champions League.\nSalah began his senior career in 2010 at Al-Mokawloon, departing in 2012 to join Basel, where he won two Swiss Super League titles.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: C. Gakpo — Goal for Liverpool at 12 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Gakpo fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Gakpo scores a great goal for Liverpool at 12 minutes, what a finish!",
+      "caption_reel_b": "C. Gakpo scores for Liverpool with Mohamed Salah's assist at 12 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.6760546383096258
+    },
+    {
+      "segment_id": "segment_012",
+      "event_type": "penalty_goal",
+      "team": "Liverpool",
+      "players": [
+        "Mohamed Salah"
+      ],
+      "d15_fields": {
+        "importance_score": 0.95,
+        "confidence": 0.99,
+        "predicted_event_type": "penalty_goal"
+      },
+      "d17_fields": {
+        "narrative": "Mohamed Salah — Penalty for Liverpool at 78 minutes.",
+        "score_after_event": "2-0",
+        "players": [
+          "Mohamed Salah"
+        ],
+        "event_type": "penalty_goal"
+      },
+      "rag_entities_used": [
+        "Gakpo",
+        "Liverpool",
+        "Mohamed Salah",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.",
+        "[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.",
+        "[Mohamed Salah] Mohamed Salah Hamed Mahrous Ghaly (born 15 June 1992) is an Egyptian professional footballer who plays as a right winger or right midfielder for Premier League club Liverpool and captains the Egypt national team. He is widely regarded as one of the best players of his generation and one of the greatest wingers of all time. Dubbed the \"Egyptian King\", he is the all-time top foreign goalscorer in the Premier League and the all-time top African goalscorer in the UEFA Champions League.\nSalah began his senior career in 2010 at Al-Mokawloon, departing in 2012 to join Basel, where he won two Swiss Super League titles.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "Mohamed Salah — Penalty for Liverpool at 78 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Gakpo\n\nEvent details:\n- Event: penalty_goal\n- Time: 78:00\n- Team: Liverpool\n- Players involved: Mohamed Salah\n- Score after event: 2-0\n- Emotions detected: Mohamed, Salah, —, Penalty, for\n- Context: Mohamed Salah — Penalty for Liverpool at 78 minutes.\n- Additional context: [Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.\n\n[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.\n\n[Mohamed Salah] Mohamed Salah Hamed Mahrous Ghaly (born 15 June 1992) is an Egyptian professional footballer who plays as a right winger or right midfielder for Premier League club Liverpool and captains the Egypt national team. He is widely regarded as one of the best players of his generation and one of the greatest wingers of all time. Dubbed the \"Egyptian King\", he is the all-time top foreign goalscorer in the Premier League and the all-time top African goalscorer in the UEFA Champions League.\nSalah began his senior career in 2010 at Al-Mokawloon, departing in 2012 to join Basel, where he won two Swiss Super League titles.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: Mohamed Salah — Penalty for Liverpool at 78 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Gakpo fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Mohamed Salah scores a penalty for Liverpool at 78 minutes, sealing the win!",
+      "caption_reel_b": "Mohamed Salah scores a penalty for Liverpool at 78 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.3529018185024834
+    },
+    {
+      "segment_id": "segment_006",
+      "event_type": "substitution",
+      "team": "Manchester City",
+      "players": [
+        "Matheus Nunes",
+        "J. Doku"
+      ],
+      "d15_fields": {
+        "importance_score": 0.5,
+        "confidence": 0.99,
+        "predicted_event_type": "substitution"
+      },
+      "d17_fields": {
+        "narrative": "Matheus Nunes — Substitution 1 for Manchester City at 57 minutes.",
+        "score_after_event": null,
+        "players": [
+          "Matheus Nunes",
+          "J. Doku"
+        ],
+        "event_type": "substitution"
+      },
+      "rag_entities_used": [
+        "Gakpo",
+        "Manchester City",
+        "Matheus Nunes",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.",
+        "[Manchester City] Manchester City Football Club is a professional football club based in Manchester, England, that competes in the Premier League, the top flight of English football. Founded in 1880 as St. Mark's (West Gorton), they became Ardwick Association Football Club in 1887 and Manchester City in 1894.",
+        "[Matheus Nunes] Matheus Luiz Nunes  (born 27 August 1998) is a professional footballer who plays as a midfielder or right-back for Premier League club Manchester City and the Portugal national team.\nNunes started his career with Ericeirense, before moving to LigaPro side Estoril. During his time with the club, Nunes played mostly in the reserve team, before moving to Primeira Liga side Sporting CP in January 2019. With Sporting, Nunes won a Primeira Liga title and back-to-back Taças da Liga in 2021 and 2022, while being part of the squad that won a double in 2021.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "Matheus Nunes — Substitution 1 for Manchester City at 57 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Gakpo\n\nEvent details:\n- Event: substitution\n- Time: 57:00\n- Team: Manchester City\n- Players involved: Matheus Nunes, J. Doku\n- Score after event: None\n- Emotions detected: Matheus, Nunes, —, Substitution, 1\n- Context: Matheus Nunes — Substitution 1 for Manchester City at 57 minutes.\n- Additional context: [Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.\n\n[Manchester City] Manchester City Football Club is a professional football club based in Manchester, England, that competes in the Premier League, the top flight of English football. Founded in 1880 as St. Mark's (West Gorton), they became Ardwick Association Football Club in 1887 and Manchester City in 1894.\n\n[Matheus Nunes] Matheus Luiz Nunes  (born 27 August 1998) is a professional footballer who plays as a midfielder or right-back for Premier League club Manchester City and the Portugal national team.\nNunes started his career with Ericeirense, before moving to LigaPro side Estoril. During his time with the club, Nunes played mostly in the reserve team, before moving to Primeira Liga side Sporting CP in January 2019. With Sporting, Nunes won a Primeira Liga title and back-to-back Taças da Liga in 2021 and 2022, while being part of the squad that won a double in 2021.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: Matheus Nunes — Substitution 1 for Manchester City at 57 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Gakpo fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Matheus Nunes substitutes in for Manchester City at 57 minutes, interesting move!",
+      "caption_reel_b": "Matheus Nunes is substituted in for J. Doku by Manchester City at 57 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.28966185334204503
+    },
+    {
+      "segment_id": "segment_007",
+      "event_type": "substitution",
+      "team": "Manchester City",
+      "players": [
+        "İ. Gündoğan",
+        "Savinho"
+      ],
+      "d15_fields": {
+        "importance_score": 0.5,
+        "confidence": 0.99,
+        "predicted_event_type": "substitution"
+      },
+      "d17_fields": {
+        "narrative": "İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes.",
+        "score_after_event": null,
+        "players": [
+          "İ. Gündoğan",
+          "Savinho"
+        ],
+        "event_type": "substitution"
+      },
+      "rag_entities_used": [
+        "Gakpo",
+        "Manchester City",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.",
+        "[Manchester City] Manchester City Football Club is a professional football club based in Manchester, England, that competes in the Premier League, the top flight of English football. Founded in 1880 as St. Mark's (West Gorton), they became Ardwick Association Football Club in 1887 and Manchester City in 1894.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Gakpo\n\nEvent details:\n- Event: substitution\n- Time: 58:00\n- Team: Manchester City\n- Players involved: İ. Gündoğan, Savinho\n- Score after event: None\n- Emotions detected: İ., Gündoğan, —, Substitution, 2\n- Context: İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes.\n- Additional context: [Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.\n\n[Manchester City] Manchester City Football Club is a professional football club based in Manchester, England, that competes in the Premier League, the top flight of English football. Founded in 1880 as St. Mark's (West Gorton), they became Ardwick Association Football Club in 1887 and Manchester City in 1894.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Gakpo fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Gündoğan gets subbed out by Manchester City at 58 minutes, Savinho comes in!",
+      "caption_reel_b": "İ. Gündoğan is substituted out for Savinho by Manchester City at 58 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.28131628459302327
+    },
+    {
+      "segment_id": "segment_008",
+      "event_type": "substitution",
+      "team": "Liverpool",
+      "players": [
+        "C. Gakpo",
+        "D. Núñez"
+      ],
+      "d15_fields": {
+        "importance_score": 0.5,
+        "confidence": 0.99,
+        "predicted_event_type": "substitution"
+      },
+      "d17_fields": {
+        "narrative": "C. Gakpo — Substitution 1 for Liverpool at 73 minutes.",
+        "score_after_event": null,
+        "players": [
+          "C. Gakpo",
+          "D. Núñez"
+        ],
+        "event_type": "substitution"
+      },
+      "rag_entities_used": [
+        "Gakpo",
+        "Liverpool",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.",
+        "[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "C. Gakpo — Substitution 1 for Liverpool at 73 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Gakpo\n\nEvent details:\n- Event: substitution\n- Time: 73:00\n- Team: Liverpool\n- Players involved: C. Gakpo, D. Núñez\n- Score after event: None\n- Emotions detected: C., Gakpo, —, Substitution, 1\n- Context: C. Gakpo — Substitution 1 for Liverpool at 73 minutes.\n- Additional context: [Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.\n\n[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: C. Gakpo — Substitution 1 for Liverpool at 73 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Gakpo fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Gakpo exits the game, Núñez subs in for Liverpool at 73 minutes.",
+      "caption_reel_b": "C. Gakpo is substituted out for D. Núñez at 73 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.5163726167647414
+    },
+    {
+      "segment_id": "segment_009",
+      "event_type": "substitution",
+      "team": "Liverpool",
+      "players": [
+        "T. Alexander-Arnold",
+        "J. Quansah"
+      ],
+      "d15_fields": {
+        "importance_score": 0.5,
+        "confidence": 0.99,
+        "predicted_event_type": "substitution"
+      },
+      "d17_fields": {
+        "narrative": "T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes.",
+        "score_after_event": null,
+        "players": [
+          "T. Alexander-Arnold",
+          "J. Quansah"
+        ],
+        "event_type": "substitution"
+      },
+      "rag_entities_used": [
+        "Gakpo",
+        "Liverpool",
+        "Anfield"
+      ],
+      "rag_fact_texts": [
+        "[Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.",
+        "[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.",
+        "[Anfield] Anfield is the home stadium of Liverpool FC."
+      ],
+      "transcript_chunks": [
+        "T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes."
+      ],
+      "prompt_used": "You are a sports commentator writing highlight captions for a fan.\n\nMatch: Premier League — Liverpool vs Manchester City\nFinal score2-0\nPreferred team/player: Gakpo\n\nEvent details:\n- Event: substitution\n- Time: 73:00\n- Team: Liverpool\n- Players involved: T. Alexander-Arnold, J. Quansah\n- Score after event: None\n- Emotions detected: T., Alexander-Arnold, —, Substitution, 2\n- Context: T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes.\n- Additional context: [Gakpo] Cody Mathès Gakpo (Dutch: ['kɔdi 'ɣɑkpɔ]; born 7 May 1999) is a Dutch professional footballer who plays as a left winger or centre forward for Premier League club Liverpool and the Netherlands national team.\nA PSV academy graduate, Gakpo made his first-team debut in February 2018. In the 2021–22 season, he won the Dutch Footballer of the Year award after scoring 21 goals in 47 games in all competitions. He signed for Liverpool in January 2023.\nGakpo played youth international football for the Netherlands from under-18 to under-21 level.\n\n[Liverpool] Liverpool Football Club is a professional football club based in Liverpool, England. The club competes in the Premier League, the top tier of English football. Founded in 1892, the club joined the Football League the following year and has played its home games at Anfield since its formation.\n\n[Anfield] Anfield is the home stadium of Liverpool FC.\n- Commentary: T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes.\n\nCRITICAL INSTRUCTIONS:\n1. Write EXACTLY 10-20 WORDS (count them!) - keep it punchy and readable\n2. Write from the perspective of a Gakpo fan\n3. Be enthusiastic, conversational, and specific\n4. MUST include: what happened + who did it\n5. Use complete sentences - NO sentence fragments\n6. End with proper punctuation (. ! ?)\n\nEXAMPLE (14 words):\n\"What a strike from Saka! Arsenal take the lead with a brilliant finish!\"\n\nFORBIDDEN:\n- DO NOT write incomplete sentences (e.g., \"gets us off\", \"levels it for\")\n- DO NOT write just a player name (e.g., \"M. Ødegaard\")\n- DO NOT exceed 20 words - keep it concise\n\nUse only the information provided above.\nDo not mention any player, team, or score not listed above.\nOutput only the caption text. No preamble.\n",
+      "caption_reel_a": "Trent Alexander-Arnold exits, Jordon Quansah subs in for Liverpool!",
+      "caption_reel_b": "Trent Alexander-Arnold is substituted out for J. Quansah at 73 minutes.",
+      "hallucination_check": "PASS",
+      "unsupported_mentions": [],
+      "was_regenerated": false,
+      "original_caption": null,
+      "alignment_score_reel_a": 0.4007799844768476
+    }
+  ],
+  "match_recap_evidence": {
+    "match_context": {
+      "home_team": "Liverpool",
+      "away_team": "Manchester City",
+      "venue": "Anfield",
+      "competition": "Premier League",
+      "final_score": "2-0"
+    },
+    "score_progression_used": [
+      {
+        "time": "0:00",
+        "scorer": null,
+        "team": null,
+        "score": "0-0"
+      },
+      {
+        "time": "12:00",
+        "scorer": "C. Gakpo",
+        "team": "Liverpool",
+        "score": "1-0"
+      },
+      {
+        "time": "78:00",
+        "scorer": "Mohamed Salah",
+        "team": "Liverpool",
+        "score": "2-0"
+      }
+    ],
+    "recap_generated": "Liverpool secured a convincing 2-0 victory over Manchester City at Anfield, with Cody Gakpo's 12th-minute strike setting the tone for the match. The early goal allowed Liverpool to dictate the pace, and although Manchester City pushed for an equalizer, they were unable to capitalize on their chances. The match's momentum remained in Liverpool's favor, particularly after Mohamed Salah sealed the win with a 78th-minute goal, ultimately deciding the outcome of the contest. The final result reflected Liverpool's dominant performance, as they controlled the flow of the game and limited Manchester City's scoring opportunities to emerge with a decisive Premier League win."
+  },
+  "summary": {
+    "total_clips": 6,
+    "hallucination_flagged": false,
+    "unsupported_mentions": [],
+    "total_retries": 0,
+    "reel_a_alignment_score": 0.41951453266479444,
+    "reel_b_alignment_score": 0.3354930930569107,
+    "rag_entities_used": [
+      "Anfield",
+      "Gakpo",
+      "Liverpool",
+      "Manchester City",
+      "Matheus Nunes",
+      "Mohamed Salah"
+    ]
+  }
+}

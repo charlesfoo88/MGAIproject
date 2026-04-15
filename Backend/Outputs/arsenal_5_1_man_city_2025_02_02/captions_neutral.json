@@ -1,0 +1,193 @@
+{
+  "match_name": "arsenal_5_1_man_city_2025_02_02",
+  "perspective": "Neutral",
+  "captions": [
+    {
+      "segment_id": "segment_001",
+      "event_type": "goal",
+      "caption": "Ødegaard scores for Arsenal with a goal in the 2nd minute, assisted by Havertz.",
+      "clip_start_sec": 85.0,
+      "clip_end_sec": 95.0,
+      "evidence": {
+        "rag_facts": [
+          "Arsenal",
+          "M. Ødegaard",
+          "K. Havertz",
+          "Emirates Stadium"
+        ],
+        "d15_fields": {
+          "importance_score": 0.95,
+          "confidence": 0.99,
+          "predicted_event_type": "goal"
+        },
+        "d17_fields": {
+          "narrative": "M. Ødegaard — Goal for Arsenal at 2 minutes.",
+          "score_after_event": "1-0",
+          "players": [
+            "M. Ødegaard",
+            "K. Havertz"
+          ],
+          "event_type": "goal"
+        },
+        "transcript_chunks": [
+          "M. Ødegaard — Goal for Arsenal at 2 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_003",
+      "event_type": "goal",
+      "caption": "Haaland scores for Manchester City, leveling the match at 55 minutes.",
+      "clip_start_sec": 365.0,
+      "clip_end_sec": 375.0,
+      "evidence": {
+        "rag_facts": [
+          "Arsenal",
+          "Manchester City",
+          "E. Haaland",
+          "Emirates Stadium"
+        ],
+        "d15_fields": {
+          "importance_score": 0.95,
+          "confidence": 0.99,
+          "predicted_event_type": "goal"
+        },
+        "d17_fields": {
+          "narrative": "E. Haaland — Goal for Manchester City at 55 minutes.",
+          "score_after_event": "1-1",
+          "players": [
+            "E. Haaland",
+            "Savinho"
+          ],
+          "event_type": "goal"
+        },
+        "transcript_chunks": [
+          "E. Haaland — Goal for Manchester City at 55 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_004",
+      "event_type": "goal",
+      "caption": "T. Partey scores for Arsenal with a goal at 56 minutes.",
+      "clip_start_sec": 435.0,
+      "clip_end_sec": 445.0,
+      "evidence": {
+        "rag_facts": [
+          "Arsenal",
+          "T. Partey",
+          "Emirates Stadium"
+        ],
+        "d15_fields": {
+          "importance_score": 0.95,
+          "confidence": 0.99,
+          "predicted_event_type": "goal"
+        },
+        "d17_fields": {
+          "narrative": "T. Partey — Goal for Arsenal at 56 minutes.",
+          "score_after_event": "2-1",
+          "players": [
+            "T. Partey"
+          ],
+          "event_type": "goal"
+        },
+        "transcript_chunks": [
+          "T. Partey — Goal for Arsenal at 56 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_005",
+      "event_type": "goal",
+      "caption": "M. Lewis-Skelly scores for Arsenal with D. Rice involved at 62 minutes.",
+      "clip_start_sec": 482.0,
+      "clip_end_sec": 492.0,
+      "evidence": {
+        "rag_facts": [
+          "Arsenal",
+          "M. Lewis-Skelly",
+          "Emirates Stadium"
+        ],
+        "d15_fields": {
+          "importance_score": 0.95,
+          "confidence": 0.99,
+          "predicted_event_type": "goal"
+        },
+        "d17_fields": {
+          "narrative": "M. Lewis-Skelly — Goal for Arsenal at 62 minutes.",
+          "score_after_event": "3-1",
+          "players": [
+            "M. Lewis-Skelly",
+            "D. Rice"
+          ],
+          "event_type": "goal"
+        },
+        "transcript_chunks": [
+          "M. Lewis-Skelly — Goal for Arsenal at 62 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_009",
+      "event_type": "goal",
+      "caption": "K. Havertz scores for Arsenal with a goal at 76 minutes.",
+      "clip_start_sec": 538.0,
+      "clip_end_sec": 548.0,
+      "evidence": {
+        "rag_facts": [
+          "Arsenal",
+          "K. Havertz",
+          "Emirates Stadium"
+        ],
+        "d15_fields": {
+          "importance_score": 0.95,
+          "confidence": 0.99,
+          "predicted_event_type": "goal"
+        },
+        "d17_fields": {
+          "narrative": "K. Havertz — Goal for Arsenal at 76 minutes.",
+          "score_after_event": "4-1",
+          "players": [
+            "K. Havertz",
+            "Gabriel Martinelli"
+          ],
+          "event_type": "goal"
+        },
+        "transcript_chunks": [
+          "K. Havertz — Goal for Arsenal at 76 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_014",
+      "event_type": "goal",
+      "caption": "E. Nwaneri scores for Arsenal with a goal in the 90th minute.",
+      "clip_start_sec": 588.0,
+      "clip_end_sec": 598.0,
+      "evidence": {
+        "rag_facts": [
+          "Arsenal",
+          "E. Nwaneri",
+          "Emirates Stadium"
+        ],
+        "d15_fields": {
+          "importance_score": 0.95,
+          "confidence": 0.99,
+          "predicted_event_type": "goal"
+        },
+        "d17_fields": {
+          "narrative": "E. Nwaneri — Goal for Arsenal at 90 minutes.",
+          "score_after_event": "5-1",
+          "players": [
+            "E. Nwaneri",
+            "D. Rice"
+          ],
+          "event_type": "goal"
+        },
+        "transcript_chunks": [
+          "E. Nwaneri — Goal for Arsenal at 90 minutes."
+        ]
+      }
+    }
+  ]
+}

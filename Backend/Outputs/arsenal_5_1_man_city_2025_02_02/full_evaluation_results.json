@@ -1,0 +1,235 @@
+{
+  "match_name": "arsenal_5_1_man_city_2025_02_02",
+  "timestamp": "2026-04-07T15:55:05.134084",
+  "self_consistency": {
+    "preferences_tested": 2,
+    "runs_per_preference": 3,
+    "results": [
+      {
+        "preference": "I am a Arsenal fan and I love watching Arsenal play",
+        "run_captions": [
+          [
+            "Ødegaard scores for Arsenal at 2 minutes, what a brilliant start!",
+            "Haaland scores for Manchester City at 55 minutes, leveling it for them now.",
+            "Partey scores a great goal for Arsenal at 56 minutes, what a finish!",
+            "Lewis-Skelly scores a goal for Arsenal at 62 minutes, what a strike!",
+            "Havertz scores a goal for Arsenal at 76 minutes, what a strike!",
+            "Nwaneri scores a brilliant goal for Arsenal at 90 minutes, what a finish!"
+          ],
+          [
+            "Ødegaard scores for Arsenal with Havertz's assist at 2 minutes, what a brilliant start!",
+            "Haaland scores for Manchester City at 55 minutes, leveling it up!",
+            "Partey scores a goal for Arsenal at 56 minutes, what a strike!",
+            "Lewis-Skelly scores a great goal for Arsenal at 62 minutes!",
+            "Havertz scores a goal for Arsenal at 76 minutes, what a finish!",
+            "Nwaneri scores for Arsenal at 90 minutes, what a finish."
+          ],
+          [
+            "Ødegaard scores for Arsenal with Havertz's help at 2 minutes, what a start!",
+            "Haaland scores for Manchester City at 55 minutes, leveling it up.",
+            "Partey scores a brilliant goal for Arsenal at 56 minutes, what a strike!",
+            "Lewis-Skelly scores a great goal for Arsenal at 62 minutes!",
+            "Havertz scores a goal for Arsenal at 76 minutes, what a strike!",
+            "Nwaneri scores a late goal for Arsenal at 90 minutes, what a finish!"
+          ]
+        ],
+        "pairwise_similarity_scores": [
+          0.9263108487572397,
+          0.950392173534123,
+          0.9660766614671178
+        ],
+        "mean_consistency_score": 0.948,
+        "is_consistent": true
+      },
+      {
+        "preference": "I support Manchester City and I follow Manchester City closely",
+        "run_captions": [
+          [
+            "Ødegaard scores for Arsenal at 2 minutes with Havertz involved!",
+            "Haaland scores for Manchester City at 55 minutes, what a goal!",
+            "Partey scores for Arsenal at 56 minutes, cutting our lead to 2-1.",
+            "Lewis-Skelly scores for Arsenal at 62 minutes, what a goal!",
+            "Havertz scores for Arsenal at 76 minutes, extending their lead!",
+            "Nwaneri scores for Arsenal at 90 minutes, consolation goal for them!"
+          ],
+          [
+            "Ødegaard scores for Arsenal at 2 minutes with Havertz involved!",
+            "Haaland scores the equalizer for Manchester City at 55 minutes, what a goal!",
+            "T. Partey scores for Arsenal at 56 minutes, tightening the game!",
+            "M. Lewis-Skelly scores for Arsenal at 62 minutes, what a goal!",
+            "Havertz scores for Arsenal at 76 minutes, what a strike by him!",
+            "Ethan Nwaneri scores a consolation goal for Arsenal at 90 minutes!"
+          ],
+          [
+            "Ødegaard scores for Arsenal at 2 minutes, what a start for them!",
+            "Haaland scores the equalizer for Manchester City at 55 minutes!",
+            "T. Partey scores for Arsenal at 56 minutes, momentarily narrowing the gap!",
+            "M. Lewis-Skelly scores for Arsenal at 62 minutes, what a strike!",
+            "Havertz scores for Arsenal at 76 minutes, increasing their tally!",
+            "E. Nwaneri scores a goal for Arsenal at 90 minutes!"
+          ]
+        ],
+        "pairwise_similarity_scores": [
+          0.9104087650125393,
+          0.8808295056602912,
+          0.8946305022749327
+        ],
+        "mean_consistency_score": 0.895,
+        "is_consistent": true
+      }
+    ],
+    "overall_consistency_rate": 1.0
+  },
+  "cross_modal_agreement": {
+    "error": "extraction_report.json not found",
+    "total_events_checked": 0
+  },
+  "disagreement_analysis": {
+    "preferences_tested": 5,
+    "clips_analysed": 6,
+    "per_clip_disagreement": [
+      {
+        "segment_id": "segment_001",
+        "event_type": "goal",
+        "captions_by_preference": {
+          "I am a Arsenal fan and I love watching Arsenal pla": "Ødegaard scores for Arsenal at 2 minutes, what a brilliant start by our Gunners!",
+          "I support Manchester City and I follow Manchester ": "Ødegaard scores for Arsenal with Havertz involved at 2 minutes, early lead for them!",
+          "I am a neutral viewer and I want to see all the go": "Ødegaard scores for Arsenal with Havertz involved at 2 minutes, what a start!",
+          "I love watching M. Ødegaard play for Arsenal, he i": "Ødegaard scores for Arsenal, what a brilliant start at 2 minutes!",
+          "I love watching E. Haaland play for Manchester Cit": "Ødegaard scores for Arsenal at 2 minutes with Havertz's assist, what a start!"
+        },
+        "mean_pairwise_similarity": 0.911,
+        "disagreement_rate": 0.089,
+        "high_disagreement": false
+      },
+      {
+        "segment_id": "segment_003",
+        "event_type": "goal",
+        "captions_by_preference": {
+          "I am a Arsenal fan and I love watching Arsenal pla": "Haaland scores the equalizer for Manchester City at 55 minutes, what a goal!",
+          "I support Manchester City and I follow Manchester ": "Haaland scores a brilliant goal for Manchester City at 55 minutes!",
+          "I am a neutral viewer and I want to see all the go": "E. Haaland scores for Manchester City at 55 minutes, leveling it up.",
+          "I love watching M. Ødegaard play for Arsenal, he i": "Haaland scores for Manchester City at 55 minutes, leveling it for them now.",
+          "I love watching E. Haaland play for Manchester Cit": "Haaland scores the equalizer for Manchester City at 55 minutes with a brilliant finish!"
+        },
+        "mean_pairwise_similarity": 0.82,
+        "disagreement_rate": 0.18,
+        "high_disagreement": false
+      },
+      {
+        "segment_id": "segment_004",
+        "event_type": "goal",
+        "captions_by_preference": {
+          "I am a Arsenal fan and I love watching Arsenal pla": "Partey scores a great goal for Arsenal at 56 minutes, what a strike!",
+          "I support Manchester City and I follow Manchester ": "T. Partey scores for Arsenal at 56 minutes, no!",
+          "I am a neutral viewer and I want to see all the go": "Partey scores a great goal for Arsenal at 56 minutes!",
+          "I love watching M. Ødegaard play for Arsenal, he i": "Partey scores a great goal for Arsenal at 56 minutes, what a strike!",
+          "I love watching E. Haaland play for Manchester Cit": "Partey scores for Arsenal at 56 minutes, what a goal!"
+        },
+        "mean_pairwise_similarity": 0.902,
+        "disagreement_rate": 0.098,
+        "high_disagreement": false
+      },
+      {
+        "segment_id": "segment_005",
+        "event_type": "goal",
+        "captions_by_preference": {
+          "I am a Arsenal fan and I love watching Arsenal pla": "Lewis-Skelly scores a great goal for Arsenal at 62 minutes!",
+          "I support Manchester City and I follow Manchester ": "Lewis-Skelly scores for Arsenal at 62 minutes, what a goal!",
+          "I am a neutral viewer and I want to see all the go": "Lewis-Skelly scores a goal for Arsenal at 62 minutes, what a strike!",
+          "I love watching M. Ødegaard play for Arsenal, he i": "Lewis-Skelly scores a great goal for Arsenal at 62 minutes!",
+          "I love watching E. Haaland play for Manchester Cit": "M. Lewis-Skelly scores for Arsenal at 62 minutes, what a goal!"
+        },
+        "mean_pairwise_similarity": 0.951,
+        "disagreement_rate": 0.049,
+        "high_disagreement": false
+      },
+      {
+        "segment_id": "segment_009",
+        "event_type": "goal",
+        "captions_by_preference": {
+          "I am a Arsenal fan and I love watching Arsenal pla": "Havertz scores a great goal for Arsenal at 76 minutes!",
+          "I support Manchester City and I follow Manchester ": "Havertz scores for Arsenal at 76 minutes, what a goal from him!",
+          "I am a neutral viewer and I want to see all the go": "Havertz scores a goal for Arsenal at 76 minutes with Martinelli's assist!",
+          "I love watching M. Ødegaard play for Arsenal, he i": "Havertz scores a great goal for Arsenal at 76 minutes, what a strike!",
+          "I love watching E. Haaland play for Manchester Cit": "Havertz scores for Arsenal at 76 minutes, what a finish by the German forward!"
+        },
+        "mean_pairwise_similarity": 0.873,
+        "disagreement_rate": 0.127,
+        "high_disagreement": false
+      },
+      {
+        "segment_id": "segment_014",
+        "event_type": "goal",
+        "captions_by_preference": {
+          "I am a Arsenal fan and I love watching Arsenal pla": "Ethan Nwaneri scores a goal for Arsenal at 90 minutes, what a finish!",
+          "I support Manchester City and I follow Manchester ": "Ethan Nwaneri scores a consolation goal for Arsenal at 90 minutes!",
+          "I am a neutral viewer and I want to see all the go": "E. Nwaneri scores a goal for Arsenal at 90 minutes, what a finish!",
+          "I love watching M. Ødegaard play for Arsenal, he i": "Ethan Nwaneri scores a goal for Arsenal at 90 minutes, what a finish!",
+          "I love watching E. Haaland play for Manchester Cit": "Nwaneri scores a consolation goal for Arsenal at 90 minutes!"
+        },
+        "mean_pairwise_similarity": 0.897,
+        "disagreement_rate": 0.103,
+        "high_disagreement": false
+      }
+    ],
+    "overall_disagreement_rate": 0.108
+  },
+  "verifier_analysis": {
+    "total_runs": 5,
+    "hallucination_rate": 1.0,
+    "total_hallucinations_detected": 5,
+    "total_retries": 7,
+    "retry_effectiveness": "resolved",
+    "avg_reel_a_alignment": 0.382,
+    "avg_reel_b_alignment": 0.342,
+    "avg_pipeline_time_seconds": 45.49,
+    "per_run_results": [
+      {
+        "preference": "I am a Arsenal fan and I love watching Arsenal play",
+        "hallucination_flagged": true,
+        "retry_count": 2,
+        "reel_a_alignment_score": 0.45100313989793345,
+        "reel_b_alignment_score": 0.3932680932298242,
+        "pipeline_time_seconds": 49.09,
+        "status": "success"
+      },
+      {
+        "preference": "I support Manchester City and I follow Manchester City closely",
+        "hallucination_flagged": true,
+        "retry_count": 2,
+        "reel_a_alignment_score": 0.21786868288101605,
+        "reel_b_alignment_score": 0.16991046900472995,
+        "pipeline_time_seconds": 48.26,
+        "status": "success"
+      },
+      {
+        "preference": "I am a neutral viewer and I want to see all the goals from this match",
+        "hallucination_flagged": true,
+        "retry_count": 1,
+        "reel_a_alignment_score": 0.4173162050904046,
+        "reel_b_alignment_score": 0.3996115511687674,
+        "pipeline_time_seconds": 43.54,
+        "status": "success"
+      },
+      {
+        "preference": "I love watching M. Ødegaard play for Arsenal, he is my favourite player",
+        "hallucination_flagged": true,
+        "retry_count": 1,
+        "reel_a_alignment_score": 0.42667254137069505,
+        "reel_b_alignment_score": 0.3899426018939183,
+        "pipeline_time_seconds": 43.16,
+        "status": "success"
+      },
+      {
+        "preference": "I love watching E. Haaland play for Manchester City, he is my favourite player",
+        "hallucination_flagged": true,
+        "retry_count": 1,
+        "reel_a_alignment_score": 0.39673784927267386,
+        "reel_b_alignment_score": 0.35712922178999335,
+        "pipeline_time_seconds": 43.4,
+        "status": "success"
+      }
+    ]
+  }
+}

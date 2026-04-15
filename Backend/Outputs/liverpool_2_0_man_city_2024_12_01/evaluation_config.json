@@ -1,0 +1,21 @@
+{
+  "match": "liverpool_2_0_man_city_2024_12_01",
+  "auto_generated": {
+    "consistency_preferences": [
+      "I am a Liverpool fan and I love watching Liverpool play",
+      "I support Manchester City and I follow Manchester City closely"
+    ],
+    "disagreement_preferences": [
+      "I am a Liverpool fan and I love watching Liverpool play",
+      "I support Manchester City and I follow Manchester City closely",
+      "I am a neutral viewer and I want to see all the goals from this match",
+      "I love watching C. Gakpo play for Liverpool, he is my favourite player",
+      "I love watching Mohamed Salah play for Liverpool, he is my favourite player"
+    ]
+  },
+  "user_defined": {
+    "consistency_preferences": [],
+    "disagreement_preferences": []
+  },
+  "self_consistency_runs": 3
+}

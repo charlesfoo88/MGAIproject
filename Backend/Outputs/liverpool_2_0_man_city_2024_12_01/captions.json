@@ -1,0 +1,406 @@
+{
+  "match_name": "liverpool_2_0_man_city_2024_12_01",
+  "user_preference": "I love watching Mohamed Salah play for Liverpool, he is my favourite player",
+  "hallucination_flagged": true,
+  "retry_count": 1,
+  "reel_a_alignment_score": 0.39420397748488956,
+  "reel_b_alignment_score": 0.3128904255213775,
+  "evidence_summary": {
+    "total_captions": 12,
+    "rag_entities_used": [
+      "Liverpool",
+      "Manchester City",
+      "Matheus Nunes",
+      "Anfield",
+      "Mohamed Salah"
+    ],
+    "d15_fields_used": [
+      "importance_score",
+      "emotion_tags",
+      "predicted_event_type",
+      "confidence"
+    ],
+    "d17_fields_used": [
+      "narrative",
+      "score_after_event",
+      "players",
+      "event_type"
+    ]
+  },
+  "reel_a_captions": [
+    {
+      "segment_id": "segment_001",
+      "event_type": "goal",
+      "caption": "Gakpo scores, Salah assists, Liverpool takes the lead at 12 minutes!",
+      "clip_start_sec": 267.0,
+      "clip_end_sec": 277.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Liverpool",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.95,
+          "confidence": 0.99,
+          "predicted_event_type": "goal"
+        },
+        "d17_fields": {
+          "narrative": "C. Gakpo — Goal for Liverpool at 12 minutes.",
+          "score_after_event": "1-0",
+          "players": [
+            "C. Gakpo",
+            "Mohamed Salah"
+          ],
+          "event_type": "goal"
+        },
+        "transcript_chunks": [
+          "C. Gakpo — Goal for Liverpool at 12 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_012",
+      "event_type": "penalty_goal",
+      "caption": "Mohamed Salah scores a penalty for Liverpool at 78 minutes, sealing the win!",
+      "clip_start_sec": 711.0,
+      "clip_end_sec": 721.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Liverpool",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.95,
+          "confidence": 0.99,
+          "predicted_event_type": "penalty_goal"
+        },
+        "d17_fields": {
+          "narrative": "Mohamed Salah — Penalty for Liverpool at 78 minutes.",
+          "score_after_event": "2-0",
+          "players": [
+            "Mohamed Salah"
+          ],
+          "event_type": "penalty_goal"
+        },
+        "transcript_chunks": [
+          "Mohamed Salah — Penalty for Liverpool at 78 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_006",
+      "event_type": "substitution",
+      "caption": "Matheus Nunes substitutes in for Manchester City at 57 minutes, nice move by them.",
+      "clip_start_sec": 533.0,
+      "clip_end_sec": 543.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Manchester City",
+          "Matheus Nunes",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.5,
+          "confidence": 0.99,
+          "predicted_event_type": "substitution"
+        },
+        "d17_fields": {
+          "narrative": "Matheus Nunes — Substitution 1 for Manchester City at 57 minutes.",
+          "score_after_event": null,
+          "players": [
+            "Matheus Nunes",
+            "J. Doku"
+          ],
+          "event_type": "substitution"
+        },
+        "transcript_chunks": [
+          "Matheus Nunes — Substitution 1 for Manchester City at 57 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_007",
+      "event_type": "substitution",
+      "caption": "Gündoğan substituted out for Savinho at 58 minutes by Manchester City.",
+      "clip_start_sec": 533.0,
+      "clip_end_sec": 543.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Manchester City",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.5,
+          "confidence": 0.99,
+          "predicted_event_type": "substitution"
+        },
+        "d17_fields": {
+          "narrative": "İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes.",
+          "score_after_event": null,
+          "players": [
+            "İ. Gündoğan",
+            "Savinho"
+          ],
+          "event_type": "substitution"
+        },
+        "transcript_chunks": [
+          "İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_008",
+      "event_type": "substitution",
+      "caption": "Cody Gakpo substitution on for Liverpool at 73 minutes, great move by the Reds!",
+      "clip_start_sec": 625.0,
+      "clip_end_sec": 635.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Liverpool",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.5,
+          "confidence": 0.99,
+          "predicted_event_type": "substitution"
+        },
+        "d17_fields": {
+          "narrative": "C. Gakpo — Substitution 1 for Liverpool at 73 minutes.",
+          "score_after_event": null,
+          "players": [
+            "C. Gakpo",
+            "D. Núñez"
+          ],
+          "event_type": "substitution"
+        },
+        "transcript_chunks": [
+          "C. Gakpo — Substitution 1 for Liverpool at 73 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_009",
+      "event_type": "substitution",
+      "caption": "Trent Alexander-Arnold makes way for Jordon Quansah in Liverpool's second substitution!",
+      "clip_start_sec": 625.0,
+      "clip_end_sec": 635.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Liverpool",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.5,
+          "confidence": 0.99,
+          "predicted_event_type": "substitution"
+        },
+        "d17_fields": {
+          "narrative": "T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes.",
+          "score_after_event": null,
+          "players": [
+            "T. Alexander-Arnold",
+            "J. Quansah"
+          ],
+          "event_type": "substitution"
+        },
+        "transcript_chunks": [
+          "T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes."
+        ]
+      }
+    }
+  ],
+  "reel_b_captions": [
+    {
+      "segment_id": "segment_001",
+      "event_type": "goal",
+      "caption": "C. Gakpo scores for Liverpool with Mohamed Salah's assist at 12 minutes.",
+      "clip_start_sec": 267.0,
+      "clip_end_sec": 277.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Liverpool",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.95,
+          "confidence": 0.99,
+          "predicted_event_type": "goal"
+        },
+        "d17_fields": {
+          "narrative": "C. Gakpo — Goal for Liverpool at 12 minutes.",
+          "score_after_event": "1-0",
+          "players": [
+            "C. Gakpo",
+            "Mohamed Salah"
+          ],
+          "event_type": "goal"
+        },
+        "transcript_chunks": [
+          "C. Gakpo — Goal for Liverpool at 12 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_012",
+      "event_type": "penalty_goal",
+      "caption": "Mohamed Salah scores a penalty for Liverpool at 78 minutes.",
+      "clip_start_sec": 711.0,
+      "clip_end_sec": 721.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Liverpool",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.95,
+          "confidence": 0.99,
+          "predicted_event_type": "penalty_goal"
+        },
+        "d17_fields": {
+          "narrative": "Mohamed Salah — Penalty for Liverpool at 78 minutes.",
+          "score_after_event": "2-0",
+          "players": [
+            "Mohamed Salah"
+          ],
+          "event_type": "penalty_goal"
+        },
+        "transcript_chunks": [
+          "Mohamed Salah — Penalty for Liverpool at 78 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_006",
+      "event_type": "substitution",
+      "caption": "Matheus Nunes is substituted in for J. Doku at 57 minutes.",
+      "clip_start_sec": 533.0,
+      "clip_end_sec": 543.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Manchester City",
+          "Matheus Nunes",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.5,
+          "confidence": 0.99,
+          "predicted_event_type": "substitution"
+        },
+        "d17_fields": {
+          "narrative": "Matheus Nunes — Substitution 1 for Manchester City at 57 minutes.",
+          "score_after_event": null,
+          "players": [
+            "Matheus Nunes",
+            "J. Doku"
+          ],
+          "event_type": "substitution"
+        },
+        "transcript_chunks": [
+          "Matheus Nunes — Substitution 1 for Manchester City at 57 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_007",
+      "event_type": "substitution",
+      "caption": "İ. Gündoğan is substituted out for Savinho at 58 minutes by Manchester City.",
+      "clip_start_sec": 533.0,
+      "clip_end_sec": 543.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Manchester City",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.5,
+          "confidence": 0.99,
+          "predicted_event_type": "substitution"
+        },
+        "d17_fields": {
+          "narrative": "İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes.",
+          "score_after_event": null,
+          "players": [
+            "İ. Gündoğan",
+            "Savinho"
+          ],
+          "event_type": "substitution"
+        },
+        "transcript_chunks": [
+          "İ. Gündoğan — Substitution 2 for Manchester City at 58 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_008",
+      "event_type": "substitution",
+      "caption": "C. Gakpo is substituted out for D. Núñez by Liverpool at 73 minutes.",
+      "clip_start_sec": 625.0,
+      "clip_end_sec": 635.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Liverpool",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.5,
+          "confidence": 0.99,
+          "predicted_event_type": "substitution"
+        },
+        "d17_fields": {
+          "narrative": "C. Gakpo — Substitution 1 for Liverpool at 73 minutes.",
+          "score_after_event": null,
+          "players": [
+            "C. Gakpo",
+            "D. Núñez"
+          ],
+          "event_type": "substitution"
+        },
+        "transcript_chunks": [
+          "C. Gakpo — Substitution 1 for Liverpool at 73 minutes."
+        ]
+      }
+    },
+    {
+      "segment_id": "segment_009",
+      "event_type": "substitution",
+      "caption": "Trent Alexander-Arnold makes way for Jordon Quansah in Liverpool's second substitution.",
+      "clip_start_sec": 625.0,
+      "clip_end_sec": 635.0,
+      "evidence": {
+        "rag_facts": [
+          "Mohamed Salah",
+          "Liverpool",
+          "Anfield"
+        ],
+        "d15_fields": {
+          "importance_score": 0.5,
+          "confidence": 0.99,
+          "predicted_event_type": "substitution"
+        },
+        "d17_fields": {
+          "narrative": "T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes.",
+          "score_after_event": null,
+          "players": [
+            "T. Alexander-Arnold",
+            "J. Quansah"
+          ],
+          "event_type": "substitution"
+        },
+        "transcript_chunks": [
+          "T. Alexander-Arnold — Substitution 2 for Liverpool at 73 minutes."
+        ]
+      }
+    }
+  ]
+}

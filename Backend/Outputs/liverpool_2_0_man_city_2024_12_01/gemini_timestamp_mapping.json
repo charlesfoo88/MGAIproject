@@ -1,0 +1,186 @@
+{
+  "mapped_events": [
+    {
+      "player": "C. Gakpo",
+      "event_type": "goal",
+      "team": "Liverpool",
+      "match_minute": "12",
+      "video_timestamp_seconds": 270,
+      "clip_start_sec": 267,
+      "clip_end_sec": 277,
+      "found": true,
+      "confidence": "high",
+      "detection_method": "first_attempt"
+    },
+    {
+      "player": "Matheus Nunes",
+      "event_type": "card",
+      "team": "Manchester City",
+      "match_minute": "24",
+      "video_timestamp_seconds": null,
+      "clip_start_sec": null,
+      "clip_end_sec": null,
+      "found": false,
+      "confidence": "high",
+      "detection_method": "re_grounded"
+    },
+    {
+      "player": "Phil Foden",
+      "event_type": "card",
+      "team": "Manchester City",
+      "match_minute": "32",
+      "video_timestamp_seconds": null,
+      "clip_start_sec": null,
+      "clip_end_sec": null,
+      "found": false,
+      "confidence": "high",
+      "detection_method": "re_grounded"
+    },
+    {
+      "player": "Ryan Gravenberch",
+      "event_type": "card",
+      "team": "Liverpool",
+      "match_minute": "36",
+      "video_timestamp_seconds": null,
+      "clip_start_sec": null,
+      "clip_end_sec": null,
+      "found": false,
+      "confidence": "high",
+      "detection_method": "re_grounded"
+    },
+    {
+      "player": "Manuel Akanji",
+      "event_type": "card",
+      "team": "Manchester City",
+      "match_minute": "45",
+      "video_timestamp_seconds": null,
+      "clip_start_sec": null,
+      "clip_end_sec": null,
+      "found": false,
+      "confidence": "high",
+      "detection_method": "re_grounded"
+    },
+    {
+      "player": "Matheus Nunes",
+      "event_type": "substitution",
+      "team": "Manchester City",
+      "match_minute": "57",
+      "video_timestamp_seconds": 535,
+      "clip_start_sec": 533,
+      "clip_end_sec": 543,
+      "found": true,
+      "confidence": "high",
+      "detection_method": "first_attempt"
+    },
+    {
+      "player": "İ. Gündoğan",
+      "event_type": "substitution",
+      "team": "Manchester City",
+      "match_minute": "58",
+      "video_timestamp_seconds": 535,
+      "clip_start_sec": 533,
+      "clip_end_sec": 543,
+      "found": true,
+      "confidence": "high",
+      "detection_method": "first_attempt"
+    },
+    {
+      "player": "C. Gakpo",
+      "event_type": "substitution",
+      "team": "Liverpool",
+      "match_minute": "73",
+      "video_timestamp_seconds": 627,
+      "clip_start_sec": 625,
+      "clip_end_sec": 635,
+      "found": true,
+      "confidence": "high",
+      "detection_method": "first_attempt"
+    },
+    {
+      "player": "T. Alexander-Arnold",
+      "event_type": "substitution",
+      "team": "Liverpool",
+      "match_minute": "73",
+      "video_timestamp_seconds": 627,
+      "clip_start_sec": 625,
+      "clip_end_sec": 635,
+      "found": true,
+      "confidence": "high",
+      "detection_method": "first_attempt"
+    },
+    {
+      "player": "P. Foden",
+      "event_type": "substitution",
+      "team": "Manchester City",
+      "match_minute": "78",
+      "video_timestamp_seconds": 761,
+      "clip_start_sec": 759,
+      "clip_end_sec": 769,
+      "found": true,
+      "confidence": "high",
+      "detection_method": "first_attempt"
+    },
+    {
+      "player": "R. Lewis",
+      "event_type": "substitution",
+      "team": "Manchester City",
+      "match_minute": "78",
+      "video_timestamp_seconds": 761,
+      "clip_start_sec": 759,
+      "clip_end_sec": 769,
+      "found": true,
+      "confidence": "high",
+      "detection_method": "first_attempt"
+    },
+    {
+      "player": "Mohamed Salah",
+      "event_type": "goal",
+      "team": "Liverpool",
+      "match_minute": "78",
+      "video_timestamp_seconds": 714,
+      "clip_start_sec": 711,
+      "clip_end_sec": 721,
+      "found": true,
+      "confidence": "high",
+      "detection_method": "first_attempt"
+    },
+    {
+      "player": "Mohamed Salah",
+      "event_type": "substitution",
+      "team": "Liverpool",
+      "match_minute": "84",
+      "video_timestamp_seconds": null,
+      "clip_start_sec": null,
+      "clip_end_sec": null,
+      "found": false,
+      "confidence": "high",
+      "detection_method": "re_grounded"
+    },
+    {
+      "player": "L. Díaz",
+      "event_type": "substitution",
+      "team": "Liverpool",
+      "match_minute": "90",
+      "video_timestamp_seconds": null,
+      "clip_start_sec": null,
+      "clip_end_sec": null,
+      "found": false,
+      "confidence": "high",
+      "detection_method": "re_grounded"
+    }
+  ],
+  "first_attempt": {
+    "found": 8,
+    "not_found": 6
+  },
+  "after_regrounding": {
+    "found": 8,
+    "not_found": 6
+  },
+  "consistency_issues": [
+    "Timestamp order issue: event 2 (535s) <= event 1 (535s)",
+    "Timestamp order issue: event 4 (627s) <= event 3 (627s)",
+    "Timestamp order issue: event 6 (761s) <= event 5 (761s)",
+    "Timestamp order issue: event 7 (714s) <= event 6 (761s)"
+  ]
+}

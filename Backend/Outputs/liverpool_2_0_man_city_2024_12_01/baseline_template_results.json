@@ -1,0 +1,139 @@
+{
+  "baseline": "template_based",
+  "match_name": "liverpool_2_0_man_city_2024_12_01",
+  "avg_alignment": 0.303,
+  "avg_time": 1.97,
+  "test_count": 5,
+  "results": [
+    {
+      "preference": "I am a Liverpool fan and I love watching Liverpool play",
+      "mode_detected": "home_team",
+      "team_detected": "Liverpool",
+      "player_detected": null,
+      "captions": [
+        "C. Gakpo scores for Liverpool at 12:00, assisted by Mohamed Salah. Score: 1-0.",
+        "Penalty Goal for Liverpool at 78:00, involving Mohamed Salah.",
+        "Manchester City make a change at 57:00 — Matheus Nunes off, J. Doku on.",
+        "Manchester City make a change at 58:00 — İ. Gündoğan off, Savinho on.",
+        "C. Gakpo makes way for D. Núñez at 73:00 for Liverpool.",
+        "T. Alexander-Arnold makes way for J. Quansah at 73:00 for Liverpool."
+      ],
+      "alignment_score": 0.294,
+      "per_clip_scores": [
+        0.351,
+        0.372,
+        0.241,
+        0.237,
+        0.224,
+        0.339
+      ],
+      "time_seconds": 9.16,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I support Manchester City and I follow Manchester City closely",
+      "mode_detected": "away_team",
+      "team_detected": "Manchester City",
+      "player_detected": null,
+      "captions": [
+        "Liverpool score at 12:00 through C. Gakpo. Score becomes 1-0.",
+        "Penalty Goal for Liverpool at 78:00, involving Mohamed Salah.",
+        "Matheus Nunes makes way for J. Doku at 57:00 for Manchester City.",
+        "İ. Gündoğan makes way for Savinho at 58:00 for Manchester City.",
+        "Liverpool make a change at 73:00 — C. Gakpo off, D. Núñez on.",
+        "Liverpool make a change at 73:00 — T. Alexander-Arnold off, J. Quansah on."
+      ],
+      "alignment_score": 0.221,
+      "per_clip_scores": [
+        0.203,
+        0.15,
+        0.217,
+        0.348,
+        0.161,
+        0.245
+      ],
+      "time_seconds": 0.2,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I am a neutral viewer and I want to see all the goals from this match",
+      "mode_detected": "neutral",
+      "team_detected": null,
+      "player_detected": null,
+      "captions": [
+        "Goal for Liverpool at 12:00 by C. Gakpo. Score: 1-0.",
+        "Penalty Goal for Liverpool at 78:00, involving Mohamed Salah.",
+        "Matheus Nunes substituted for J. Doku at 57:00 for Manchester City.",
+        "İ. Gündoğan substituted for Savinho at 58:00 for Manchester City.",
+        "C. Gakpo substituted for D. Núñez at 73:00 for Liverpool.",
+        "T. Alexander-Arnold substituted for J. Quansah at 73:00 for Liverpool."
+      ],
+      "alignment_score": 0.273,
+      "per_clip_scores": [
+        0.482,
+        0.433,
+        0.15,
+        0.205,
+        0.201,
+        0.169
+      ],
+      "time_seconds": 0.17,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I love watching C. Gakpo play for Liverpool, he is my favourite player",
+      "mode_detected": "player",
+      "team_detected": null,
+      "player_detected": "C. Gakpo",
+      "captions": [
+        "C. Gakpo is involved in the goal at 12:00 for Liverpool. Score: 1-0.",
+        "Penalty Goal for Liverpool at 78:00, involving Mohamed Salah.",
+        "Matheus Nunes substituted for J. Doku at 57:00 for Manchester City.",
+        "İ. Gündoğan substituted for Savinho at 58:00 for Manchester City.",
+        "C. Gakpo is substituted at 73:00 for Liverpool.",
+        "T. Alexander-Arnold substituted for J. Quansah at 73:00 for Liverpool."
+      ],
+      "alignment_score": 0.389,
+      "per_clip_scores": [
+        0.638,
+        0.299,
+        0.172,
+        0.292,
+        0.627,
+        0.308
+      ],
+      "time_seconds": 0.16,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I love watching Mohamed Salah play for Liverpool, he is my favourite player",
+      "mode_detected": "player",
+      "team_detected": null,
+      "player_detected": "Mohamed Salah",
+      "captions": [
+        "Mohamed Salah is involved in the goal at 12:00 for Liverpool. Score: 1-0.",
+        "Penalty Goal for Liverpool at 78:00, involving Mohamed Salah.",
+        "Matheus Nunes substituted for J. Doku at 57:00 for Manchester City.",
+        "İ. Gündoğan substituted for Savinho at 58:00 for Manchester City.",
+        "C. Gakpo substituted for D. Núñez at 73:00 for Liverpool.",
+        "T. Alexander-Arnold substituted for J. Quansah at 73:00 for Liverpool."
+      ],
+      "alignment_score": 0.339,
+      "per_clip_scores": [
+        0.587,
+        0.501,
+        0.16,
+        0.311,
+        0.184,
+        0.291
+      ],
+      "time_seconds": 0.16,
+      "clip_count": 6,
+      "status": "success"
+    }
+  ]
+}

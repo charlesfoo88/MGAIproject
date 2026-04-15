@@ -1,0 +1,232 @@
+{
+  "match_name": "liverpool_2_0_man_city_2024_12_01",
+  "timestamp": "2026-04-07T02:34:17.753257",
+  "self_consistency": {
+    "preferences_tested": 2,
+    "runs_per_preference": 3,
+    "results": [
+      {
+        "preference": "I am a Liverpool fan and I love watching Liverpool play",
+        "run_captions": [
+          [
+            "Gakpo scores, assisted by Salah, giving Liverpool the lead at 12 minutes.",
+            "Mohamed Salah scores a penalty for Liverpool at 78 minutes, sealing the win!",
+            "Matheus Nunes subbed in for Manchester City at 57 minutes, big change for them!",
+            "Gündoğan substituted out for Savinho at 58 minutes by Manchester City.",
+            "Gakpo subs out for Núñez at 73 minutes, fresh legs for Liverpool!",
+            "Trent Alexander-Arnold substituted out for J. Quansah at 73 minutes!"
+          ],
+          [
+            "Gakpo scores for Liverpool with a great assist from Mohamed Salah at 12 minutes!",
+            "Mohamed Salah scores a penalty for Liverpool at 78 minutes, sealing the win!",
+            "Matheus Nunes is subbed out for J. Doku at 57 minutes by Manchester City.",
+            "Gündoğan is subbed out by Manchester City at 58 minutes, Savinho comes in.",
+            "Cody Gakpo is subbed out for Darwin Núñez at 73 minutes!",
+            "Trent Alexander-Arnold makes way for Quansah in Liverpool's second substitution!"
+          ],
+          [
+            "Gakpo scores, Salah assists, Liverpool takes the lead at 12 minutes!",
+            "Mohamed Salah scores a penalty for Liverpool at 78 minutes, sealing the win!",
+            "Matheus Nunes substitutes in for Manchester City at 57 minutes, let's see how this changes the game!",
+            "Gündoğan gets subbed out by Manchester City at 58 minutes, nice move!",
+            "Cody Gakpo substitution gives Liverpool fresh legs at 73 minutes with Núñez entering.",
+            "Trent Alexander-Arnold makes way for Quansah in Liverpool's second substitution!"
+          ]
+        ],
+        "pairwise_similarity_scores": [
+          0.8211859821025543,
+          0.8366146609161683,
+          0.8330301881789827
+        ],
+        "mean_consistency_score": 0.83,
+        "is_consistent": true
+      },
+      {
+        "preference": "I support Manchester City and I follow Manchester City closely",
+        "run_captions": [
+          [
+            "Gakpo scores for Liverpool at 12 minutes, tough break for City, Salah assisted nicely!",
+            "Mohamed Salah scores a penalty for Liverpool at 78 minutes, extending their lead!",
+            "Matheus Nunes is subbed out for J. Doku at 57 minutes!",
+            "Gündoğan exits, Savinho enters for Manchester City at 58 minutes!",
+            "Liverpool's C. Gakpo gets subbed out at 73 minutes by D. Núñez!",
+            "Trent Alexander-Arnold gets subbed out for Quansah at 73 minutes!"
+          ],
+          [
+            "Gakpo scores for Liverpool, assisted by Mohamed Salah, at 12 minutes.",
+            "Mohamed Salah scores a penalty for Liverpool at 78 minutes, sealing their win!",
+            "Matheus Nunes makes way for J. Doku in a tactical substitution for Manchester City!",
+            "Gündoğan makes way, Savinho subs in for Manchester City at 58 minutes!",
+            "Gakpo substitution gives Liverpool new hope at 73 minutes!",
+            "Trent Alexander-Arnold makes way for Quansah in Liverpool's second substitution!"
+          ],
+          [
+            "Gakpo scores for Liverpool at 12 minutes, tough break for City!",
+            "Mohamed Salah scores a penalty for Liverpool at 78 minutes, extending their lead!",
+            "Matheus Nunes makes way for J. Doku in Manchester City's substitution at 57 minutes!",
+            "Gündoğan makes way, Savinho subs in for Manchester City at 58 minutes!",
+            "Gakpo substitutes out for Núñez at 73 minutes for Liverpool!",
+            "Trent Alexander-Arnold exits, J. Quansah enters for Liverpool at 73 minutes!"
+          ]
+        ],
+        "pairwise_similarity_scores": [
+          0.8056044520545099,
+          0.8482647028051242,
+          0.8742157864715852
+        ],
+        "mean_consistency_score": 0.843,
+        "is_consistent": true
+      }
+    ],
+    "overall_consistency_rate": 1.0
+  },
+  "cross_modal_agreement": {
+    "total_events_checked": 0,
+    "events": [],
+    "mean_deviation_seconds": 0.0,
+    "high_agreement_count": 0,
+    "low_agreement_count": 0
+  },
+  "disagreement_analysis": {
+    "preferences_tested": 5,
+    "clips_analysed": 6,
+    "per_clip_disagreement": [
+      {
+        "segment_id": "segment_001",
+        "event_type": "goal",
+        "captions_by_preference": {
+          "I am a Liverpool fan and I love watching Liverpool": "Gakpo scores for Liverpool, assisted by Salah, at 12 minutes!",
+          "I support Manchester City and I follow Manchester ": "Gakpo scores for Liverpool at 12 minutes, what a goal from him!",
+          "I am a neutral viewer and I want to see all the go": "Gakpo scores for Liverpool with Salah's assist at 12 minutes!",
+          "I love watching C. Gakpo play for Liverpool, he is": "Gakpo scores a brilliant goal for Liverpool at 12 minutes, what a finish!",
+          "I love watching Mohamed Salah play for Liverpool, ": "Gakpo scores, assisted by Salah, what a goal for Liverpool!"
+        },
+        "mean_pairwise_similarity": 0.896,
+        "disagreement_rate": 0.104,
+        "high_disagreement": false
+      },
+      {
+        "segment_id": "segment_012",
+        "event_type": "penalty_goal",
+        "captions_by_preference": {
+          "I am a Liverpool fan and I love watching Liverpool": "Mohamed Salah scores a penalty for Liverpool at 78 minutes, sealing the win!",
+          "I support Manchester City and I follow Manchester ": "Mohamed Salah scores a penalty for Liverpool at 78 minutes, oh no!",
+          "I am a neutral viewer and I want to see all the go": "Mohamed Salah scores a penalty for Liverpool at 78 minutes, sealing the win!",
+          "I love watching C. Gakpo play for Liverpool, he is": "Mohamed Salah scores a penalty for Liverpool at 78 minutes, what a finish!",
+          "I love watching Mohamed Salah play for Liverpool, ": "Mohamed Salah scores a penalty for Liverpool at 78 minutes, what a goal!"
+        },
+        "mean_pairwise_similarity": 0.934,
+        "disagreement_rate": 0.066,
+        "high_disagreement": false
+      },
+      {
+        "segment_id": "segment_006",
+        "event_type": "substitution",
+        "captions_by_preference": {
+          "I am a Liverpool fan and I love watching Liverpool": "Matheus Nunes substituted out for J. Doku at 57 minutes for Manchester City!",
+          "I support Manchester City and I follow Manchester ": "Matheus Nunes makes way for J. Doku in a tactical substitution.",
+          "I am a neutral viewer and I want to see all the go": "Matheus Nunes makes way for J. Doku in a Manchester City substitution at 57 minutes.",
+          "I love watching C. Gakpo play for Liverpool, he is": "Matheus Nunes substitutes in for Manchester City at 57 minutes, will they turn it around now?",
+          "I love watching Mohamed Salah play for Liverpool, ": "Matheus Nunes substitutes in for Manchester City at 57 minutes, will he change the game?"
+        },
+        "mean_pairwise_similarity": 0.692,
+        "disagreement_rate": 0.308,
+        "high_disagreement": false
+      },
+      {
+        "segment_id": "segment_007",
+        "event_type": "substitution",
+        "captions_by_preference": {
+          "I am a Liverpool fan and I love watching Liverpool": "Gündoğan gets subbed out by Manchester City at 58 minutes, nice move by them!",
+          "I support Manchester City and I follow Manchester ": "Gündoğan makes way for Savinho in Manchester City's second substitution at 58 minutes!",
+          "I am a neutral viewer and I want to see all the go": "Gündoğan makes way for Savinho in Manchester City's second substitution at 58 minutes!",
+          "I love watching C. Gakpo play for Liverpool, he is": "Gündoğan is subbed out by Manchester City at 58 minutes, Savinho takes his place!",
+          "I love watching Mohamed Salah play for Liverpool, ": "Gündoğan gets subbed out by Manchester City at 58 minutes, Savinho comes in!"
+        },
+        "mean_pairwise_similarity": 0.864,
+        "disagreement_rate": 0.136,
+        "high_disagreement": false
+      },
+      {
+        "segment_id": "segment_008",
+        "event_type": "substitution",
+        "captions_by_preference": {
+          "I am a Liverpool fan and I love watching Liverpool": "C. Gakpo makes way for D. Núñez in Liverpool's first substitution at 73 minutes!",
+          "I support Manchester City and I follow Manchester ": "C. Gakpo is subbed out for D. Núñez at 73 minutes by Liverpool!",
+          "I am a neutral viewer and I want to see all the go": "C. Gakpo makes way for D. Núñez in a Liverpool substitution at 73 minutes!",
+          "I love watching C. Gakpo play for Liverpool, he is": "Gakpo exits the game, Núñez substitutes in for Liverpool at 73 minutes.",
+          "I love watching Mohamed Salah play for Liverpool, ": "Gakpo comes on for Núñez at 73 minutes, great move by Liverpool!"
+        },
+        "mean_pairwise_similarity": 0.849,
+        "disagreement_rate": 0.151,
+        "high_disagreement": false
+      },
+      {
+        "segment_id": "segment_009",
+        "event_type": "substitution",
+        "captions_by_preference": {
+          "I am a Liverpool fan and I love watching Liverpool": "Trent Alexander-Arnold exits, J. Quansah subs in for Liverpool at 73 minutes!",
+          "I support Manchester City and I follow Manchester ": "Trent Alexander-Arnold exits, J. Quansah enters for Liverpool at 73 minutes!",
+          "I am a neutral viewer and I want to see all the go": "Trent Alexander-Arnold exits, J. Quansah subs in for Liverpool at 73 minutes!",
+          "I love watching C. Gakpo play for Liverpool, he is": "Trent Alexander-Arnold makes way, Jordon Quansah subs in for Liverpool at 73 minutes!",
+          "I love watching Mohamed Salah play for Liverpool, ": "Trent Alexander-Arnold exits, J. Quansah enters for Liverpool at 73 minutes!"
+        },
+        "mean_pairwise_similarity": 0.897,
+        "disagreement_rate": 0.103,
+        "high_disagreement": false
+      }
+    ],
+    "overall_disagreement_rate": 0.145
+  },
+  "verifier_analysis": {
+    "total_runs": 5,
+    "hallucination_rate": 0.4,
+    "total_hallucinations_detected": 2,
+    "total_retries": 2,
+    "retry_effectiveness": "resolved",
+    "avg_reel_a_alignment": 0.328,
+    "avg_reel_b_alignment": 0.263,
+    "per_run_results": [
+      {
+        "preference": "I am a Liverpool fan and I love watching Liverpool play",
+        "hallucination_flagged": false,
+        "retry_count": 0,
+        "reel_a_alignment_score": 0.27961941667757256,
+        "reel_b_alignment_score": 0.21758559178164275,
+        "status": "success"
+      },
+      {
+        "preference": "I support Manchester City and I follow Manchester City closely",
+        "hallucination_flagged": false,
+        "retry_count": 0,
+        "reel_a_alignment_score": 0.2720083616378988,
+        "reel_b_alignment_score": 0.16738815822223319,
+        "status": "success"
+      },
+      {
+        "preference": "I am a neutral viewer and I want to see all the goals from this match",
+        "hallucination_flagged": false,
+        "retry_count": 0,
+        "reel_a_alignment_score": 0.27073535592007425,
+        "reel_b_alignment_score": 0.25207071996350155,
+        "status": "success"
+      },
+      {
+        "preference": "I love watching C. Gakpo play for Liverpool, he is my favourite player",
+        "hallucination_flagged": true,
+        "retry_count": 1,
+        "reel_a_alignment_score": 0.42220412436402194,
+        "reel_b_alignment_score": 0.36380238028020545,
+        "status": "success"
+      },
+      {
+        "preference": "I love watching Mohamed Salah play for Liverpool, he is my favourite player",
+        "hallucination_flagged": true,
+        "retry_count": 1,
+        "reel_a_alignment_score": 0.39420397748488956,
+        "reel_b_alignment_score": 0.3128904255213775,
+        "status": "success"
+      }
+    ]
+  }
+}

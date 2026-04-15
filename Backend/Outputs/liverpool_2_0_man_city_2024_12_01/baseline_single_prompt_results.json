@@ -1,0 +1,147 @@
+{
+  "match_name": "liverpool_2_0_man_city_2024_12_01",
+  "timestamp": "2026-04-15T08:38:05",
+  "baseline": "single_prompt",
+  "description": "Single LLM call per preference. No RAG, no disagreement, no hallucination check, no retry.",
+  "model": "llama-3.3-70b-versatile",
+  "clips_used": 6,
+  "summary": {
+    "total_runs": 5,
+    "successful_runs": 5,
+    "avg_alignment_score": 0.243,
+    "avg_time_seconds": 1.06,
+    "hallucination_rate": "N/A — not checked"
+  },
+  "results": [
+    {
+      "preference": "I am a Liverpool fan and I love watching Liverpool play",
+      "captions": [
+        "Gakpo scores for Liverpool at 12 minutes, Reds lead 1-0, Anfield erupts.",
+        "Salah nets penalty at 78 minutes, sealing 2-0 win for Liverpool.",
+        "Manchester City subs in Matheus Nunes at 57 minutes, seeking momentum.",
+        "İ. Gündoğan replaces Savinho at 58 minutes, City pushes for goal.",
+        "Gakpo exits, D. Núñez enters at 73 minutes, fresh legs for Liverpool.",
+        "Alexander-Arnold subs out, Quansah in at 73 minutes, defensive tweak."
+      ],
+      "alignment_score": 0.263,
+      "per_clip_scores": [
+        0.419,
+        0.356,
+        0.267,
+        0.157,
+        0.214,
+        0.162
+      ],
+      "time_taken": 1.39,
+      "tokens_used": 686,
+      "prompt_tokens": 546,
+      "completion_tokens": 140,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I support Manchester City and I follow Manchester City closely",
+      "captions": [
+        "Gakpo scores against City at 12 minutes, early lead for Liverpool.",
+        "Salah seals it with penalty goal at 78 minutes, tough loss.",
+        "Matheus Nunes replaces J. Doku at 57 minutes, City seeks spark.",
+        "İ. Gündoğan subbed out for Savinho at 58 minutes, tactical move.",
+        "C. Gakpo subbed out for D. Núñez at 73 minutes, Liverpool rotates.",
+        "T. Alexander-Arnold replaced by J. Quansah at 73 minutes, defensive switch."
+      ],
+      "alignment_score": 0.105,
+      "per_clip_scores": [
+        0.202,
+        0.089,
+        0.046,
+        0.094,
+        0.161,
+        0.037
+      ],
+      "time_taken": 0.98,
+      "tokens_used": 681,
+      "prompt_tokens": 545,
+      "completion_tokens": 136,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I am a neutral viewer and I want to see all the goals from this match",
+      "captions": [
+        "Gakpo scores for Liverpool at 12 minutes with Salah assist.",
+        "Salah converts penalty for Liverpool at 78 minutes perfectly.",
+        "Matheus Nunes replaces J. Doku for Manchester City.",
+        "İ. Gündoğan substituted in for Savinho by Manchester City.",
+        "C. Gakpo makes way for D. Núñez at 73 minutes.",
+        "T. Alexander-Arnold substituted out for J. Quansah by Liverpool."
+      ],
+      "alignment_score": 0.234,
+      "per_clip_scores": [
+        0.431,
+        0.333,
+        0.106,
+        0.193,
+        0.19,
+        0.154
+      ],
+      "time_taken": 0.88,
+      "tokens_used": 664,
+      "prompt_tokens": 551,
+      "completion_tokens": 113,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I love watching C. Gakpo play for Liverpool, he is my favourite player",
+      "captions": [
+        "Gakpo scores for Liverpool at 12 minutes, what a start.",
+        "Salah seals the win with a penalty at 78 minutes.",
+        "Matheus Nunes substituted in for Manchester City at 57.",
+        "İ. Gündoğan replaces Savinho for Manchester City at 58.",
+        "Gakpo subbed out for D. Núñez at 73 minutes unfortunately.",
+        "T. Alexander-Arnold makes way for J. Quansah at 73 minutes."
+      ],
+      "alignment_score": 0.303,
+      "per_clip_scores": [
+        0.628,
+        0.162,
+        0.151,
+        0.279,
+        0.382,
+        0.219
+      ],
+      "time_taken": 1.04,
+      "tokens_used": 670,
+      "prompt_tokens": 552,
+      "completion_tokens": 118,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I love watching Mohamed Salah play for Liverpool, he is my favourite player",
+      "captions": [
+        "Gakpo scores, Salah assists, Liverpool leads 1-0 early on.",
+        "Salah seals the win with a penalty goal.",
+        "Manchester City subs in Matheus Nunes at 57 minutes.",
+        "İ. Gündoğan replaced by Savinho in a quick sub.",
+        "Gakpo exits, Núñez enters, Liverpool makes a change.",
+        "Alexander-Arnold subbed out, Quansah comes in for Liverpool."
+      ],
+      "alignment_score": 0.31,
+      "per_clip_scores": [
+        0.386,
+        0.432,
+        0.237,
+        0.257,
+        0.195,
+        0.355
+      ],
+      "time_taken": 1.02,
+      "tokens_used": 659,
+      "prompt_tokens": 549,
+      "completion_tokens": 110,
+      "clip_count": 6,
+      "status": "success"
+    }
+  ]
+}

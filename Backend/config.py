@@ -81,7 +81,7 @@ EVENT_IMPORTANCE = {
 }
 
 # Demo mode (set to True to use mock data for testing)
-DEMO_MODE = False
+DEMO_MODE = True
 
 # Subtitle typing effect configuration
 ENABLE_TYPING_EFFECT = True  # Enable character-by-character reveal

@@ -1,0 +1,139 @@
+{
+  "baseline": "template_based",
+  "match_name": "arsenal_5_1_man_city_2025_02_02",
+  "avg_alignment": 0.36,
+  "avg_time": 1.962,
+  "test_count": 5,
+  "results": [
+    {
+      "preference": "I am a Arsenal fan and I love watching Arsenal play",
+      "mode_detected": "home_team",
+      "team_detected": "Arsenal",
+      "player_detected": null,
+      "captions": [
+        "M. Ødegaard scores for Arsenal at 2:00, assisted by K. Havertz. Score: 1-0.",
+        "Manchester City score at 55:00 through E. Haaland. Score becomes 1-1.",
+        "T. Partey scores for Arsenal at 56:00. Score: 2-1.",
+        "M. Lewis-Skelly scores for Arsenal at 62:00, assisted by D. Rice. Score: 3-1.",
+        "K. Havertz scores for Arsenal at 76:00, assisted by Gabriel Martinelli. Score: 4-1.",
+        "E. Nwaneri scores for Arsenal at 90:00, assisted by D. Rice. Score: 5-1."
+      ],
+      "alignment_score": 0.393,
+      "per_clip_scores": [
+        0.429,
+        0.319,
+        0.509,
+        0.318,
+        0.407,
+        0.378
+      ],
+      "time_seconds": 8.99,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I support Manchester City and I follow Manchester City closely",
+      "mode_detected": "away_team",
+      "team_detected": "Manchester City",
+      "player_detected": null,
+      "captions": [
+        "Arsenal score at 2:00 through M. Ødegaard. Score becomes 1-0.",
+        "E. Haaland scores for Manchester City at 55:00, assisted by Savinho. Score: 1-1.",
+        "Arsenal score at 56:00 through T. Partey. Score becomes 2-1.",
+        "Arsenal score at 62:00 through M. Lewis-Skelly. Score becomes 3-1.",
+        "Arsenal score at 76:00 through K. Havertz. Score becomes 4-1.",
+        "Arsenal score at 90:00 through E. Nwaneri. Score becomes 5-1."
+      ],
+      "alignment_score": 0.196,
+      "per_clip_scores": [
+        0.147,
+        0.384,
+        0.174,
+        0.153,
+        0.158,
+        0.162
+      ],
+      "time_seconds": 0.28,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I am a neutral viewer and I want to see all the goals from this match",
+      "mode_detected": "neutral",
+      "team_detected": null,
+      "player_detected": null,
+      "captions": [
+        "Goal for Arsenal at 2:00 by M. Ødegaard. Score: 1-0.",
+        "Goal for Manchester City at 55:00 by E. Haaland. Score: 1-1.",
+        "Goal for Arsenal at 56:00 by T. Partey. Score: 2-1.",
+        "Goal for Arsenal at 62:00 by M. Lewis-Skelly. Score: 3-1.",
+        "Goal for Arsenal at 76:00 by K. Havertz. Score: 4-1.",
+        "Goal for Arsenal at 90:00 by E. Nwaneri. Score: 5-1."
+      ],
+      "alignment_score": 0.465,
+      "per_clip_scores": [
+        0.484,
+        0.484,
+        0.463,
+        0.435,
+        0.466,
+        0.459
+      ],
+      "time_seconds": 0.21,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I love watching M. Ødegaard play for Arsenal, he is my favourite player",
+      "mode_detected": "player",
+      "team_detected": null,
+      "player_detected": "M. Ødegaard",
+      "captions": [
+        "M. Ødegaard is involved in the goal at 2:00 for Arsenal. Score: 1-0.",
+        "E. Haaland scores for Manchester City at 55:00. Score: 1-1.",
+        "T. Partey scores for Arsenal at 56:00. Score: 2-1.",
+        "M. Lewis-Skelly scores for Arsenal at 62:00. Score: 3-1.",
+        "K. Havertz scores for Arsenal at 76:00. Score: 4-1.",
+        "E. Nwaneri scores for Arsenal at 90:00. Score: 5-1."
+      ],
+      "alignment_score": 0.396,
+      "per_clip_scores": [
+        0.69,
+        0.247,
+        0.352,
+        0.336,
+        0.371,
+        0.383
+      ],
+      "time_seconds": 0.17,
+      "clip_count": 6,
+      "status": "success"
+    },
+    {
+      "preference": "I love watching E. Haaland play for Manchester City, he is my favourite player",
+      "mode_detected": "player",
+      "team_detected": null,
+      "player_detected": "E. Haaland",
+      "captions": [
+        "M. Ødegaard scores for Arsenal at 2:00. Score: 1-0.",
+        "E. Haaland is involved in the goal at 55:00 for Manchester City. Score: 1-1.",
+        "T. Partey scores for Arsenal at 56:00. Score: 2-1.",
+        "M. Lewis-Skelly scores for Arsenal at 62:00. Score: 3-1.",
+        "K. Havertz scores for Arsenal at 76:00. Score: 4-1.",
+        "E. Nwaneri scores for Arsenal at 90:00. Score: 5-1."
+      ],
+      "alignment_score": 0.35,
+      "per_clip_scores": [
+        0.289,
+        0.633,
+        0.293,
+        0.234,
+        0.301,
+        0.35
+      ],
+      "time_seconds": 0.16,
+      "clip_count": 6,
+      "status": "success"
+    }
+  ]
+}
