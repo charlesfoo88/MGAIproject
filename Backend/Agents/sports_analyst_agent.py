@@ -8,7 +8,9 @@ context, and prepares structured input for the Fan Agent.
 
 import json
 import re
-from typing import List, Optional
+import unicodedata
+from difflib import get_close_matches
+from typing import List, Optional, Tuple
 from pathlib import Path
 
 # Relative imports
@@ -83,6 +85,122 @@ try:
 except ImportError:
     GEMINI_AVAILABLE = False
     print("⚠ Google Generative AI library not available")
+
+
+PLAYER_ALIAS_TEAM_OVERRIDES = {
+    "odegaard": {"canonical_name": "M. Ødegaard", "team": "Arsenal"},
+    "odegard": {"canonical_name": "M. Ødegaard", "team": "Arsenal"},
+    "oedegaard": {"canonical_name": "M. Ødegaard", "team": "Arsenal"},
+    "oddegaard": {"canonical_name": "M. Ødegaard", "team": "Arsenal"},
+    "oddergard": {"canonical_name": "M. Ødegaard", "team": "Arsenal"},
+    "sorddergard": {"canonical_name": "M. Ødegaard", "team": "Arsenal"},
+    "modegaard": {"canonical_name": "M. Ødegaard", "team": "Arsenal"},
+}
+
+
+def _normalize_entity_token(value: str) -> str:
+    """Normalize names for robust matching across accents and punctuation."""
+    text = unicodedata.normalize("NFKD", str(value or ""))
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
+def _compact_entity_token(value: str) -> str:
+    return _normalize_entity_token(value).replace(" ", "")
+
+
+def _resolve_player_team_from_events(player_name: str, events: List[HandoffEvent]) -> Optional[str]:
+    """Infer player team from D17 events."""
+    normalized = _normalize_entity_token(player_name)
+    compact = _compact_entity_token(player_name)
+    if not normalized:
+        return None
+
+    for event in events:
+        event_team = str(getattr(event, "team", "") or "").strip()
+        if not event_team:
+            continue
+        for event_player in (getattr(event, "players", None) or []):
+            player_norm = _normalize_entity_token(event_player)
+            player_compact = _compact_entity_token(event_player)
+            if not player_norm:
+                continue
+            if player_norm == normalized:
+                return event_team
+            if compact and len(compact) >= 6 and (
+                player_compact in compact or compact in player_compact
+            ):
+                return event_team
+    return None
+
+
+def resolve_preferred_player_name(preference_detail: str, dl_handoff: DLHandoff) -> Tuple[str, Optional[str]]:
+    """
+    Resolve misspelled/aliased preferred player names to canonical D17 entities.
+    Returns (canonical_player_name, inferred_team_name).
+    """
+    raw = str(preference_detail or "").strip()
+    if not raw:
+        return "", None
+
+    normalized = _normalize_entity_token(raw)
+    compact = _compact_entity_token(raw)
+
+    alias_to_canonical = {}
+    for entity in dl_handoff.entity_registry or []:
+        if str(getattr(entity, "entity_type", "")).lower() != "player":
+            continue
+        canonical_name = str(getattr(entity, "canonical_name", "") or "").strip()
+        if not canonical_name:
+            continue
+
+        candidate_names = [canonical_name] + list(getattr(entity, "aliases", []) or [])
+        for alias in candidate_names:
+            alias_norm = _normalize_entity_token(alias)
+            if alias_norm:
+                alias_to_canonical[alias_norm] = canonical_name
+
+    resolved_name = alias_to_canonical.get(normalized)
+
+    if not resolved_name and compact:
+        for alias_norm, canonical_name in alias_to_canonical.items():
+            alias_compact = alias_norm.replace(" ", "")
+            if alias_compact == compact:
+                resolved_name = canonical_name
+                break
+        if not resolved_name and len(compact) >= 6:
+            for alias_norm, canonical_name in alias_to_canonical.items():
+                alias_compact = alias_norm.replace(" ", "")
+                if alias_compact and (alias_compact in compact or compact in alias_compact):
+                    resolved_name = canonical_name
+                    break
+
+    override = PLAYER_ALIAS_TEAM_OVERRIDES.get(compact)
+    if not override and compact:
+        for alias_key, alias_meta in PLAYER_ALIAS_TEAM_OVERRIDES.items():
+            if compact in alias_key or alias_key in compact:
+                override = alias_meta
+                break
+
+    if not resolved_name and override:
+        resolved_name = override["canonical_name"]
+
+    if not resolved_name and alias_to_canonical:
+        close = get_close_matches(normalized, list(alias_to_canonical.keys()), n=1, cutoff=0.86)
+        if close:
+            resolved_name = alias_to_canonical[close[0]]
+
+    if not resolved_name:
+        resolved_name = raw
+
+    inferred_team = _resolve_player_team_from_events(resolved_name, dl_handoff.events or [])
+    if not inferred_team and override:
+        inferred_team = override.get("team")
+
+    return resolved_name, inferred_team
 
 
 def extract_preferred_entity(user_preference: str) -> Optional[str]:
@@ -471,7 +589,11 @@ def run(shared_state: SharedState) -> SharedState:
         structured_pref["preference_type"] == "individual"
         and structured_pref["preference_detail"]
     ):
-        selected_player = structured_pref["preference_detail"]
+        selected_player_raw = structured_pref["preference_detail"]
+        selected_player, inferred_team = resolve_preferred_player_name(selected_player_raw, dl_handoff)
+        if selected_player != selected_player_raw:
+            print(f"  Canonicalized preferred player: '{selected_player_raw}' -> '{selected_player}'")
+
         players = query_transformed.get("preferred_players") or []
         if selected_player not in players:
             players = [selected_player, *players]
@@ -480,10 +602,17 @@ def run(shared_state: SharedState) -> SharedState:
         search_terms = query_transformed.get("search_terms") or []
         if selected_player not in search_terms:
             search_terms = [selected_player, *search_terms]
+
+        if inferred_team:
+            if inferred_team not in search_terms:
+                search_terms = [inferred_team, *search_terms]
+            if not query_transformed.get("preferred_team"):
+                query_transformed["preferred_team"] = inferred_team
         query_transformed["search_terms"] = search_terms
 
         # Prefer player-level entity when individual mode is selected.
         shared_state.preferred_entity = selected_player
+        preferred_entity = selected_player
 
     shared_state.query_transformed = query_transformed
     if query_transformed.get("preferred_team"):

@@ -830,10 +830,6 @@ def run_pipeline_all_perspectives(match_name: str) -> dict:
             os.remove(home_reel_path)
         os.rename(result_home['reel_a_path'], str(home_reel_path))
         
-        if Path(neutral_reel_path).exists():
-            os.remove(neutral_reel_path)
-        os.rename(result_home['reel_b_path'], str(neutral_reel_path))
-        
         # Rename VTT files
         reel_a_vtt = match_output_dir / "reel_a.vtt"
         reel_b_vtt = match_output_dir / "reel_b.vtt"
@@ -842,17 +838,18 @@ def run_pipeline_all_perspectives(match_name: str) -> dict:
                 os.remove(home_vtt_path)
             os.rename(str(reel_a_vtt), str(home_vtt_path))
         if reel_b_vtt.exists():
-            if Path(neutral_vtt_path).exists():
-                os.remove(neutral_vtt_path)
-            os.rename(str(reel_b_vtt), str(neutral_vtt_path))
+            os.remove(str(reel_b_vtt))
+        
+        # Remove duplicate neutral reel generated as reel_b in the home run.
+        if os.path.exists(result_home['reel_b_path']):
+            os.remove(result_home['reel_b_path'])
         
         # Rename captions JSON
         captions_json = match_output_dir / "captions.json"
         home_captions_path = match_output_dir / f"captions_{home_team_slug}.json"
-        neutral_captions_path = match_output_dir / "captions_neutral.json"
         
         if captions_json.exists():
-            # Load and split into home and neutral
+            # Load and save only home team perspective captions (reel_a)
             with open(captions_json, 'r', encoding='utf-8') as f:
                 captions_data = json.load(f)
             
@@ -865,48 +862,69 @@ def run_pipeline_all_perspectives(match_name: str) -> dict:
             with open(home_captions_path, 'w', encoding='utf-8') as f:
                 json.dump(home_captions_only, f, indent=2, ensure_ascii=False)
             
-            # Save neutral captions (reel_b)
-            neutral_captions_only = {
-                "match_name": match_name,
-                "perspective": "Neutral",
-                "captions": captions_data.get("reel_b_captions", [])
-            }
-            with open(neutral_captions_path, 'w', encoding='utf-8') as f:
-                json.dump(neutral_captions_only, f, indent=2, ensure_ascii=False)
-            
             # Remove original combined file
             os.remove(str(captions_json))
         
         print(f"✓ {home_team} reel saved: {home_reel_path}")
+        
+        # ========================================================================
+        # Run 2: Neutral Perspective
+        # ========================================================================
+        print(f"\n[Perspective 2/3] Generating Neutral perspective...")
+        print("-" * 70)
+        result_neutral = run_pipeline(
+            match_name=match_name,
+            user_preference="Neutral",
+            perspective_name="neutral"
+        )
+        
+        if result_neutral['status'] != 'success':
+            raise RuntimeError(f"Neutral perspective failed: {result_neutral.get('error_message', 'Unknown error')}")
+        
+        # Rename neutral reel from dedicated neutral run (use reel_a as neutral output)
+        if Path(neutral_reel_path).exists():
+            os.remove(neutral_reel_path)
+        os.rename(result_neutral['reel_a_path'], str(neutral_reel_path))
+        
+        # Rename neutral VTT file
+        reel_a_vtt_neutral = match_output_dir / "reel_a.vtt"
+        if reel_a_vtt_neutral.exists():
+            if Path(neutral_vtt_path).exists():
+                os.remove(neutral_vtt_path)
+            os.rename(str(reel_a_vtt_neutral), str(neutral_vtt_path))
+        
+        # Save neutral captions from dedicated neutral run
+        captions_json_neutral = match_output_dir / "captions.json"
+        neutral_captions_path = match_output_dir / "captions_neutral.json"
+        if captions_json_neutral.exists():
+            with open(captions_json_neutral, 'r', encoding='utf-8') as f:
+                captions_data = json.load(f)
+            
+            neutral_captions_only = {
+                "match_name": match_name,
+                "perspective": "Neutral",
+                "captions": captions_data.get("reel_a_captions", [])
+            }
+            with open(neutral_captions_path, 'w', encoding='utf-8') as f:
+                json.dump(neutral_captions_only, f, indent=2, ensure_ascii=False)
+            
+            os.remove(str(captions_json_neutral))
+        
+        # Remove duplicate neutral baseline outputs from neutral run
+        if os.path.exists(result_neutral['reel_b_path']):
+            os.remove(result_neutral['reel_b_path'])
+        
+        reel_b_vtt_neutral = match_output_dir / "reel_b.vtt"
+        if reel_b_vtt_neutral.exists():
+            os.remove(str(reel_b_vtt_neutral))
+        
         print(f"✓ Neutral reel saved: {neutral_reel_path}")
         
-        # Write evidence log and disagreement log for neutral perspective
-        shared_state_home = result_home.get('shared_state')
-        verified_output_home = result_home.get('verified_output')
-        
-        if shared_state_home and verified_output_home:
-            write_evidence_log(
-                match_name=match_name,
-                user_preference='Neutral',
-                shared_state=shared_state_home,
-                verified_output=verified_output_home,
-                output_path=match_output_dir,
-                perspective_name='neutral'
-            )
-            
-            if verified_output_home.disagreement_log:
-                disagreement_log_path = match_output_dir / 'disagreement_log_neutral.json'
-                with open(disagreement_log_path, 'w', encoding='utf-8') as f:
-                    json.dump(
-                        [d.dict() for d in verified_output_home.disagreement_log],
-                        f, indent=2, ensure_ascii=False
-                    )
-                print(f"✓ Neutral perspective logs saved")
         
         # ========================================================================
-        # Run 2: Away Team Perspective
+        # Run 3: Away Team Perspective
         # ========================================================================
-        print(f"\n[Perspective 2/3] Generating {away_team} fan perspective...")
+        print(f"\n[Perspective 3/3] Generating {away_team} fan perspective...")
         print("-" * 70)
         result_away = run_pipeline(
             match_name=match_name,

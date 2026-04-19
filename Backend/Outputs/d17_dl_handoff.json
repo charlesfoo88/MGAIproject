@@ -1,0 +1,104 @@
+{
+  "match_context": {
+    "match_id": "arsenal_vs_manchester_city_2025-02-02",
+    "video_id": "f3POqcfPJZ8",
+    "competition": "English Premier League",
+    "season": "2024-2025",
+    "date": "2025-02-02",
+    "venue": "Unknown Venue",
+    "home_team": "Arsenal",
+    "away_team": "Manchester City",
+    "final_score": "5-1"
+  },
+  "entity_registry": [
+    {
+      "entity_id": "team_arsenal",
+      "entity_type": "team",
+      "canonical_name": "Arsenal",
+      "aliases": [
+        "Arsenal"
+      ],
+      "team_id": "Arsenal"
+    },
+    {
+      "entity_id": "team_manchester_city",
+      "entity_type": "team",
+      "canonical_name": "Manchester City",
+      "aliases": [
+        "Manchester City"
+      ],
+      "team_id": "Manchester City"
+    }
+  ],
+  "events": [
+    {
+      "clip_id": "segment_000102",
+      "time": "1:41",
+      "time_seconds": 101.0,
+      "event_type": "score_change",
+      "importance": 0.97,
+      "confidence": 0.93,
+      "team": "Arsenal",
+      "players": [],
+      "score_after_event": "5-1",
+      "clip_start_sec": 101.0,
+      "clip_end_sec": 106.0,
+      "ocr_text": [],
+      "match_phase": "in_play",
+      "context": {
+        "previous_event": null,
+        "next_event": null,
+        "narrative": "Arsenal transition ends in finish; scoreboard changes and loud crowd reaction."
+      }
+    },
+    {
+      "clip_id": "segment_000331",
+      "time": "5:29",
+      "time_seconds": 329.0,
+      "event_type": "celebration",
+      "importance": 0.9,
+      "confidence": 0.89,
+      "team": null,
+      "players": [],
+      "score_after_event": "5-1",
+      "clip_start_sec": 329.0,
+      "clip_end_sec": 335.0,
+      "ocr_text": [],
+      "match_phase": "in_play",
+      "context": {
+        "previous_event": null,
+        "next_event": null,
+        "narrative": "Team and bench reaction, replay intro, and crowd swell after goal sequence."
+      }
+    },
+    {
+      "clip_id": "segment_000600",
+      "time": "9:58",
+      "time_seconds": 598.0,
+      "event_type": "stoppage_review",
+      "importance": 0.76,
+      "confidence": 0.78,
+      "team": null,
+      "players": [],
+      "score_after_event": "5-1",
+      "clip_start_sec": 598.0,
+      "clip_end_sec": 603.0,
+      "ocr_text": [],
+      "match_phase": "in_play",
+      "context": {
+        "previous_event": null,
+        "next_event": null,
+        "narrative": "Referee whistle and players gather; possible foul check before restart."
+      }
+    }
+  ],
+  "score_progression": [
+    {
+      "time": "FT",
+      "score": "5-1",
+      "event": "full_time",
+      "scorer": null,
+      "team": null
+    }
+  ]
+}

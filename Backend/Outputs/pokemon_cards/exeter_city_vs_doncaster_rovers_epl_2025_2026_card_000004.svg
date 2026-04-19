@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1300" viewBox="0 0 900 1300" role="img" aria-label="Shiny recap card">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#05080f"/>
+      <stop offset="100%" stop-color="#132340"/>
+    </linearGradient>
+    <linearGradient id="foil" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.14"/>
+      <stop offset="38%" stop-color="#f472b6" stop-opacity="0.16"/>
+      <stop offset="70%" stop-color="#facc15" stop-opacity="0.13"/>
+      <stop offset="100%" stop-color="#60a5fa" stop-opacity="0.16"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1300" fill="url(#bg)"/>
+  <rect width="900" height="1300" fill="url(#foil)"/>
+  <rect x="24" y="24" width="852" height="1252" rx="28" fill="none" stroke="#facc15" stroke-opacity="0.7" stroke-width="5"/>
+  <rect x="46" y="46" width="808" height="1208" rx="22" fill="#0b1220" fill-opacity="0.46" stroke="#93c5fd" stroke-opacity="0.28"/>
+
+  <rect x="70" y="70" width="760" height="58" rx="14" fill="#7f1d1d" fill-opacity="0.65"/>
+  <text x="88" y="108" fill="#fff1f2" font-family="Arial,sans-serif" font-size="20" font-weight="800" letter-spacing="1.4">LIMITED SHINY SOCCER CARD #000004</text>
+
+  <text x="72" y="178" fill="#f8fafc" font-family="Arial,sans-serif" font-size="46" font-weight="900">MGAI FEATURE CARD</text>
+  <text x="72" y="216" fill="#bfdbfe" font-family="Arial,sans-serif" font-size="24" font-weight="700">Arsenal vs Manchester City</text>
+  <text x="72" y="252" fill="#67e8f9" font-family="Arial,sans-serif" font-size="22" font-weight="700">Arsenal vs Manchester City • Focus: Exeter City</text>
+
+  <rect x="76" y="290" width="748" height="584" rx="24" fill="#020617" fill-opacity="0.7" stroke="#7dd3fc" stroke-opacity="0.42"/>
+  <rect x="92" y="306" width="716" height="552" rx="16" fill="#0f172a" stroke="#fbbf24" stroke-opacity="0.35"/>
+  <rect x="-400" y="280" width="280" height="660" fill="url(#shine)" transform="rotate(14 450 650)">
+    <animate attributeName="x" values="-400;980" dur="4.2s" repeatCount="indefinite"/>
+  </rect>
+  <text x="116" y="356" fill="#fef9c3" font-family="Arial,sans-serif" font-size="22" font-weight="800" letter-spacing="1.2">BEST MOMENTS • FEATURE SHOT</text>
+  <foreignObject x="116" y="390" width="676" height="440">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Arial,sans-serif;font-size:34px;line-height:1.28;font-weight:700;color:#e2e8f0;">
+      M. Ødegaard scores the opening goal at 2 minutes, assisted by K. Havertz, to give his side an early 1-0 lead. The strike sets the tone for an eventful match.
+    </div>
+  </foreignObject>
+
+  <rect x="56" y="930" width="788" height="188" rx="16" fill="#020617" fill-opacity="0.66" stroke="#7dd3fc" stroke-opacity="0.26"/>
+  <text x="78" y="968" fill="#fef9c3" font-family="Arial,sans-serif" font-size="20" font-weight="800" letter-spacing="1.0">MATCH STORYLINE</text>
+  <foreignObject x="78" y="988" width="748" height="112">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Arial,sans-serif;font-size:23px;line-height:1.36;font-weight:600;color:#dbeafe;">
+      The match at Emirates Stadium got off to a flying start as Martin Ødegaard scored for Arsenal in just the 2nd minute, setting the tone for an action-packed encounter. The early advantage seemed to spark a competitive first half, but it wasn&#x27;t until after the break that the match truly came alive, with Erling Haaland&#x27;s 55th-minute equalizer for Manchester City being quickly countered by Thomas Partey&#x27;s strike just a minute later, shifting the momentum firmly in Arsenal&#x27;s favor. As the match wore on, Arsenal&#x27;s dominance only grew, with further goals from M. Lewis-Skelly, Kai Havertz, and Ethan Nwaneri sealing a resounding 5-1 victory. In the end, Arsenal&#x27;s ability to capitalize on key turning points and maintain their momentum proved too much for Manchester City to handle, resulting in a convincing win for the home side.
+    </div>
+  </foreignObject>
+  <text x="78" y="1148" fill="#94a3b8" font-family="Arial,sans-serif" font-size="14" font-weight="600">Generated: 2026-04-04 12:17 UTC</text>
+</svg>

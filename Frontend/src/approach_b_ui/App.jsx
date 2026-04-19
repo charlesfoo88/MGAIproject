@@ -61,12 +61,29 @@ const WEATHER_CODE_LABELS = {
 const CARD_COLLECTION_STORAGE_KEY = "mgai_collectible_cards_v1";
 const CARD_COLLECTION_LIMIT = 120;
 const CARD_PULL_INVENTORY_STORAGE_KEY = "mgai_reel_pull_inventory_v1";
-const FACTUAL_INCONSISTENCY_ALIGNMENT_THRESHOLD = 0.75;
+const CARD_STORAGE_BOOTSTRAP_KEY = "mgai_card_storage_bootstrap_v2";
 const FACTUAL_INCONSISTENCY_DISAGREEMENT_THRESHOLD = 0.25;
 const FACTUAL_INCONSISTENCY_POPUP_MS = 4200;
+const HALLUCINATION_POPUP_MS = 12000;
+
+function bootstrapCardStorageOnFirstLoad() {
+  if (typeof window === "undefined") return;
+  try {
+    const alreadyBootstrapped = window.localStorage.getItem(CARD_STORAGE_BOOTSTRAP_KEY) === "1";
+    if (alreadyBootstrapped) return;
+
+    // First app open for this storage version: start with an empty collection/inventory.
+    window.localStorage.removeItem(CARD_COLLECTION_STORAGE_KEY);
+    window.localStorage.removeItem(CARD_PULL_INVENTORY_STORAGE_KEY);
+    window.localStorage.setItem(CARD_STORAGE_BOOTSTRAP_KEY, "1");
+  } catch {
+    // Ignore storage access failures.
+  }
+}
 
 function readCardCollection() {
   if (typeof window === "undefined") return [];
+  bootstrapCardStorageOnFirstLoad();
   try {
     const raw = window.localStorage.getItem(CARD_COLLECTION_STORAGE_KEY);
     if (!raw) return [];
@@ -133,6 +150,7 @@ function buildCardSetCode(matchupLabel) {
 
 function readCardPullInventory() {
   if (typeof window === "undefined") return {};
+  bootstrapCardStorageOnFirstLoad();
   try {
     const raw = window.localStorage.getItem(CARD_PULL_INVENTORY_STORAGE_KEY);
     if (!raw) return {};
@@ -173,6 +191,19 @@ function parseRateValue(value) {
   if (numeric <= 1) return Math.max(0, numeric);
   if (numeric <= 100) return Math.min(1, Math.max(0, numeric / 100));
   return 1;
+}
+
+function normalizeSegmentId(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  if (!raw) return "";
+  const match = raw.match(/segment[\s_-]*(\d+)/i);
+  if (!match) return "";
+  const digits = String(match[1] || "").trim();
+  if (!digits) return "";
+  const width = Math.max(3, digits.length);
+  const numeric = Number(digits);
+  if (!Number.isFinite(numeric)) return `segment_${digits.padStart(width, "0")}`;
+  return `segment_${String(Math.max(0, Math.trunc(numeric))).padStart(width, "0")}`;
 }
 
 function assignRarityFromHighlightScore(score) {
@@ -274,6 +305,11 @@ function normalizeHighlightDetail(highlight, index = 0) {
 
   return {
     caption,
+    segment_id: isObject
+      ? normalizeSegmentId(highlight.segment_id ?? highlight.segmentId)
+      : "",
+    consistency_score: parseConfidenceValue(isObject ? highlight.consistency_score : undefined),
+    event_type: isObject ? String(highlight.event_type || "").trim() : "",
     alignment_score: Number.isFinite(alignmentScore) ? alignmentScore : null,
     disagreement_rate: Number.isFinite(disagreementRate) ? disagreementRate : null,
     high_disagreement: highDisagreement,
@@ -307,9 +343,7 @@ function averageConfidenceFromDetails(details, limit = 0) {
 function formatConfidenceLabel(value) {
   const normalized = parseConfidenceValue(value);
   if (!Number.isFinite(normalized)) return "N/A";
-  const percentage = normalized * 100;
-  const rounded = Math.round(percentage * 10) / 10;
-  return `${Number.isInteger(rounded) ? rounded.toFixed(0) : rounded.toFixed(1)}%`;
+  return `${(normalized * 100).toFixed(2)}%`;
 }
 
 function deriveLiveAlignmentScore(cueAlignment, reelAlignment, fallbackScore) {
@@ -317,11 +351,9 @@ function deriveLiveAlignmentScore(cueAlignment, reelAlignment, fallbackScore) {
   const reel = parseConfidenceValue(reelAlignment);
   const fallback = parseConfidenceValue(fallbackScore);
 
-  if (Number.isFinite(cue) && Number.isFinite(reel)) {
-    // Blend cue-level movement with stream-level baseline so selected/neutral can diverge naturally.
-    return (cue * 0.82) + (reel * 0.18);
-  }
-  if (Number.isFinite(cue)) return cue;
+  // Prefer cue-level alignment when available and non-zero.
+  // Some legacy artifacts emit zero as a missing placeholder.
+  if (Number.isFinite(cue) && cue > 0) return cue;
   if (Number.isFinite(reel)) return reel;
   return Number.isFinite(fallback) ? fallback : null;
 }
@@ -341,6 +373,7 @@ function mergeCaptionsWithEvidence(captions, evidenceRows) {
     if (caption && typeof caption === "object" && !Array.isArray(caption)) {
       return {
         ...caption,
+        segment_id: normalizeSegmentId(caption.segment_id ?? caption.segmentId ?? evidence?.segment_id),
         score: caption.score ?? caption.confidence ?? score,
         confidence: caption.confidence ?? caption.score ?? score,
       };
@@ -350,7 +383,7 @@ function mergeCaptionsWithEvidence(captions, evidenceRows) {
       caption: String(caption || "").trim(),
       score,
       confidence: score,
-      segment_id: evidence?.segment_id,
+      segment_id: normalizeSegmentId(evidence?.segment_id),
     };
   });
 }
@@ -379,12 +412,382 @@ function parseCaptionDetailRows(rows) {
         caption,
         score,
         confidence: score,
-        segment_id: row?.segment_id,
+        segment_id: normalizeSegmentId(row?.segment_id),
         disagreement_rate: disagreementRate,
         high_disagreement: highDisagreement,
       };
     })
     .filter(Boolean);
+}
+
+function stripDiacritics(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function normalizeEvidenceKey(value) {
+  return slugifyText(stripDiacritics(String(value || "").replace(/\./g, " ")));
+}
+
+function extractEvidenceKeyFromFilename(filename) {
+  const name = String(filename || "").trim().toLowerCase();
+  if (!name.startsWith("evidence_log_") || !name.endsWith(".json")) return "";
+  return name.slice("evidence_log_".length, -".json".length).trim();
+}
+
+function buildPreferredEvidenceKeyCandidates(preferenceType, preferenceDetail) {
+  const type = String(preferenceType || "").trim().toLowerCase();
+  const detailRaw = String(preferenceDetail || "").trim();
+  const keys = [];
+  const add = (value) => {
+    const key = normalizeEvidenceKey(value);
+    if (key) keys.push(key);
+  };
+
+  if (type === "team") {
+    const resolvedTeam = resolveTeamName(detailRaw) || detailRaw;
+    perspectiveKeysForTeam(resolvedTeam).forEach((key) => add(key));
+    add(resolvedTeam);
+  } else if (type === "individual") {
+    const compactDetail = stripDiacritics(detailRaw)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "");
+    const odegaardAliases = [
+      "odegaard",
+      "odegard",
+      "oedegaard",
+      "oddegaard",
+      "oddergard",
+      "sorddergard",
+      "modegaard",
+      "martinodegaard"
+    ];
+    if (compactDetail && odegaardAliases.some((alias) => compactDetail.includes(alias) || alias.includes(compactDetail))) {
+      // Force preferred lookup to hit evidence_log_odegaard.json first.
+      add("odegaard");
+    }
+
+    add(detailRaw);
+    const asciiTokens = stripDiacritics(detailRaw)
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter(Boolean);
+    if (asciiTokens.length > 0) {
+      add(asciiTokens.join("_"));
+      add(asciiTokens[asciiTokens.length - 1]);
+      const withoutInitials = asciiTokens.filter((token) => token.length > 1);
+      if (withoutInitials.length > 0) {
+        add(withoutInitials.join("_"));
+        add(withoutInitials[withoutInitials.length - 1]);
+      }
+    }
+  } else if (detailRaw) {
+    add(detailRaw);
+  }
+
+  return Array.from(new Set(keys.filter(Boolean)));
+}
+
+function buildPreferredEvidenceFilenames(preferenceType, preferenceDetail, options = {}) {
+  const files = [];
+  const addFile = (filename) => {
+    const name = String(filename || "").trim();
+    if (!name) return;
+    if (!files.includes(name)) files.push(name);
+  };
+  const addEvidenceFileForKey = (key) => {
+    const normalized = normalizeEvidenceKey(key);
+    if (!normalized) return;
+    addFile(`evidence_log_${normalized}.json`);
+  };
+
+  const type = String(preferenceType || "").trim().toLowerCase();
+  const preferredTeam = String(options?.preferredTeam || "").trim();
+
+  // Priority order:
+  // 1) Player evidence log (for individual preferences)
+  // 2) Team evidence log (for team preferences, or fallback for individual)
+  // 3) Generic evidence_log.json fallback
+  if (type === "individual") {
+    const playerKeys = buildPreferredEvidenceKeyCandidates(preferenceType, preferenceDetail);
+    playerKeys.forEach((key) => addEvidenceFileForKey(key));
+
+    if (preferredTeam) {
+      perspectiveKeysForTeam(preferredTeam).forEach((key) => addEvidenceFileForKey(key));
+      addEvidenceFileForKey(preferredTeam);
+    }
+  } else if (type === "team") {
+    const resolvedTeam = resolveTeamName(preferenceDetail) || String(preferenceDetail || "").trim();
+    perspectiveKeysForTeam(resolvedTeam).forEach((key) => addEvidenceFileForKey(key));
+    addEvidenceFileForKey(resolvedTeam);
+
+    const teamKeys = buildPreferredEvidenceKeyCandidates(preferenceType, preferenceDetail);
+    teamKeys.forEach((key) => addEvidenceFileForKey(key));
+  } else {
+    const keys = buildPreferredEvidenceKeyCandidates(preferenceType, preferenceDetail);
+    keys.forEach((key) => addEvidenceFileForKey(key));
+  }
+
+  addFile("evidence_log.json");
+  return files;
+}
+
+async function fetchOutputJsonFile(matchName, filename) {
+  const response = await fetch(
+    `${API_BASE_URL}/api/output-files/${encodeURIComponent(matchName)}/${encodeURIComponent(filename)}`
+  );
+  if (!response.ok) return null;
+  return response.json().catch(() => null);
+}
+
+async function fetchFirstExistingOutputJson(matchName, filenames = []) {
+  for (const filename of Array.from(new Set((Array.isArray(filenames) ? filenames : []).filter(Boolean)))) {
+    try {
+      const payload = await fetchOutputJsonFile(matchName, filename);
+      if (payload && typeof payload === "object") {
+        return { payload, filename };
+      }
+    } catch {
+      // Try next file candidate.
+    }
+  }
+  return { payload: null, filename: "" };
+}
+
+function parseEvidenceClipRows(payload, options = {}) {
+  const clipEvidence = Array.isArray(payload?.clip_evidence) ? payload.clip_evidence : [];
+  const captionField = String(options?.captionField || "caption_reel_a");
+  const fallbackCaptionField = String(options?.fallbackCaptionField || "caption_reel_b");
+  const alignmentField = String(options?.alignmentField || "alignment_score_reel_a");
+
+  return clipEvidence
+    .map((entry, index) => {
+      if (!entry || typeof entry !== "object") return null;
+      const caption = normalizeMomentTextForDisplay(
+        String(
+          entry?.[captionField]
+          ?? entry?.[fallbackCaptionField]
+          ?? entry?.caption
+          ?? entry?.text
+          ?? entry?.d17_fields?.narrative
+          ?? ""
+        ).trim()
+      );
+      if (!caption) return null;
+      const alignment = parseConfidenceValue(
+        entry?.[alignmentField]
+        ?? entry?.alignment_score_reel_a
+        ?? entry?.alignment_score_reel_b
+        ?? entry?.alignment_score
+        ?? entry?.score
+      );
+      const score = entry?.d15_fields?.importance_score
+        ?? entry?.d15_fields?.confidence
+        ?? alignment
+        ?? entry?.score
+        ?? entry?.confidence;
+      const segmentId = normalizeSegmentId(entry?.segment_id || `segment_${String(index + 1).padStart(3, "0")}`);
+      return {
+        caption,
+        score,
+        confidence: score,
+        segment_id: segmentId,
+        event_type: String(entry?.event_type || "").trim(),
+        alignment_score: Number.isFinite(alignment) ? alignment : null
+      };
+    })
+    .filter(Boolean);
+}
+
+function extractEvidenceSummaryAlignment(payload, preferredKeys = []) {
+  const summary = payload?.summary && typeof payload.summary === "object"
+    ? payload.summary
+    : {};
+  const keys = Array.isArray(preferredKeys) && preferredKeys.length > 0
+    ? preferredKeys
+    : ["reel_a_alignment_score", "reel_b_alignment_score"];
+
+  for (const key of keys) {
+    const value = parseConfidenceValue(summary?.[key] ?? payload?.[key]);
+    if (Number.isFinite(value)) return value;
+  }
+  return null;
+}
+
+function extractHallucinationState(payload) {
+  if (!payload || typeof payload !== "object") {
+    return {
+      flagged: false,
+      unsupportedMentions: [],
+      retryCount: null,
+    };
+  }
+
+  const summary = payload?.summary && typeof payload.summary === "object"
+    ? payload.summary
+    : {};
+
+  const rawFlag = summary?.hallucination_flagged ?? payload?.hallucination_flagged;
+  const flagged = rawFlag === true || String(rawFlag || "").toLowerCase() === "true";
+
+  const unsupportedMentionsRaw = Array.isArray(summary?.unsupported_mentions)
+    ? summary.unsupported_mentions
+    : (Array.isArray(payload?.unsupported_mentions) ? payload.unsupported_mentions : []);
+  const unsupportedMentions = unsupportedMentionsRaw
+    .map((value) => String(value || "").trim())
+    .filter(Boolean);
+
+  const retryRaw = summary?.total_retries ?? payload?.retry_count ?? payload?.total_retries;
+  const retryCount = Number.isFinite(Number(retryRaw)) ? Number(retryRaw) : null;
+
+  return {
+    flagged,
+    unsupportedMentions,
+    retryCount,
+  };
+}
+
+function extractHallucinationTotalsFromFullEvaluation(payload) {
+  if (!payload || typeof payload !== "object") return null;
+  const verifier = payload?.verifier_analysis && typeof payload.verifier_analysis === "object"
+    ? payload.verifier_analysis
+    : {};
+  const total = Number(verifier?.total_hallucinations_detected ?? payload?.total_hallucinations_detected);
+  return Number.isFinite(total) ? total : null;
+}
+
+function mapHallucinationMentionStream(reelLabel, fallbackStream = "Verifier") {
+  const reel = String(reelLabel || "").trim().toUpperCase();
+  if (reel === "A") return "Selected";
+  if (reel === "B") return "Neutral";
+  return String(fallbackStream || "").trim() || "Verifier";
+}
+
+function parseHallucinationUnsupportedMention(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return null;
+
+  const reelMatch = raw.match(/^Reel\s*([AB])\s*\[\s*(segment[\s_-]*\d+)\s*\]\s*:\s*(.*)$/i);
+  if (reelMatch) {
+    return {
+      reel: String(reelMatch[1] || "").trim().toUpperCase(),
+      segment_id: normalizeSegmentId(reelMatch[2]),
+      caption: String(reelMatch[3] || "").trim() || raw,
+      raw,
+    };
+  }
+
+  const segmentMatch = raw.match(/\[\s*(segment[\s_-]*\d+)\s*\]/i) || raw.match(/\b(segment[\s_-]*\d+)\b/i);
+  const colonIndex = raw.indexOf(":");
+  const caption = colonIndex >= 0
+    ? String(raw.slice(colonIndex + 1) || "").trim() || raw
+    : raw;
+
+  return {
+    reel: "",
+    segment_id: normalizeSegmentId(segmentMatch?.[1]),
+    caption,
+    raw,
+  };
+}
+
+function buildHallucinationCueSignals(candidates = [], options = {}) {
+  const normalized = (Array.isArray(candidates) ? candidates : [])
+    .filter((item) => item && typeof item === "object")
+    .map((item) => ({
+      stream: String(item?.stream || "").trim() || "Verifier",
+      flagged: item?.flagged === true,
+      unsupportedMentions: Array.isArray(item?.unsupportedMentions)
+        ? item.unsupportedMentions.map((v) => String(v || "").trim()).filter(Boolean)
+        : [],
+      retryCount: Number.isFinite(Number(item?.retryCount)) ? Number(item.retryCount) : null,
+    }))
+    .filter((item) => item.flagged);
+
+  const totalFromEval = Number(options?.totalHallucinationsDetected);
+  const hasTotalFromEval = Number.isFinite(totalFromEval) && totalFromEval > 0;
+  const rawSignals = [];
+
+  normalized.forEach((item) => {
+    if (item.unsupportedMentions.length === 0) {
+      rawSignals.push({
+        stream: item.stream,
+        segment_id: "",
+        cueIndex: null,
+        retryCount: item.retryCount,
+        totalHallucinationsDetected: hasTotalFromEval ? totalFromEval : null,
+        caption: "Verifier detected unsupported content and recaptioned.",
+      });
+      return;
+    }
+
+    item.unsupportedMentions.forEach((mention) => {
+      const parsed = parseHallucinationUnsupportedMention(mention);
+      if (!parsed) return;
+      rawSignals.push({
+        stream: mapHallucinationMentionStream(parsed.reel, item.stream),
+        segment_id: normalizeSegmentId(parsed.segment_id),
+        cueIndex: null,
+        retryCount: item.retryCount,
+        totalHallucinationsDetected: hasTotalFromEval ? totalFromEval : item.unsupportedMentions.length,
+        caption: parsed.caption || "Verifier detected unsupported content and recaptioned.",
+      });
+    });
+  });
+
+  if (rawSignals.length === 0 && hasTotalFromEval) {
+    rawSignals.push({
+      stream: "Verifier",
+      segment_id: "",
+      cueIndex: null,
+      retryCount: null,
+      totalHallucinationsDetected: totalFromEval,
+      caption: "Verifier detected hallucinations in evaluation runs.",
+    });
+  }
+
+  const deduped = [];
+  const seen = new Set();
+  rawSignals.forEach((item) => {
+    const key = [
+      String(item.stream || "").toLowerCase(),
+      String(item.segment_id || "").toLowerCase(),
+      String(item.caption || "").toLowerCase(),
+    ].join("|");
+    if (seen.has(key)) return;
+    seen.add(key);
+    deduped.push(item);
+  });
+
+  deduped.sort((a, b) => {
+    const aSegment = a.segment_id ? 1 : 0;
+    const bSegment = b.segment_id ? 1 : 0;
+    if (aSegment !== bSegment) return bSegment - aSegment;
+    const aTotal = Number.isFinite(a.totalHallucinationsDetected) ? a.totalHallucinationsDetected : -1;
+    const bTotal = Number.isFinite(b.totalHallucinationsDetected) ? b.totalHallucinationsDetected : -1;
+    if (aTotal !== bTotal) return bTotal - aTotal;
+    const aRetry = Number.isFinite(a.retryCount) ? a.retryCount : -1;
+    const bRetry = Number.isFinite(b.retryCount) ? b.retryCount : -1;
+    return bRetry - aRetry;
+  });
+
+  return deduped;
+}
+
+function buildHallucinationAlertFromSignal(signal, options = {}) {
+  if (!signal || typeof signal !== "object") return null;
+  return {
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    stream: String(options?.stream || signal.stream || "").trim() || "Verifier",
+    cueIndex: Number.isFinite(options?.cueIndex) ? Number(options.cueIndex) : null,
+    segment_id: normalizeSegmentId(options?.segment_id ?? signal.segment_id),
+    retryCount: Number.isFinite(signal.retryCount) ? signal.retryCount : null,
+    caption: String(signal.caption || "").trim() || "Verifier detected unsupported content and recaptioned.",
+    totalHallucinationsDetected: Number.isFinite(signal.totalHallucinationsDetected)
+      ? signal.totalHallucinationsDetected
+      : null,
+  };
 }
 
 function buildPerClipAlignmentBySegment(payload) {
@@ -394,12 +797,12 @@ function buildPerClipAlignmentBySegment(payload) {
   const lookup = {};
   entries.forEach((entry) => {
     const key = String(entry?.segment_id || "").trim();
-    const alignmentScore = parseConfidenceValue(entry?.mean_pairwise_similarity);
+    const consistencyScore = parseConfidenceValue(entry?.mean_pairwise_similarity);
     const disagreementRate = parseRateValue(entry?.disagreement_rate);
     const highDisagreement = entry?.high_disagreement === true || String(entry?.high_disagreement || "").toLowerCase() === "true";
     if (!key) return;
     lookup[key] = {
-      alignment_score: Number.isFinite(alignmentScore) ? alignmentScore : null,
+      consistency_score: Number.isFinite(consistencyScore) ? consistencyScore : null,
       disagreement_rate: Number.isFinite(disagreementRate) ? disagreementRate : null,
       high_disagreement: highDisagreement,
       event_type: String(entry?.event_type || "").trim(),
@@ -413,11 +816,11 @@ function applyPerClipAlignmentToCaptionRows(rows, alignmentBySegment = {}) {
   return rows.map((row) => {
     const key = String(row?.segment_id || "").trim();
     const mapped = alignmentBySegment?.[key];
-    const mappedAlignment = parseConfidenceValue(mapped?.alignment_score);
+    const mappedConsistency = parseConfidenceValue(mapped?.consistency_score);
     const mappedDisagreement = parseRateValue(mapped?.disagreement_rate);
     const mappedHighDisagreement = mapped?.high_disagreement === true || String(mapped?.high_disagreement || "").toLowerCase() === "true";
     if (
-      !Number.isFinite(mappedAlignment)
+      !Number.isFinite(mappedConsistency)
       && !Number.isFinite(mappedDisagreement)
       && !mappedHighDisagreement
     ) {
@@ -425,25 +828,40 @@ function applyPerClipAlignmentToCaptionRows(rows, alignmentBySegment = {}) {
     }
     return {
       ...row,
-      score: Number.isFinite(mappedAlignment) ? mappedAlignment : row?.score,
-      confidence: Number.isFinite(mappedAlignment) ? mappedAlignment : row?.confidence,
-      alignment_score: Number.isFinite(mappedAlignment) ? mappedAlignment : (row?.alignment_score ?? null),
+      consistency_score: Number.isFinite(mappedConsistency) ? mappedConsistency : (row?.consistency_score ?? null),
       disagreement_rate: Number.isFinite(mappedDisagreement) ? mappedDisagreement : (row?.disagreement_rate ?? null),
       high_disagreement: mappedHighDisagreement || row?.high_disagreement === true,
+      event_type: row?.event_type || String(mapped?.event_type || "").trim(),
+    };
+  });
+}
+
+function mergePerClipDisagreementIntoCaptionRows(rows, alignmentBySegment = {}) {
+  if (!Array.isArray(rows) || rows.length === 0) return [];
+  return rows.map((row) => {
+    const key = String(row?.segment_id || "").trim();
+    const mapped = alignmentBySegment?.[key];
+    if (!mapped || typeof mapped !== "object") return row;
+    const mappedConsistency = parseConfidenceValue(mapped?.consistency_score);
+    const mappedDisagreement = parseRateValue(mapped?.disagreement_rate);
+    const mappedHighDisagreement = mapped?.high_disagreement === true || String(mapped?.high_disagreement || "").toLowerCase() === "true";
+    return {
+      ...row,
+      consistency_score: Number.isFinite(mappedConsistency) ? mappedConsistency : (row?.consistency_score ?? null),
+      disagreement_rate: Number.isFinite(mappedDisagreement) ? mappedDisagreement : (row?.disagreement_rate ?? null),
+      high_disagreement: mappedHighDisagreement || row?.high_disagreement === true,
+      event_type: row?.event_type || String(mapped?.event_type || "").trim(),
     };
   });
 }
 
 function isFactualInconsistencyDetail(detail) {
   if (!detail || typeof detail !== "object") return false;
-  const alignmentScore = parseConfidenceValue(detail?.alignment_score);
-  const disagreementRate = parseRateValue(detail?.disagreement_rate);
-  const highDisagreement = detail?.high_disagreement === true;
-  return Boolean(
-    highDisagreement
-    || (Number.isFinite(disagreementRate) && disagreementRate >= FACTUAL_INCONSISTENCY_DISAGREEMENT_THRESHOLD)
-    || (Number.isFinite(alignmentScore) && alignmentScore < FACTUAL_INCONSISTENCY_ALIGNMENT_THRESHOLD)
+  const disagreementRate = parseRateValue(
+    detail?.disagreement_rate
+    ?? detail?.disagreementRate
   );
+  return Number.isFinite(disagreementRate) && disagreementRate >= FACTUAL_INCONSISTENCY_DISAGREEMENT_THRESHOLD;
 }
 
 function extractAlignmentScoresFromFullEvaluation(payload, context = {}) {
@@ -576,6 +994,73 @@ function normalizeTeamKey(value) {
 
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+const PLAYER_ALIAS_OVERRIDES = {
+  odegaard: { canonical: "Martin Odegaard", team: "Arsenal" },
+  odegard: { canonical: "Martin Odegaard", team: "Arsenal" },
+  oedegaard: { canonical: "Martin Odegaard", team: "Arsenal" },
+  oddegaard: { canonical: "Martin Odegaard", team: "Arsenal" },
+  oddergard: { canonical: "Martin Odegaard", team: "Arsenal" },
+  sorddergard: { canonical: "Martin Odegaard", team: "Arsenal" },
+  modegaard: { canonical: "Martin Odegaard", team: "Arsenal" }
+};
+
+function normalizePlayerKey(value) {
+  return stripDiacritics(String(value || ""))
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function compactPlayerKey(value) {
+  return normalizePlayerKey(value).replace(/\s+/g, "");
+}
+
+function resolvePreferredPlayerSelection(preferenceDetail, players = []) {
+  const raw = String(preferenceDetail || "").trim();
+  if (!raw) return { name: "", team: "" };
+
+  const normalized = normalizePlayerKey(raw);
+  const compact = compactPlayerKey(raw);
+  const pool = Array.isArray(players) ? players.filter(Boolean) : [];
+
+  const toResult = (name, team) => ({
+    name: String(name || raw).trim() || raw,
+    team: resolveTeamName(team) || String(team || "").trim()
+  });
+
+  const exact = pool.find((player) => normalizePlayerKey(player?.name) === normalized);
+  if (exact) return toResult(exact.name, exact.team);
+
+  const compactExact = pool.find((player) => compactPlayerKey(player?.name) === compact);
+  if (compactExact) return toResult(compactExact.name, compactExact.team);
+
+  if (compact.length >= 6) {
+    const containsMatch = pool.find((player) => {
+      const playerCompact = compactPlayerKey(player?.name);
+      return playerCompact && (playerCompact.includes(compact) || compact.includes(playerCompact));
+    });
+    if (containsMatch) return toResult(containsMatch.name, containsMatch.team);
+  }
+
+  const override = PLAYER_ALIAS_OVERRIDES[compact]
+    || Object.entries(PLAYER_ALIAS_OVERRIDES).find(([alias]) => compact.includes(alias) || alias.includes(compact))?.[1]
+    || null;
+
+  if (override) {
+    const canonicalCompact = compactPlayerKey(override.canonical);
+    const canonicalFromPool = pool.find((player) => compactPlayerKey(player?.name) === canonicalCompact)
+      || pool.find((player) => {
+        const playerCompact = compactPlayerKey(player?.name);
+        return playerCompact && (playerCompact.includes(canonicalCompact) || canonicalCompact.includes(playerCompact));
+      });
+    if (canonicalFromPool) return toResult(canonicalFromPool.name, canonicalFromPool.team);
+    return toResult(override.canonical, override.team);
+  }
+
+  return { name: raw, team: "" };
 }
 
 const EPL_TEAM_DATABASE = [
@@ -1259,8 +1744,8 @@ function buildUserPreference(
 
     return `Source mode: text. User request: ${sourcePrompt}. `
       + `${inferredMatchup}${inferredTeamPreference}`
-      + "Extract key terms/entities from this request and generate the best available personalized and neutral highlights."
-      + " If the request is broad or non-football, still produce a meaningful recap from available match events.";
+      + "Extract football entities from this request and generate the best available personalized and neutral football highlights."
+      + " Keep the output strictly football-focused and grounded in available match events.";
   }
 
   const base = `Preference type: ${preferenceType}; detail: ${preferenceDetail}; tone: ${tone}.`;
@@ -1932,22 +2417,23 @@ function buildShowcaseResult(showcaseData, options = {}) {
     const mappedCaptionDetails = Array.isArray(captionDetailsByPerspective?.[perspective])
       ? captionDetailsByPerspective[perspective]
       : [];
+    const hasSelectedEvidenceForPerspective = (
+      perspective === String(selectedPerspectiveKey || "").trim().toLowerCase()
+      && Array.isArray(selectedCaptionDetails)
+      && selectedCaptionDetails.length > 0
+    );
+    const hasNeutralEvidenceForPerspective = (
+      perspective === "neutral"
+      && Array.isArray(neutralCaptionDetails)
+      && neutralCaptionDetails.length > 0
+    );
     const highlightSource = Array.isArray(reel?.captions_detailed)
       ? reel.captions_detailed
-      : (
-        mappedCaptionDetails.length > 0
-          ? mappedCaptionDetails
-          : (
-            perspective === "neutral" && Array.isArray(neutralCaptionDetails) && neutralCaptionDetails.length > 0
-              ? neutralCaptionDetails
-              : (
-              perspective === String(selectedPerspectiveKey || "").trim().toLowerCase()
-              && Array.isArray(selectedCaptionDetails) && selectedCaptionDetails.length > 0
-              ? selectedCaptionDetails
-              : (Array.isArray(reel?.captions) ? reel.captions : [])
-              )
-          )
-      );
+      : hasSelectedEvidenceForPerspective
+        ? selectedCaptionDetails
+        : hasNeutralEvidenceForPerspective
+          ? neutralCaptionDetails
+          : (mappedCaptionDetails.length > 0 ? mappedCaptionDetails : (Array.isArray(reel?.captions) ? reel.captions : []));
     const highlightsDetailed = buildHighlightDetails(highlightSource);
     const highlights = highlightsDetailed.map((item) => item.caption);
 
@@ -2189,8 +2675,12 @@ export default function App() {
   const [playerPoolMessage, setPlayerPoolMessage] = useState("");
   const [playerHeadshotFailed, setPlayerHeadshotFailed] = useState({});
   const [factualInconsistencyAlert, setFactualInconsistencyAlert] = useState(null);
+  const [hallucinationAlert, setHallucinationAlert] = useState(null);
+  const [hallucinationCueSignals, setHallucinationCueSignals] = useState([]);
   const alertDismissTimerRef = useRef(null);
+  const hallucinationDismissTimerRef = useRef(null);
   const lastAlertSignatureRef = useRef("");
+  const lastHallucinationSignatureRef = useRef("");
   const previousCueIndicesRef = useRef({ selected: -1, neutral: -1 });
   const headerMetaLabel = HEADER_NAV_ITEMS.find((item) => item.key === headerMode)?.metaLabel || "Recent EPL Scores";
   const backendHighlights = Array.isArray(backendFeed?.highlights)
@@ -2387,6 +2877,15 @@ export default function App() {
     sourceMode !== "teams" || selectedTeams.includes(player.team)
   );
   const availablePlayerNames = Array.from(new Set(selectablePlayers.map((player) => player.name)));
+  const resolvedPreferredPlayer = String(preferenceType || "").toLowerCase() === "individual"
+    ? resolvePreferredPlayerSelection(preferenceDetail, selectablePlayers)
+    : { name: "", team: "" };
+  const effectivePreferenceDetail = String(preferenceType || "").toLowerCase() === "individual"
+    ? (resolvedPreferredPlayer.name || preferenceDetail)
+    : preferenceDetail;
+  const effectivePreferredTeamFromPlayer = String(preferenceType || "").toLowerCase() === "individual"
+    ? (resolvedPreferredPlayer.team || "")
+    : "";
 
   const preferenceTypeOptions = ["team", "individual"];
 
@@ -2410,6 +2909,15 @@ export default function App() {
     previousCueIndicesRef.current = { selected: -1, neutral: -1 };
     setFactualInconsistencyAlert(null);
   };
+  const resetHallucinationAlert = () => {
+    if (hallucinationDismissTimerRef.current) {
+      clearTimeout(hallucinationDismissTimerRef.current);
+      hallucinationDismissTimerRef.current = null;
+    }
+    lastHallucinationSignatureRef.current = "";
+    setHallucinationCueSignals([]);
+    setHallucinationAlert(null);
+  };
 
   const hasValidSource = sourceMode === "teams"
     ? teamA && teamB && teamA !== teamB
@@ -2425,6 +2933,7 @@ export default function App() {
 
   const handleSourceModeChange = (nextMode) => {
     resetFactualInconsistencyAlert();
+    resetHallucinationAlert();
     setSourceMode(nextMode);
     setTeamA("");
     setTeamB("");
@@ -2704,8 +3213,13 @@ export default function App() {
     if (preferenceType !== "individual") return;
     if (!preferenceDetail) return;
     if (availablePlayerNames.includes(preferenceDetail)) return;
+    const resolved = resolvePreferredPlayerSelection(preferenceDetail, selectablePlayers);
+    if (resolved.name && availablePlayerNames.includes(resolved.name)) {
+      if (resolved.name !== preferenceDetail) setPreferenceDetail(resolved.name);
+      return;
+    }
     setPreferenceDetail("");
-  }, [preferenceType, preferenceDetail, availablePlayerNames]);
+  }, [preferenceType, preferenceDetail, availablePlayerNames, selectablePlayers]);
 
   useEffect(() => {
     if (!preferenceType) return;
@@ -2893,6 +3407,10 @@ export default function App() {
         clearTimeout(alertDismissTimerRef.current);
         alertDismissTimerRef.current = null;
       }
+      if (hallucinationDismissTimerRef.current) {
+        clearTimeout(hallucinationDismissTimerRef.current);
+        hallucinationDismissTimerRef.current = null;
+      }
     };
   }, []);
 
@@ -2914,6 +3432,23 @@ export default function App() {
   }, [factualInconsistencyAlert]);
 
   useEffect(() => {
+    if (!hallucinationAlert) return;
+    if (hallucinationDismissTimerRef.current) {
+      clearTimeout(hallucinationDismissTimerRef.current);
+    }
+    hallucinationDismissTimerRef.current = setTimeout(() => {
+      setHallucinationAlert(null);
+      hallucinationDismissTimerRef.current = null;
+    }, HALLUCINATION_POPUP_MS);
+    return () => {
+      if (hallucinationDismissTimerRef.current) {
+        clearTimeout(hallucinationDismissTimerRef.current);
+        hallucinationDismissTimerRef.current = null;
+      }
+    };
+  }, [hallucinationAlert]);
+
+  useEffect(() => {
     const currentSelected = Number.isFinite(selectedLiveCueIndex) ? selectedLiveCueIndex : -1;
     const currentNeutral = Number.isFinite(neutralLiveCueIndex) ? neutralLiveCueIndex : -1;
     const previous = previousCueIndicesRef.current || { selected: -1, neutral: -1 };
@@ -2924,6 +3459,7 @@ export default function App() {
     if (selectedRewound || neutralRewound) {
       // Allow alert to re-fire when user replays/seeks backward.
       lastAlertSignatureRef.current = "";
+      lastHallucinationSignatureRef.current = "";
     }
 
     previousCueIndicesRef.current = {
@@ -2941,7 +3477,12 @@ export default function App() {
         stream: "Selected",
         cueIndex: selectedLiveCueIndex,
         caption: String(selectedLiveCueDetail?.caption || selectedCommentaryDisplay || "").trim(),
-        alignment: parseConfidenceValue(selectedLiveCueDetail?.alignment_score),
+        importance: parseConfidenceValue(
+          selectedLiveCueDetail?.importance_score
+          ?? selectedLiveCueDetail?.score
+          ?? selectedLiveCueDetail?.confidence
+        ),
+        alignment: parseConfidenceValue(selectedLiveCueDetail?.consistency_score ?? selectedLiveCueDetail?.alignment_score),
         disagreement: parseRateValue(selectedLiveCueDetail?.disagreement_rate),
         highDisagreement: selectedLiveCueDetail?.high_disagreement === true,
       });
@@ -2953,7 +3494,12 @@ export default function App() {
           ? neutralLiveCueIndex
           : selectedLiveCueIndex,
         caption: String(neutralLiveCueDetail?.caption || neutralCommentaryDisplay || "").trim(),
-        alignment: parseConfidenceValue(neutralLiveCueDetail?.alignment_score),
+        importance: parseConfidenceValue(
+          neutralLiveCueDetail?.importance_score
+          ?? neutralLiveCueDetail?.score
+          ?? neutralLiveCueDetail?.confidence
+        ),
+        alignment: parseConfidenceValue(neutralLiveCueDetail?.consistency_score ?? neutralLiveCueDetail?.alignment_score),
         disagreement: parseRateValue(neutralLiveCueDetail?.disagreement_rate),
         highDisagreement: neutralLiveCueDetail?.high_disagreement === true,
       });
@@ -2966,7 +3512,10 @@ export default function App() {
       if (aSeverity !== bSeverity) return bSeverity - aSeverity;
       const aAlignment = Number.isFinite(a.alignment) ? a.alignment : 1;
       const bAlignment = Number.isFinite(b.alignment) ? b.alignment : 1;
-      return aAlignment - bAlignment;
+      if (aAlignment !== bAlignment) return aAlignment - bAlignment;
+      const aImportance = Number.isFinite(a.importance) ? a.importance : 1;
+      const bImportance = Number.isFinite(b.importance) ? b.importance : 1;
+      return aImportance - bImportance;
     });
 
     const top = candidates[0];
@@ -2974,6 +3523,7 @@ export default function App() {
       String(result?.matchup || ""),
       top.stream,
       Number.isFinite(top.cueIndex) ? top.cueIndex : "na",
+      Number.isFinite(top.importance) ? top.importance.toFixed(3) : "na",
       Number.isFinite(top.alignment) ? top.alignment.toFixed(3) : "na",
       Number.isFinite(top.disagreement) ? top.disagreement.toFixed(3) : "na",
       top.highDisagreement ? "high" : "normal",
@@ -2987,7 +3537,8 @@ export default function App() {
       id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
       stream: top.stream,
       cueIndex: top.cueIndex,
-      caption: top.caption || "Potential mismatch detected in current caption.",
+      caption: top.caption || "High-disagreement clip triggered disagreement challenge.",
+      importance: top.importance,
       alignment: top.alignment,
       disagreement: top.disagreement,
       highDisagreement: top.highDisagreement,
@@ -2999,19 +3550,125 @@ export default function App() {
     selectedCommentaryDisplay,
     neutralCommentaryDisplay,
     selectedLiveCueDetail?.caption,
+    selectedLiveCueDetail?.consistency_score,
     selectedLiveCueDetail?.alignment_score,
+    selectedLiveCueDetail?.score,
+    selectedLiveCueDetail?.confidence,
     selectedLiveCueDetail?.disagreement_rate,
     selectedLiveCueDetail?.high_disagreement,
     neutralLiveCueDetail?.caption,
+    neutralLiveCueDetail?.consistency_score,
     neutralLiveCueDetail?.alignment_score,
+    neutralLiveCueDetail?.score,
+    neutralLiveCueDetail?.confidence,
     neutralLiveCueDetail?.disagreement_rate,
     neutralLiveCueDetail?.high_disagreement,
+  ]);
+
+  useEffect(() => {
+    if (!result) return;
+    if (!Array.isArray(hallucinationCueSignals) || hallucinationCueSignals.length === 0) return;
+
+    const selectedSegmentId = normalizeSegmentId(selectedLiveCueDetail?.segment_id);
+    const neutralSegmentId = normalizeSegmentId(neutralLiveCueDetail?.segment_id);
+    if (!selectedSegmentId && !neutralSegmentId) return;
+
+    const candidates = [];
+    hallucinationCueSignals.forEach((signal) => {
+      const signalSegmentId = normalizeSegmentId(signal?.segment_id);
+      if (!signalSegmentId) return;
+
+      const streamKey = String(signal?.stream || "").trim().toLowerCase();
+      if (streamKey === "selected") {
+        if (selectedSegmentId && selectedSegmentId === signalSegmentId) {
+          candidates.push({
+            ...signal,
+            stream: "Selected",
+            cueIndex: Number.isFinite(selectedLiveCueIndex) ? selectedLiveCueIndex : null,
+            segment_id: signalSegmentId,
+          });
+        }
+        return;
+      }
+
+      if (streamKey === "neutral") {
+        if (neutralSegmentId && neutralSegmentId === signalSegmentId) {
+          candidates.push({
+            ...signal,
+            stream: "Neutral",
+            cueIndex: Number.isFinite(neutralLiveCueIndex) ? neutralLiveCueIndex : null,
+            segment_id: signalSegmentId,
+          });
+        }
+        return;
+      }
+
+      if (selectedSegmentId && selectedSegmentId === signalSegmentId) {
+        candidates.push({
+          ...signal,
+          stream: "Selected",
+          cueIndex: Number.isFinite(selectedLiveCueIndex) ? selectedLiveCueIndex : null,
+          segment_id: signalSegmentId,
+        });
+      }
+      if (neutralSegmentId && neutralSegmentId === signalSegmentId) {
+        candidates.push({
+          ...signal,
+          stream: "Neutral",
+          cueIndex: Number.isFinite(neutralLiveCueIndex) ? neutralLiveCueIndex : null,
+          segment_id: signalSegmentId,
+        });
+      }
+    });
+
+    if (!candidates.length) return;
+
+    candidates.sort((a, b) => {
+      const aTotal = Number.isFinite(a.totalHallucinationsDetected) ? a.totalHallucinationsDetected : -1;
+      const bTotal = Number.isFinite(b.totalHallucinationsDetected) ? b.totalHallucinationsDetected : -1;
+      if (aTotal !== bTotal) return bTotal - aTotal;
+      const aRetry = Number.isFinite(a.retryCount) ? a.retryCount : -1;
+      const bRetry = Number.isFinite(b.retryCount) ? b.retryCount : -1;
+      if (aRetry !== bRetry) return bRetry - aRetry;
+      const aStreamPriority = String(a.stream || "").toLowerCase() === "selected" ? 0 : 1;
+      const bStreamPriority = String(b.stream || "").toLowerCase() === "selected" ? 0 : 1;
+      return aStreamPriority - bStreamPriority;
+    });
+
+    const top = candidates[0];
+    const signature = [
+      String(result?.matchup || ""),
+      String(top.stream || ""),
+      String(top.segment_id || ""),
+      Number.isFinite(top.cueIndex) ? String(top.cueIndex) : "na",
+      String(top.caption || ""),
+    ].join("|");
+
+    if (lastHallucinationSignatureRef.current === signature) return;
+    lastHallucinationSignatureRef.current = signature;
+
+    const alert = buildHallucinationAlertFromSignal(top, {
+      stream: top.stream,
+      cueIndex: top.cueIndex,
+      segment_id: top.segment_id,
+    });
+    if (alert) {
+      setHallucinationAlert(alert);
+    }
+  }, [
+    result,
+    hallucinationCueSignals,
+    selectedLiveCueIndex,
+    neutralLiveCueIndex,
+    selectedLiveCueDetail?.segment_id,
+    neutralLiveCueDetail?.segment_id,
   ]);
 
   const handleGenerate = async () => {
     if (!isFormComplete) return;
 
     resetFactualInconsistencyAlert();
+    resetHallucinationAlert();
     setLoading(true);
     setError("");
     setResult(null);
@@ -3085,9 +3742,20 @@ export default function App() {
         } catch {
           fullEvaluationPayload = null;
         }
+
+        const selectedEvidenceFileCandidates = buildPreferredEvidenceFilenames(
+          preferenceType,
+          effectivePreferenceDetail,
+          { preferredTeam: effectivePreferredTeamFromPlayer }
+        );
+        const [selectedEvidenceResult, neutralEvidenceResult] = await Promise.all([
+          fetchFirstExistingOutputJson(showcaseMatchName, selectedEvidenceFileCandidates),
+          fetchFirstExistingOutputJson(showcaseMatchName, ["evidence_log_neutral.json", "evidence_log.json"])
+        ]);
+
         const fullEvalAlignment = extractAlignmentScoresFromFullEvaluation(fullEvaluationPayload, {
           preferenceType,
-          preferenceDetail,
+          preferenceDetail: effectivePreferenceDetail,
           tone: autoTone
         });
         const perClipAlignmentBySegment = buildPerClipAlignmentBySegment(fullEvaluationPayload);
@@ -3099,43 +3767,118 @@ export default function App() {
           );
         });
 
+        const selectedEvidenceRows = mergePerClipDisagreementIntoCaptionRows(
+          parseEvidenceClipRows(selectedEvidenceResult?.payload, {
+            captionField: "caption_reel_a",
+            fallbackCaptionField: "caption_reel_b",
+            alignmentField: "alignment_score_reel_a"
+          }),
+          perClipAlignmentBySegment
+        );
+        const neutralEvidenceRows = mergePerClipDisagreementIntoCaptionRows(
+          parseEvidenceClipRows(neutralEvidenceResult?.payload, {
+            captionField: "caption_reel_b",
+            fallbackCaptionField: "caption_reel_a",
+            alignmentField: "alignment_score_reel_b"
+          }),
+          perClipAlignmentBySegment
+        );
+        const selectedEvidenceSummaryAlignment = extractEvidenceSummaryAlignment(
+          selectedEvidenceResult?.payload,
+          ["reel_a_alignment_score", "reel_b_alignment_score"]
+        );
+        const neutralEvidenceSummaryAlignment = extractEvidenceSummaryAlignment(
+          neutralEvidenceResult?.payload,
+          ["reel_b_alignment_score", "reel_a_alignment_score"]
+        );
+        const showcaseHallucinationCandidates = [
+          {
+            stream: "Selected",
+            ...extractHallucinationState(selectedEvidenceResult?.payload),
+          },
+          {
+            stream: "Neutral",
+            ...extractHallucinationState(neutralEvidenceResult?.payload),
+          },
+        ];
+        const showcaseHallucinationSignals = buildHallucinationCueSignals(
+          showcaseHallucinationCandidates,
+          {
+            totalHallucinationsDetected: extractHallucinationTotalsFromFullEvaluation(fullEvaluationPayload),
+          }
+        );
+        const showcaseHallucinationAlert = buildHallucinationAlertFromSignal(
+          showcaseHallucinationSignals.find((item) => !item.segment_id) || null
+        );
+
         const preferredPerspectiveKey = (() => {
-          if (String(preferenceType || "").toLowerCase() !== "team" || !preferenceDetail) return "";
-          const candidateKeys = perspectiveKeysForTeam(preferenceDetail);
-          if (!candidateKeys.length) return "";
-          return candidateKeys.find((key) => Array.isArray(captionDetailsByPerspective[key]) && captionDetailsByPerspective[key].length > 0)
-            || candidateKeys[0];
+          const normalizedPreferenceType = String(preferenceType || "").toLowerCase();
+          if (normalizedPreferenceType === "team" && effectivePreferenceDetail) {
+            const candidateKeys = perspectiveKeysForTeam(effectivePreferenceDetail);
+            if (!candidateKeys.length) return "";
+            return candidateKeys.find((key) => perspectives.includes(key))
+              || candidateKeys.find((key) => Array.isArray(captionDetailsByPerspective[key]) && captionDetailsByPerspective[key].length > 0)
+              || candidateKeys[0];
+          }
+          if (normalizedPreferenceType === "individual" && effectivePreferredTeamFromPlayer) {
+            const candidateKeys = perspectiveKeysForTeam(effectivePreferredTeamFromPlayer);
+            if (!candidateKeys.length) return "";
+            return candidateKeys.find((key) => perspectives.includes(key))
+              || candidateKeys.find((key) => Array.isArray(captionDetailsByPerspective[key]) && captionDetailsByPerspective[key].length > 0)
+              || candidateKeys[0];
+          }
+          return "";
+        })();
+        const selectedEvidencePerspectiveKey = (() => {
+          const key = extractEvidenceKeyFromFilename(selectedEvidenceResult?.filename);
+          if (!key) return "";
+          if (perspectives.includes(key)) return key;
+          if (key === "man_city" && perspectives.includes("manchester_city")) return "manchester_city";
+          return "";
         })();
         const fallbackSelectedPerspective = perspectives.find((key) => key !== "neutral") || "";
-        const selectedPerspectiveKey = preferredPerspectiveKey || fallbackSelectedPerspective;
+        const selectedPerspectiveKey = preferredPerspectiveKey || selectedEvidencePerspectiveKey || fallbackSelectedPerspective;
 
+        const fallbackSelectedCaptionDetails = (
+          Array.isArray(captionDetailsByPerspective[selectedPerspectiveKey]) && captionDetailsByPerspective[selectedPerspectiveKey].length > 0
+            ? captionDetailsByPerspective[selectedPerspectiveKey]
+            : applyPerClipAlignmentToCaptionRows(
+              parseCaptionDetailRows(showcaseAlignmentPayload?.reel_a_captions),
+              perClipAlignmentBySegment
+            )
+        );
+        const fallbackNeutralCaptionDetails = (
+          Array.isArray(captionDetailsByPerspective.neutral) && captionDetailsByPerspective.neutral.length > 0
+            ? captionDetailsByPerspective.neutral
+            : applyPerClipAlignmentToCaptionRows(
+              parseCaptionDetailRows(showcaseAlignmentPayload?.reel_b_captions),
+              perClipAlignmentBySegment
+            )
+        );
+
+        const resolvedNeutralCaptionDetails = (
+          fallbackNeutralCaptionDetails.length > 0
+            ? fallbackNeutralCaptionDetails
+            : neutralEvidenceRows
+        );
+
+        setHallucinationCueSignals(showcaseHallucinationSignals);
         setResult(buildShowcaseResult(showcaseData, {
           tone: autoTone,
           teamA,
           teamB,
           preferenceType,
-          preferenceDetail,
-          selectedAlignmentScore: fullEvalAlignment.selected ?? showcaseAlignmentPayload?.reel_a_alignment_score,
-          neutralAlignmentScore: fullEvalAlignment.neutral ?? showcaseAlignmentPayload?.reel_b_alignment_score,
-          selectedCaptionDetails: (
-            Array.isArray(captionDetailsByPerspective[selectedPerspectiveKey]) && captionDetailsByPerspective[selectedPerspectiveKey].length > 0
-              ? captionDetailsByPerspective[selectedPerspectiveKey]
-              : applyPerClipAlignmentToCaptionRows(
-                parseCaptionDetailRows(showcaseAlignmentPayload?.reel_a_captions),
-                perClipAlignmentBySegment
-              )
-          ),
-          neutralCaptionDetails: (
-            Array.isArray(captionDetailsByPerspective.neutral) && captionDetailsByPerspective.neutral.length > 0
-              ? captionDetailsByPerspective.neutral
-              : applyPerClipAlignmentToCaptionRows(
-                parseCaptionDetailRows(showcaseAlignmentPayload?.reel_b_captions),
-                perClipAlignmentBySegment
-              )
-          ),
+          preferenceDetail: effectivePreferenceDetail,
+          selectedAlignmentScore: fullEvalAlignment.selected ?? selectedEvidenceSummaryAlignment ?? showcaseAlignmentPayload?.reel_a_alignment_score,
+          neutralAlignmentScore: fullEvalAlignment.neutral ?? neutralEvidenceSummaryAlignment ?? showcaseAlignmentPayload?.reel_b_alignment_score,
+          selectedCaptionDetails: selectedEvidenceRows.length > 0 ? selectedEvidenceRows : fallbackSelectedCaptionDetails,
+          neutralCaptionDetails: resolvedNeutralCaptionDetails,
           selectedPerspectiveKey,
           captionDetailsByPerspective,
         }));
+        if (showcaseHallucinationAlert) {
+          setHallucinationAlert(showcaseHallucinationAlert);
+        }
         return;
       }
 
@@ -3153,7 +3896,7 @@ export default function App() {
               teamA,
               teamB,
               preferenceType,
-              preferenceDetail,
+              effectivePreferenceDetail,
               autoTone,
               youtubeUrl,
               sourcePrompt
@@ -3175,6 +3918,17 @@ export default function App() {
         if (pipelineData.status && pipelineData.status !== "success") {
           throw new Error(pipelineData.error_message || "Pipeline returned error status.");
         }
+        const pipelineHallucinationCandidates = [
+          {
+            stream: "Verifier",
+            ...extractHallucinationState(pipelineData),
+          }
+        ];
+        const pipelineHallucinationSignals = buildHallucinationCueSignals(pipelineHallucinationCandidates);
+        const pipelineHallucinationAlert = buildHallucinationAlertFromSignal(
+          pipelineHallucinationSignals.find((item) => !item.segment_id) || null
+        );
+        setHallucinationCueSignals(pipelineHallucinationSignals);
         setResult(buildPipelineResult(
           pipelineData,
           sourceMode,
@@ -3183,11 +3937,14 @@ export default function App() {
           matchInfo,
           youtubeUrl,
           preferenceType,
-          preferenceDetail
+          effectivePreferenceDetail
         ));
+        if (pipelineHallucinationAlert) {
+          setHallucinationAlert(pipelineHallucinationAlert);
+        }
       } else {
         await new Promise((resolve) => setTimeout(resolve, MOCK_DELAY_MS));
-        setResult(buildMockResult(teamA, teamB, preferenceType, preferenceDetail, autoTone, matchInfo));
+        setResult(buildMockResult(teamA, teamB, preferenceType, effectivePreferenceDetail, autoTone, matchInfo));
       }
     } catch (err) {
       setError(
@@ -3325,10 +4082,40 @@ export default function App() {
 
   return (
     <div className="generator-shell">
+      {hallucinationAlert && (
+        <div className="factual-alert-toast hallucination-alert-toast" role="status" aria-live="polite">
+          <div className="factual-alert-row">
+            <p className="factual-alert-title hallucination-alert-title">Hallucination Check Triggered</p>
+            <button
+              type="button"
+              className="factual-alert-dismiss"
+              onClick={() => setHallucinationAlert(null)}
+            >
+              Dismiss
+            </button>
+          </div>
+          <p className="factual-alert-meta hallucination-alert-meta">
+            {hallucinationAlert.stream || "Verifier"}
+            {Number.isFinite(hallucinationAlert.cueIndex)
+              ? ` • Cue #${Number(hallucinationAlert.cueIndex) + 1}`
+              : ""}
+            {hallucinationAlert.segment_id
+              ? ` • ${hallucinationAlert.segment_id}`
+              : ""}
+            {Number.isFinite(hallucinationAlert.retryCount)
+              ? ` • Retries ${Number(hallucinationAlert.retryCount)}`
+              : ""}
+            {Number.isFinite(hallucinationAlert.totalHallucinationsDetected)
+              ? ` • Flagged ${Number(hallucinationAlert.totalHallucinationsDetected)}`
+              : ""}
+          </p>
+          <p className="factual-alert-caption">{hallucinationAlert.caption}</p>
+        </div>
+      )}
       {factualInconsistencyAlert && (
         <div className="factual-alert-toast" role="status" aria-live="polite">
           <div className="factual-alert-row">
-            <p className="factual-alert-title">Potential Factual Inconsistency</p>
+            <p className="factual-alert-title">Disagreement Challenge Triggered</p>
             <button
               type="button"
               className="factual-alert-dismiss"
@@ -3340,9 +4127,12 @@ export default function App() {
           <p className="factual-alert-meta">
             {factualInconsistencyAlert.stream} cue
             {Number.isFinite(factualInconsistencyAlert.cueIndex) ? ` #${Number(factualInconsistencyAlert.cueIndex) + 1}` : ""}
-            {" "}• Alignment {formatConfidenceLabel(factualInconsistencyAlert.alignment)}
+            {Number.isFinite(factualInconsistencyAlert.importance)
+              ? ` • Importance ${formatConfidenceLabel(factualInconsistencyAlert.importance)}`
+              : ""}
+            {" "}• Consistency {formatConfidenceLabel(factualInconsistencyAlert.alignment)}
             {Number.isFinite(factualInconsistencyAlert.disagreement)
-              ? ` • Disagreement ${Math.round(factualInconsistencyAlert.disagreement * 100)}%`
+              ? ` • Disagreement ${(factualInconsistencyAlert.disagreement * 100).toFixed(2)}%`
               : ""}
           </p>
           <p className="factual-alert-caption">{factualInconsistencyAlert.caption}</p>
@@ -3570,7 +4360,7 @@ export default function App() {
             className="fifa-select source-textarea"
             value={sourcePrompt}
             onChange={(e) => setSourcePrompt(e.target.value)}
-            placeholder="Type anything you want to focus on (football or non-football). The pipeline will extract keywords and return the best available highlights."
+            placeholder="Type what you want to focus on in football. The pipeline will extract football entities and return the best available highlights."
           />
           {sourcePrompt.trim() && (
             <p className="output-context" style={{ marginTop: "10px", marginBottom: "0" }}>

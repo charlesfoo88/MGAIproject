@@ -2,6 +2,97 @@
 
 React web application for AI-powered sports highlight generation with personalized and neutral reel views.
 
+## UI Documentation (Current)
+
+- [UI_EXPLANATION.md](UI_EXPLANATION.md) - current `approach_b_ui` behavior, data flow, and warning logic.
+
+## **System Implementation -> Frontend/UI**
+
+This section describes how the current UI implements the project pipeline behavior reported in `MM_GENAI_Final_Report.pdf`, especially for interaction, reliability feedback, and evidence-grounded personalization.
+
+### 1. Interaction Flow
+
+The frontend is implemented in `src/approach_b_ui/App.jsx` with styling in `src/approach_b_ui/badge.css`. The interaction flow is designed around one generation cycle:
+
+1. User selects source mode:
+- `Team Selection`: select home/away teams.
+- `YouTube Link`: provide a valid YouTube URL.
+- `Custom Text Prompt`: provide a football prompt (teams/preferences inferred when possible).
+
+2. User sets preference (for non-text mode):
+- `Team` preference, or
+- `Individual` preference (player pool with verified headshots).
+
+3. User runs generation:
+- `Generate` for team mode.
+- `Send to Pipeline` for YouTube/custom-text mode.
+
+4. UI renders outputs:
+- Selected reel and neutral reel panels (video + timed live captions).
+- Live selected-vs-neutral commentary comparison.
+- Alignment scores formatted as percentages (2 decimals).
+
+5. Optional engagement layer:
+- Reel highlight card spin/reveal/collect.
+- Local collection persistence with first-load bootstrap reset for the current storage version.
+
+Operationally, generation follows two backend paths:
+- Showcase path (`GET /api/showcase/{match_name}` + output artifact files) for known matches.
+- Pipeline path (`POST /api/run`) for YouTube/custom-text runs.
+
+### 2. Reliability Feedback (Disagreement + Hallucination)
+
+The UI surfaces two reliability signals that correspond to report mechanisms.
+
+#### 2.1 Disagreement Feedback
+
+From the report, the disagreement feature is a Critic-vs-Analyst 2-round challenge before caption generation for low-importance clips (importance score below `0.8`), with full traceability logs.  
+In the UI, this is surfaced as a red `Disagreement Challenge Triggered` toast during playback when cue-level disagreement is high (configured factual inconsistency threshold at `25%` disagreement rate).  
+The toast is cue-aware and replay-aware, so rewinding and replaying a flagged cue can trigger it again.
+
+#### 2.2 Hallucination Feedback
+
+From the report, hallucination verification checks unconfirmed entities and retries up to 2 times, with 100% resolution reported for evaluated matches.  
+In the UI, this is surfaced as a yellow `Hallucination Check Triggered` toast derived from:
+- `hallucination_flagged`,
+- `unsupported_mentions`,
+- retry metadata.
+
+Unsupported mentions are parsed into stream/segment markers (e.g., `Reel A [segment_009]`) and matched against active timed cues. The toast is:
+- segment-aware (appears when the flagged cue is active),
+- persistent long enough for visibility (12 seconds),
+- replay-aware (reappears after rewind when returning to the same flagged moment).
+
+### 3. Personalization and Evidence-Log Alignment
+
+The report states that evidence tracking is personalized per preference and includes hallucination checks, retries, alignment scores, and recap inputs. The UI implementation follows this by explicitly resolving evidence sources per match and preference.
+
+#### 3.1 Match-first resolution
+
+The UI first resolves which match output folder to use (for example:
+- `arsenal_5_1_man_city_2025_02_02`
+- `liverpool_2_0_man_city_2024_12_01`)
+
+This prevents cross-match mix-ups when the same team appears in different fixtures (e.g., Manchester City in multiple matches).
+
+#### 3.2 Preference-to-evidence mapping
+
+After match resolution, the UI resolves selected evidence logs by preference:
+- preferred team -> team evidence log (`evidence_log_<team>.json`),
+- preferred player -> player evidence log (`evidence_log_<player>.json`),
+- neutral comparison -> `evidence_log_neutral.json`.
+
+Name normalization/alias handling is applied for player preferences (including known Odegaard variants) to map user input to the correct evidence file.
+
+#### 3.3 Alignment sourcing in UI
+
+For showcase runs, selected/neutral alignment values are resolved in priority order:
+1. best matching run from `full_evaluation_results.json`,
+2. evidence summary alignment from the selected/neutral evidence logs,
+3. fallback alignment fields from `captions.json`.
+
+Cue-level alignment is used when available during playback, otherwise reel-level values are shown. This keeps UI alignment displays tied to the same evidence-grounded artifacts described in the report.
+
 ## 🎯 Overview
 
 Modern web interface for the MGAI highlight generation pipeline. Users input their team/player preferences and receive two personalized video reels with AI-generated captions and event metadata.

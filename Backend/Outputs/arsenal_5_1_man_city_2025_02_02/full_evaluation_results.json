@@ -158,7 +158,7 @@
         "disagreement_rate": 0.127,
         "high_disagreement": false
       },
-      {
+      {   
         "segment_id": "segment_014",
         "event_type": "goal",
         "captions_by_preference": {

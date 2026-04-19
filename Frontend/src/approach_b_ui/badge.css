@@ -1041,6 +1041,28 @@
   animation: factual-alert-enter 180ms ease-out;
 }
 
+.hallucination-alert-toast {
+  top: 108px;
+  background: rgba(56, 38, 5, 0.95);
+  border: 1px solid rgba(251, 191, 36, 0.62);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.42),
+    inset 0 0 0 1px rgba(253, 224, 71, 0.2);
+}
+
+.hallucination-alert-title {
+  color: #fde68a;
+}
+
+.hallucination-alert-meta {
+  color: #fef3c7;
+}
+
+.hallucination-alert-toast .factual-alert-dismiss {
+  color: #fef3c7;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
 .factual-alert-row {
   display: flex;
   align-items: center;
@@ -2996,15 +3018,15 @@ body,
 }
 
 .espn-pill-date {
-  font-size: 10px !important;
+  font-size: 9px !important;
 }
 
 .espn-pill-match {
-  font-size: 14px !important;
+  font-size: 12px !important;
 }
 
 .espn-pill-detail {
-  font-size: 11px !important;
+  font-size: 10px !important;
 }
 
 .espn-table-team {
@@ -3025,7 +3047,7 @@ body,
 .espn-header .espn-table-team,
 .espn-header .espn-table-stats,
 .espn-header .espn-pill-match strong {
-  font-weight: 500 !important;
+  font-weight: 400 !important;
 }
 
 /* Compact banner match boxes */
