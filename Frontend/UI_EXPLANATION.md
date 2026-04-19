@@ -158,14 +158,3 @@ First-time bootstrap for current storage version resets old collection/inventory
 - UI styling: `Frontend/src/approach_b_ui/badge.css`
 - Frontend entry: `Frontend/src/main.jsx`
 
-## 10. Notes for Report Usage
-
-If you want to insert this directly into the final report, the best section is:
-
-- **System Implementation -> Frontend/UI**
-
-and optionally split into:
-
-1. Interaction Flow,
-2. Reliability Feedback (Disagreement + Hallucination),
-3. Personalization and Evidence-Log Alignment.

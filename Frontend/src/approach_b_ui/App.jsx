@@ -1465,6 +1465,73 @@ function inferTeamsFromPipelineData(pipelineData) {
   return { leftTeam, rightTeam };
 }
 
+function splitSentences(text) {
+  return String(text || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .split(/(?<=[.!?])\s+/)
+    .map((part) => String(part || "").trim())
+    .filter(Boolean);
+}
+
+function buildQuickMatchRecap(rawRecap, context = {}) {
+  const source = String(rawRecap || "").replace(/\s+/g, " ").trim();
+  const homeTeam = resolveTeamName(context?.homeTeam || context?.home_team) || String(context?.homeTeam || context?.home_team || "").trim();
+  const awayTeam = resolveTeamName(context?.awayTeam || context?.away_team) || String(context?.awayTeam || context?.away_team || "").trim();
+  const finalScore = String(context?.finalScore || context?.final_score || "").trim();
+  const venue = String(context?.venue || "").trim();
+
+  if (!source) {
+    if (homeTeam && awayTeam && finalScore) {
+      const venueSuffix = venue ? ` at ${venue}` : "";
+      return `${homeTeam} vs ${awayTeam} finished ${finalScore}${venueSuffix}.`;
+    }
+    if (homeTeam && awayTeam) return `${homeTeam} vs ${awayTeam} has been summarized from generated highlights.`;
+    return "Match recap unavailable.";
+  }
+
+  const sentences = splitSentences(source);
+  let quick = sentences.slice(0, 2).join(" ").trim();
+  if (!quick) quick = source;
+
+  // Keep recap concise for UI readability.
+  if (quick.length > 320) {
+    quick = `${quick.slice(0, 317).trimEnd()}...`;
+  }
+
+  if (homeTeam && awayTeam && finalScore) {
+    const scoreMentioned = quick.includes(finalScore)
+      || (quick.toLowerCase().includes(homeTeam.toLowerCase()) && quick.toLowerCase().includes(awayTeam.toLowerCase()));
+    if (!scoreMentioned) {
+      quick = `${homeTeam} vs ${awayTeam} finished ${finalScore}. ${quick}`;
+    }
+  }
+
+  return quick;
+}
+
+function extractMatchRecapFromEvidence(payload) {
+  if (!payload || typeof payload !== "object") {
+    return { recap: "", context: {} };
+  }
+  const recapEvidence = payload?.match_recap_evidence && typeof payload.match_recap_evidence === "object"
+    ? payload.match_recap_evidence
+    : {};
+  const matchContext = recapEvidence?.match_context && typeof recapEvidence.match_context === "object"
+    ? recapEvidence.match_context
+    : (payload?.match_context && typeof payload.match_context === "object" ? payload.match_context : {});
+  const recap = String(
+    recapEvidence?.recap_generated
+    ?? payload?.match_recap
+    ?? payload?.recap_generated
+    ?? ""
+  ).trim();
+  return {
+    recap,
+    context: matchContext
+  };
+}
+
 function slugifyText(value) {
   return value
     .toLowerCase()
@@ -1947,7 +2014,16 @@ function buildLocalRecapCardDataUri(
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
-function buildMockResult(teamA, teamB, preferenceType, preferenceDetail, tone, matchInfo) {
+function buildMockResult(
+  teamA,
+  teamB,
+  preferenceType,
+  preferenceDetail,
+  tone,
+  matchInfo,
+  preferredTeamFromPlayer = "",
+  preferredPlayer = null
+) {
   const leftHighlights = buildReelHighlights(teamA, teamB, preferenceDetail);
   const rightHighlights = buildReelHighlights(teamB, teamA, preferenceDetail);
   const leftHighlightsDetailed = buildHighlightDetails(leftHighlights);
@@ -1971,15 +2047,29 @@ function buildMockResult(teamA, teamB, preferenceType, preferenceDetail, tone, m
   };
   const cardMoments = [...leftReel.highlights.slice(0, 2), ...rightReel.highlights.slice(0, 2)];
   const neutralCommentary = buildNeutralCommentary(teamA, teamB, preferenceDetail);
-  const preferredTeamName = String(preferenceType || "").toLowerCase() === "team"
+  const normalizedPreferenceType = String(preferenceType || "").toLowerCase();
+  const preferredTeamName = normalizedPreferenceType === "team"
     ? (resolveTeamName(preferenceDetail) || String(preferenceDetail || "").trim())
-    : "";
-  const preferredMockReel = preferredTeamName
-    ? [leftReel, rightReel].find((reel) => reel.teamName === preferredTeamName) || null
+    : (
+      normalizedPreferenceType === "individual"
+        ? (resolveTeamName(preferredTeamFromPlayer) || String(preferredTeamFromPlayer || "").trim())
+        : ""
+    );
+  const preferredTeamNameResolved = resolveTeamName(preferredTeamName) || String(preferredTeamName || "").trim();
+  const preferredMockReel = preferredTeamNameResolved
+    ? [leftReel, rightReel].find((reel) => {
+      const reelTeamResolved = resolveTeamName(reel.teamName) || String(reel.teamName || "").trim();
+      return reelTeamResolved === preferredTeamNameResolved;
+    }) || null
     : null;
   const reels = preferredMockReel
     ? [{ ...preferredMockReel, side: "Preferred Reel" }]
     : [leftReel, rightReel];
+  const matchRecap = buildQuickMatchRecap(neutralCommentary, {
+    homeTeam: teamA,
+    awayTeam: teamB,
+    venue: matchInfo?.venue
+  });
 
   return {
     title: "Dual-Reel Analyst Output",
@@ -1987,11 +2077,15 @@ function buildMockResult(teamA, teamB, preferenceType, preferenceDetail, tone, m
     matchup: `${teamA} vs ${teamB}`,
     venue: matchInfo.venue,
     commentary: neutralCommentary,
+    matchRecap,
     neutralCommentary,
     commentaryConfidence: averageConfidenceFromDetails(leftHighlightsDetailed, 2),
     neutralCommentaryConfidence: averageConfidenceFromDetails(rightHighlightsDetailed, 2),
     neutralHighlightsDetailed: rightHighlightsDetailed,
     reels,
+    preferredPlayer: preferredPlayer && typeof preferredPlayer === "object"
+      ? preferredPlayer
+      : null,
     preferenceType,
     preferenceDetail,
     tone,
@@ -2015,7 +2109,9 @@ function buildPipelineResult(
   matchInfo,
   youtubeUrl,
   preferenceType = "",
-  preferenceDetail = ""
+  preferenceDetail = "",
+  preferredTeamFromPlayer = "",
+  preferredPlayer = null
 ) {
   const inferredTeams = sourceMode !== "teams"
     ? inferTeamsFromPipelineData(pipelineData)
@@ -2095,17 +2191,35 @@ function buildPipelineResult(
     videoUrl: reelBVideoUrl,
     vttUrl: reelBVttUrl
   };
-  const prefersTeam = String(preferenceType || "").trim().toLowerCase() === "team";
-  const preferredTeamName = prefersTeam
+  const normalizedPreferenceType = String(preferenceType || "").trim().toLowerCase();
+  const preferredTeamName = normalizedPreferenceType === "team"
     ? (resolveTeamName(preferenceDetail) || String(preferenceDetail || "").trim())
-    : "";
-  const preferredPipelineReel = preferredTeamName
-    ? [leftReel, rightReel].find((reel) => reel.teamName === preferredTeamName) || null
+    : (
+      normalizedPreferenceType === "individual"
+        ? (resolveTeamName(preferredTeamFromPlayer) || String(preferredTeamFromPlayer || "").trim())
+        : ""
+    );
+  const preferredTeamNameResolved = resolveTeamName(preferredTeamName) || String(preferredTeamName || "").trim();
+  const preferredPipelineReel = preferredTeamNameResolved
+    ? [leftReel, rightReel].find((reel) => {
+      const reelTeamResolved = resolveTeamName(reel.teamName) || String(reel.teamName || "").trim();
+      return reelTeamResolved === preferredTeamNameResolved;
+    }) || null
     : null;
-  const reels = prefersTeam
+  const prefersSingleReel = Boolean(preferredPipelineReel);
+  const reels = prefersSingleReel
     ? [{ ...(preferredPipelineReel || leftReel), side: "Preferred Reel" }]
     : [leftReel, rightReel];
-  const outputTitle = reels.length > 1 ? "Dual-Reel Analyst Output" : "Preferred-Team Reel Output";
+  const outputTitle = reels.length > 1 ? "Dual-Reel Analyst Output" : "Preferred Reel Output";
+  const matchRecap = buildQuickMatchRecap(
+    pipelineData?.match_recap || pipelineData?.recap_generated || "",
+    {
+      homeTeam: pipelineData?.match_context?.home_team || leftTeam,
+      awayTeam: pipelineData?.match_context?.away_team || rightTeam,
+      finalScore: pipelineData?.match_context?.final_score,
+      venue: pipelineData?.match_context?.venue || matchInfo?.venue
+    }
+  );
 
   return {
     title: outputTitle,
@@ -2117,6 +2231,7 @@ function buildPipelineResult(
     sourceUrl: sourceMode === "youtube" ? youtubeUrl : "",
     commentary: pipelineData.match_recap
       || "Video sent to deep-learning pipeline for detection, extraction, and summarization.",
+    matchRecap,
     neutralCommentary,
     selectedAlignmentScore,
     neutralAlignmentScore,
@@ -2137,6 +2252,9 @@ function buildPipelineResult(
       ),
     neutralHighlightsDetailed: rightHighlightsDetailed,
     reels,
+    preferredPlayer: preferredPlayer && typeof preferredPlayer === "object"
+      ? preferredPlayer
+      : null,
     pokemonCardUrl,
     pokemonCardFilename
   };
@@ -2409,6 +2527,9 @@ function buildShowcaseResult(showcaseData, options = {}) {
     neutralCaptionDetails = [],
     selectedPerspectiveKey = "",
     captionDetailsByPerspective = {},
+    preferredTeamFromPlayer = "",
+    preferredPlayer = null,
+    matchRecap = "",
   } = options;
   const reels = Array.isArray(showcaseData?.reels) ? showcaseData.reels : [];
   const mappedAllReels = reels.map((reel, index) => {
@@ -2471,11 +2592,14 @@ function buildShowcaseResult(showcaseData, options = {}) {
     ?? showcaseData?.reel_b_alignment_score
     ?? showcaseData?.neutral_alignment_score
   );
-  const preferredTeamName = (
-    String(preferenceType || "").toLowerCase() === "team"
-      ? (resolveTeamName(preferenceDetail) || String(preferenceDetail || "").trim())
-      : ""
-  );
+  const normalizedPreferenceType = String(preferenceType || "").toLowerCase();
+  const preferredTeamName = normalizedPreferenceType === "team"
+    ? (resolveTeamName(preferenceDetail) || String(preferenceDetail || "").trim())
+    : (
+      normalizedPreferenceType === "individual"
+        ? (resolveTeamName(preferredTeamFromPlayer) || String(preferredTeamFromPlayer || "").trim())
+        : ""
+    );
   const findReelForTeam = (teamName) => {
     const resolvedTeam = resolveTeamName(teamName) || String(teamName || "").trim();
     if (!resolvedTeam) return null;
@@ -2540,6 +2664,10 @@ function buildShowcaseResult(showcaseData, options = {}) {
     sourceUrl: "",
     commentaryTitle,
     commentary,
+    matchRecap: buildQuickMatchRecap(matchRecap, {
+      homeTeam: teamA,
+      awayTeam: teamB
+    }),
     neutralCommentary,
     selectedAlignmentScore,
     neutralAlignmentScore,
@@ -2551,6 +2679,9 @@ function buildShowcaseResult(showcaseData, options = {}) {
       ?? neutralAlignmentScore,
     neutralHighlightsDetailed: byPerspective?.neutral?.highlightsDetailed || [],
     reels: mappedReels,
+    preferredPlayer: preferredPlayer && typeof preferredPlayer === "object"
+      ? preferredPlayer
+      : null,
     pokemonCardUrl: buildLocalRecapCardDataUri(
       teamA && teamB ? `${teamA} vs ${teamB}` : "Showcase Match",
       preferenceDetail || tone || "Showcase recap",
@@ -2886,6 +3017,21 @@ export default function App() {
   const effectivePreferredTeamFromPlayer = String(preferenceType || "").toLowerCase() === "individual"
     ? (resolvedPreferredPlayer.team || "")
     : "";
+  const preferredPlayerContext = (() => {
+    if (String(preferenceType || "").toLowerCase() !== "individual") return null;
+    const preferredName = String(resolvedPreferredPlayer.name || "").trim();
+    if (!preferredName) return null;
+    const preferredTeam = resolveTeamName(resolvedPreferredPlayer.team) || String(resolvedPreferredPlayer.team || "").trim();
+    const matchedPlayer = selectablePlayers.find((player) =>
+      String(player?.name || "").trim().toLowerCase() === preferredName.toLowerCase()
+      && (!preferredTeam || (resolveTeamName(player?.team) || String(player?.team || "").trim()) === preferredTeam)
+    ) || selectablePlayers.find((player) => String(player?.name || "").trim().toLowerCase() === preferredName.toLowerCase()) || null;
+    return {
+      name: preferredName,
+      team: preferredTeam,
+      headshot: String(matchedPlayer?.headshot || "").trim()
+    };
+  })();
 
   const preferenceTypeOptions = ["team", "individual"];
 
@@ -3791,6 +3937,17 @@ export default function App() {
           neutralEvidenceResult?.payload,
           ["reel_b_alignment_score", "reel_a_alignment_score"]
         );
+        const selectedRecapEvidence = extractMatchRecapFromEvidence(selectedEvidenceResult?.payload);
+        const neutralRecapEvidence = extractMatchRecapFromEvidence(neutralEvidenceResult?.payload);
+        const showcaseMatchRecap = buildQuickMatchRecap(
+          selectedRecapEvidence.recap || neutralRecapEvidence.recap || "",
+          {
+            homeTeam: selectedRecapEvidence?.context?.home_team || neutralRecapEvidence?.context?.home_team || teamA,
+            awayTeam: selectedRecapEvidence?.context?.away_team || neutralRecapEvidence?.context?.away_team || teamB,
+            finalScore: selectedRecapEvidence?.context?.final_score || neutralRecapEvidence?.context?.final_score,
+            venue: selectedRecapEvidence?.context?.venue || neutralRecapEvidence?.context?.venue || ""
+          }
+        );
         const showcaseHallucinationCandidates = [
           {
             stream: "Selected",
@@ -3869,6 +4026,9 @@ export default function App() {
           teamB,
           preferenceType,
           preferenceDetail: effectivePreferenceDetail,
+          preferredTeamFromPlayer: effectivePreferredTeamFromPlayer,
+          preferredPlayer: preferredPlayerContext,
+          matchRecap: showcaseMatchRecap,
           selectedAlignmentScore: fullEvalAlignment.selected ?? selectedEvidenceSummaryAlignment ?? showcaseAlignmentPayload?.reel_a_alignment_score,
           neutralAlignmentScore: fullEvalAlignment.neutral ?? neutralEvidenceSummaryAlignment ?? showcaseAlignmentPayload?.reel_b_alignment_score,
           selectedCaptionDetails: selectedEvidenceRows.length > 0 ? selectedEvidenceRows : fallbackSelectedCaptionDetails,
@@ -3937,14 +4097,25 @@ export default function App() {
           matchInfo,
           youtubeUrl,
           preferenceType,
-          effectivePreferenceDetail
+          effectivePreferenceDetail,
+          effectivePreferredTeamFromPlayer,
+          preferredPlayerContext
         ));
         if (pipelineHallucinationAlert) {
           setHallucinationAlert(pipelineHallucinationAlert);
         }
       } else {
         await new Promise((resolve) => setTimeout(resolve, MOCK_DELAY_MS));
-        setResult(buildMockResult(teamA, teamB, preferenceType, effectivePreferenceDetail, autoTone, matchInfo));
+        setResult(buildMockResult(
+          teamA,
+          teamB,
+          preferenceType,
+          effectivePreferenceDetail,
+          autoTone,
+          matchInfo,
+          effectivePreferredTeamFromPlayer,
+          preferredPlayerContext
+        ));
       }
     } catch (err) {
       setError(
@@ -4503,18 +4674,54 @@ export default function App() {
             </p>
           )}
 
+          {String(result?.matchRecap || result?.commentary || "").trim() && (
+            <div className="commentary-box match-recap-box">
+              <h3>Match Recap</h3>
+              <p>{String(result.matchRecap || result.commentary || "").trim()}</p>
+            </div>
+          )}
+
           <div className="reels-grid">
-            {result.reels.map((reel) => (
+            {result.reels.map((reel) => {
+              const preferredPlayer = result?.preferredPlayer && typeof result.preferredPlayer === "object"
+                ? result.preferredPlayer
+                : null;
+              const preferredPlayerHeadshot = String(preferredPlayer?.headshot || "").trim();
+              const preferredPlayerTeam = resolveTeamName(preferredPlayer?.team) || String(preferredPlayer?.team || "").trim();
+              const reelTeam = resolveTeamName(reel?.teamName) || String(reel?.teamName || "").trim();
+              const isPreferredReel = String(reel?.side || "").toLowerCase().includes("preferred");
+              const shouldUsePlayerPhoto = Boolean(
+                preferredPlayer
+                && preferredPlayerHeadshot
+                && (
+                  isPreferredReel
+                  || (preferredPlayerTeam && reelTeam && preferredPlayerTeam === reelTeam)
+                )
+              );
+
+              return (
               <article key={reel.side} className="reel-panel">
                 <header className="reel-header">
                   <span className="reel-side">{reel.side}</span>
                   <h3>{reel.title}</h3>
                 </header>
 
-                {String(reel.logo || "").trim() && String(reel.logo || "").trim() !== FALLBACK_TEAM_LOGO && (
+                {shouldUsePlayerPhoto ? (
+                  <div className="reel-badge-wrap reel-player-wrap">
+                    <img
+                      src={preferredPlayerHeadshot}
+                      alt={`${String(preferredPlayer?.name || "Preferred player")} headshot`}
+                      className="reel-player-photo"
+                      loading="lazy"
+                    />
+                    <p className="reel-player-name">{String(preferredPlayer?.name || "").trim()}</p>
+                  </div>
+                ) : (
+                  String(reel.logo || "").trim() && String(reel.logo || "").trim() !== FALLBACK_TEAM_LOGO && (
                   <div className="reel-badge-wrap">
                     <TeamFoilBadge logoSrc={reel.logo} teamName={reel.teamName} size={REEL_BADGE_SIZE} speed="12s" />
                   </div>
+                  )
                 )}
 
                 <div className="reel-feed-status">Live pull: Active</div>
@@ -4536,7 +4743,8 @@ export default function App() {
                   }}
                 />
               </article>
-            ))}
+            );
+            })}
           </div>
 
           <div className="commentary-box below-reel-commentary">
