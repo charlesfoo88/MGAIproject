@@ -1006,6 +1006,35 @@ const PLAYER_ALIAS_OVERRIDES = {
   modegaard: { canonical: "Martin Odegaard", team: "Arsenal" }
 };
 
+const PLAYER_HEADSHOT_OVERRIDES = {
+  "erling haaland": { team: "Manchester City", headshot: "/player-headshots/erling-haaland.png" },
+  "e haaland": { team: "Manchester City", headshot: "/player-headshots/erling-haaland.png" },
+  "kevin de bruyne": { team: "Manchester City", headshot: "/player-headshots/kevin-de-bruyne.png" },
+  "k de bruyne": { team: "Manchester City", headshot: "/player-headshots/kevin-de-bruyne.png" }
+};
+
+function resolvePlayerHeadshotOverride(name, team = "") {
+  const normalizedName = normalizePlayerKey(name);
+  if (!normalizedName) return "";
+  const override = PLAYER_HEADSHOT_OVERRIDES[normalizedName];
+  if (!override || typeof override !== "object") return "";
+
+  const overrideTeam = resolveTeamName(override?.team) || String(override?.team || "").trim();
+  const candidateTeam = resolveTeamName(team) || String(team || "").trim();
+  if (overrideTeam && candidateTeam && overrideTeam !== candidateTeam) return "";
+  return String(override?.headshot || "").trim();
+}
+
+function applyPlayerHeadshotOverride(player) {
+  if (!player || typeof player !== "object") return player;
+  const overrideHeadshot = resolvePlayerHeadshotOverride(player?.name, player?.team);
+  if (!overrideHeadshot) return player;
+  return {
+    ...player,
+    headshot: overrideHeadshot
+  };
+}
+
 function normalizePlayerKey(value) {
   return stripDiacritics(String(value || ""))
     .toLowerCase()
@@ -1151,7 +1180,7 @@ const EPL_TEAM_DATABASE = [
   {
     name: "Manchester City",
     logo: "/team-logos/manchester-city.png",
-    aliases: ["Manchester City", "Man City", "MCI", "Citizens"],
+    aliases: ["Manchester City", "Man City", "ManCity", "MCI", "MCFC", "Citizens"],
     tuning: { scale: 1.02, y: 0 }
   },
   {
@@ -1233,8 +1262,8 @@ const TEAM_WEATHER_LOCATIONS = {
 const FALLBACK_PLAYER_DATABASE = [
   { name: "Bukayo Saka", team: "Arsenal", headshot: "/player-headshots/bukayo-saka.svg" },
   { name: "Martin Odegaard", team: "Arsenal", headshot: "/player-headshots/martin-odegaard.svg" },
-  { name: "Erling Haaland", team: "Manchester City", headshot: "/player-headshots/erling-haaland.svg" },
-  { name: "Kevin De Bruyne", team: "Manchester City", headshot: "/player-headshots/kevin-de-bruyne.svg" },
+  { name: "Erling Haaland", team: "Manchester City", headshot: "/player-headshots/erling-haaland.png" },
+  { name: "Kevin De Bruyne", team: "Manchester City", headshot: "/player-headshots/kevin-de-bruyne.png" },
   { name: "Mohamed Salah", team: "Liverpool", headshot: "/player-headshots/mohamed-salah.svg" },
   { name: "Cole Palmer", team: "Chelsea", headshot: "/player-headshots/cole-palmer.svg" },
   { name: "Bruno Fernandes", team: "Manchester United", headshot: "/player-headshots/bruno-fernandes.svg" },
@@ -2063,7 +2092,7 @@ function buildMockResult(
     }) || null
     : null;
   const reels = preferredMockReel
-    ? [{ ...preferredMockReel, side: "Preferred Reel" }]
+    ? [{ ...preferredMockReel, side: "Generated Reel" }]
     : [leftReel, rightReel];
   const matchRecap = buildQuickMatchRecap(neutralCommentary, {
     homeTeam: teamA,
@@ -2208,9 +2237,9 @@ function buildPipelineResult(
     : null;
   const prefersSingleReel = Boolean(preferredPipelineReel);
   const reels = prefersSingleReel
-    ? [{ ...(preferredPipelineReel || leftReel), side: "Preferred Reel" }]
+    ? [{ ...(preferredPipelineReel || leftReel), side: "Generated Reel" }]
     : [leftReel, rightReel];
-  const outputTitle = reels.length > 1 ? "Dual-Reel Analyst Output" : "Preferred Reel Output";
+  const outputTitle = reels.length > 1 ? "Dual-Reel Analyst Output" : "Generated Reel Output";
   const matchRecap = buildQuickMatchRecap(
     pipelineData?.match_recap || pipelineData?.recap_generated || "",
     {
@@ -2628,7 +2657,7 @@ function buildShowcaseResult(showcaseData, options = {}) {
     if (preferredExpressive) {
       mappedReels = [{
         ...preferredExpressive,
-        side: "Preferred Reel",
+        side: "Generated Reel",
       }];
       commentaryTitle = "Expressive Commentary";
       commentary = preferredExpressive.highlights[0]
@@ -2639,7 +2668,7 @@ function buildShowcaseResult(showcaseData, options = {}) {
       if (expressive.length > 0) {
         mappedReels = [{
           ...expressive[0],
-          side: "Preferred Reel",
+          side: "Generated Reel",
         }];
         commentaryTitle = "Expressive Commentary";
         commentary = expressive
@@ -2995,9 +3024,12 @@ export default function App() {
   const fallbackPlayers = sourceMode === "teams"
     ? FALLBACK_PLAYER_DATABASE.filter((player) => selectedTeams.includes(player.team))
     : FALLBACK_PLAYER_DATABASE;
-  const availablePlayers = sourceMode === "teams" && dynamicPlayers.length > 0
+  const availablePlayersRaw = sourceMode === "teams" && dynamicPlayers.length > 0
     ? dynamicPlayers
     : fallbackPlayers;
+  const availablePlayers = availablePlayersRaw
+    .map((player) => applyPlayerHeadshotOverride(player))
+    .filter(Boolean);
   const uniqueAvailablePlayers = Array.from(
     new Map(availablePlayers.map((player) => [`${player.team}::${player.name}`, player])).values()
   ).filter((player) => {
@@ -3029,7 +3061,11 @@ export default function App() {
     return {
       name: preferredName,
       team: preferredTeam,
-      headshot: String(matchedPlayer?.headshot || "").trim()
+      headshot: String(
+        resolvePlayerHeadshotOverride(preferredName, preferredTeam)
+        || matchedPlayer?.headshot
+        || ""
+      ).trim()
     };
   })();
 
@@ -3301,14 +3337,15 @@ export default function App() {
             if (!name) return null;
 
             const resolvedTeam = resolveTeamName(player?.team) || String(player?.team || "").trim() || "Unknown Team";
-            const headshot = String(player?.headshot || "").trim();
+            const overrideHeadshot = resolvePlayerHeadshotOverride(name, resolvedTeam);
+            const headshot = String(overrideHeadshot || player?.headshot || "").trim();
             if (!hasRealHeadshot(headshot)) return null;
 
-            return {
+            return applyPlayerHeadshotOverride({
               name,
               team: resolvedTeam,
               headshot
-            };
+            });
           })
           .filter(Boolean);
 
