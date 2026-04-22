@@ -29,36 +29,73 @@ Frontend/src/approach_b_ui/  # React UI
 ## Prerequisites
 
 - Python 3.8+, Node.js 18+, FFmpeg
-- `GEMINI_API_KEY` (timestamp extraction, cross-modal eval)
-- `GROQ_API_KEY` (pipeline agents)
-- Windows: `winget install FFmpeg` | macOS: `brew install ffmpeg`
+- API Keys (see Setup below):
+  - `GROQ_API_KEY` - Required for pipeline agents ([Get free key](https://console.groq.com))
+  - `GEMINI_API_KEY` - Required for timestamp extraction ([Get free key](https://aistudio.google.com/app/apikey))
+  - `API_SPORTS_KEY` - Optional for new match data ([Get free key](https://dashboard.api-football.com/register))
+- FFmpeg installation:
+  - Windows: `winget install FFmpeg`
+  - macOS: `brew install ffmpeg`
+  - Linux: `sudo apt install ffmpeg` or `sudo yum install ffmpeg`
 
 ## Quick Start
 
-**Backend:**
+### 1. Clone the Repository
+```bash
+git clone https://github.com/charlesfoo88/MGAIproject.git
+cd MGAIproject
+```
+
+### 2. Backend Setup
 ```bash
 cd Backend
+
+# Install dependencies
 pip install -r requirements.txt
-echo "GEMINI_API_KEY=your-key\nGROQ_API_KEY=your-key" > .env
+
+# Setup environment variables
+cp .env.example .env
+# Edit .env and add your API keys (GROQ_API_KEY and GEMINI_API_KEY are required)
+
+# Test with existing match data (~45 seconds)
 python pipeline.py --match-name arsenal_5_1_man_city_2025_02_02 --all-perspectives
 ```
 
-**Frontend:**
+### 3. Frontend Setup
 ```bash
-cd Frontend
-npm install && npm run dev  # http://localhost:5173
+cd ../Frontend
+
+# Install dependencies
+npm install
+
+# (Optional) Copy .env.example to .env if you need to customize backend URL
+cp .env.example .env
+
+# Start development server
+npm run dev  # Opens at http://localhost:5173
 ```
 
-**Backend API:**
+### 4. Run the Full Application
+
+**Terminal 1 - Backend API Server:**
 ```bash
-cd Backend && python main.py  # http://localhost:8000
+cd Backend
+python main.py  # Runs on http://localhost:8000
+```
+
+**Terminal 2 - Frontend Dev Server:**
+```bash
+cd Frontend
+npm run dev  # Runs on http://localhost:5173
 ```
 
 **Using the Web UI:**
-- Once both servers are running, open http://localhost:5173
-- Select teams, choose preference (Team or Individual player), generate reels
-- View live captions, alignment scores, and reliability warnings
-- See [Frontend/UI_EXPLANATION.md](Frontend/UI_EXPLANATION.md) for detailed UI behavior and features
+1. Open http://localhost:5173 in your browser
+2. Select one or two teams from the dropdown
+3. Choose preference type: "Team" or "Individual" (select a player)
+4. Click "Generate Highlight Reel"
+5. View personalized captions with alignment scores and reliability warnings
+6. See [Frontend/UI_EXPLANATION.md](Frontend/UI_EXPLANATION.md) for detailed features
 
 ## System Architecture
 
