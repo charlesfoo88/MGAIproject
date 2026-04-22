@@ -148,8 +148,8 @@ async def startup_event():
     print(f"Demo Mode (configured): {DEMO_MODE}")
     print(f"Demo Mode (active): {_demo_mode_active()}")
     print(f"Output Path: {OUTPUT_PATH}")
-    print(f"API Documentation: http://localhost:8000/docs")
-    print(f"Interactive API: http://localhost:8000/redoc")
+    print(f"API Documentation: http://localhost:5000/docs")
+    print(f"Interactive API: http://localhost:5000/redoc")
     print("=" * 70)
     print("Available Endpoints:")
     print("  POST   /api/run        - Generate highlight reels")
@@ -747,7 +747,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8000,
+        port=5000,
         reload=True,
         log_level="info"
     )
